@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA Chart</title>
+
+    <!-- 引入 Noto Sans 字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            display: none;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* 只針對 CONSONANTSPULMONIC 表格設定 */
+        table[data-type="ConsonantsPulmonic"] {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table[data-type="ConsonantsPulmonic"] td:first-child,
+        table[data-type="ConsonantsPulmonic"] th:first-child {
+            width: 1%;
+            /* 第一格根據內容自適應 */
+            white-space: nowrap;
+            /* 避免換行 */
+        }
+
+        table[data-type="ConsonantsPulmonic"] td:not(:first-child),
+        table[data-type="ConsonantsPulmonic"] th:not(:first-child) {
+            width: 1%;
+            /* 其餘欄位平均分配剩餘空間 */
+        }
+
+        h2 {
+            cursor: pointer;
+            color: black;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        span.toggle-icon {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #language-selector {
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <label for="language-selector">Lang：</label>
+    <select id="language-selector" onchange="changeLanguage(this.value)">
+        <option value="zh">繁體中文</option>
+        <option value="en">English</option>
+    </select>
+    <br>
+
+    <input type="checkbox" id="toggle-row" onclick="toggleRow()">
+    <label for="toggle-row">中文</label>
+
+    <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic">輔音(肺部氣流) <span class="toggle-icon">+</span></h2>
+    <table data-type="ConsonantsPulmonic">
+        <tr>
+            <th data-key=""></th>
+            <th colspan="2" data-key="Bilabial">雙唇</th>
+            <th colspan="2" data-key="Labiodental">唇齒</th>
+            <th colspan="2" data-key="Dental">齒</th>
+            <th colspan="2" data-key="Alveolar">齦</th>
+            <th colspan="2" data-key="Postalveolar">齦後</th>
+            <th colspan="2" data-key="Retroflex">捲舌</th>
+            <th colspan="2" data-key="Palatal">硬顎</th>
+            <th colspan="2" data-key="Velar">軟顎</th>
+            <th colspan="2" data-key="Uvular">小舌</th>
+            <th colspan="2" data-key="Pharyngeal">咽</th>
+            <th colspan="2" data-key="Glottal">喉</th>
+        </tr>
+        <tr>
+            <td id="first-cell" rowspan="1" data-key="Plosive">爆發音</td>
+            <td style="border-right: none;">p</td>
+            <td style="border-left: none;">b</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">t</td>
+            <td style="border-right: none; border-left: none;">d</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;">ʈ</td>
+            <td style="border-left: none;">ɖ</td>
+            <td style="border-right: none;">c</td>
+            <td style="border-left: none;">ɟ</td>
+            <td style="border-right: none;">k</td>
+            <td style="border-left: none;">ɡ</td>
+            <td style="border-right: none;">q</td>
+            <td style="border-left: none;">ɢ</td>
+            <td></td>
+            <td style="background-color: #d3d3d3;"></td>
+            <td>ʔ</td>
+            <td style="background-color: #d3d3d3"></td>
+        </tr>
+        <tr id="hidden-row-1" class="hidden-row">
+            <td style="border-right: none;">p:ㄅ<br>
+                pʰ:ㄆ
+            </td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">t:ㄉ<br>
+                tʰ:ㄊ<br>
+                tʃʲ:ㄐ<br>
+                tʃʰʲ:ㄑ<br>
+                ts:ㄗ<br>
+                tsʰ:ㄘ</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;">ʈʂ:ㄓ<br>
+                ʈʂʰ:ㄔ
+            </td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;">k:ㄍ<br>
+                kʰ:ㄎ
+            </td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td></td>
+            <td style="background-color: #d3d3d3;"></td>
+            <td>ʔ</td>
+            <td style="background-color: #d3d3d3"></td>
+        </tr>
+        <tr>
+            <td data-key="Nasal">鼻音</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">m</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɱ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">n</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɳ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɲ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ŋ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɴ</td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+        </tr>
+        <tr>
+            <td data-key="Trill">顫音</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ʙ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">r</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ʀ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+        </tr>
+        <tr>
+            <td data-key="Taporflap">拍音或閃音</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ⱱ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">ɾ</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɽ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+        </tr>
+        <tr>
+            <td data-key="Fricative">擦音</td>
+            <td style="border-right: none;">ɸ</td>
+            <td style="border-left: none;">β</td>
+            <td style="border-right: none;">f</td>
+            <td style="border-left: none;">v</td>
+            <td style="border-right: none;">θ</td>
+            <td style="border-left: none;">ð</td>
+            <td style="border-right: none;">s</td>
+            <td style="border-left: none;">z</td>
+            <td style="border-right: none;">ʃ</td>
+            <td style="border-left: none;">ʒ</td>
+            <td style="border-right: none;">ʂ</td>
+            <td style="border-left: none;">ʐ</td>
+            <td style="border-right: none;">ç</td>
+            <td style="border-left: none;">ʝ</td>
+            <td style="border-right: none;">x</td>
+            <td style="border-left: none;">ɣ</td>
+            <td style="border-right: none;">χ</td>
+            <td style="border-left: none;">ʁ</td>
+            <td style="border-right: none;">ħ</td>
+            <td style="border-left: none;">ʕ</td>
+            <td style="border-right: none;">h</td>
+            <td style="border-left: none;">ɦ</td>
+        </tr>
+        <tr>
+            <td data-key="Lateralfricative">邊擦音</td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">ɬ</td>
+            <td style="border-right: none; border-left: none;">ɮ</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+        </tr>
+        <tr>
+            <td data-key="Approximant">近音</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ʋ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">ɹ</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɻ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">j</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɰ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+        </tr>
+        <tr>
+            <td data-key="Lateralapproximant">邊近音</td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-right: none; border-left: none;">l</td>
+            <td style="border-right: none; border-left: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ɭ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ʎ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;">ʟ</td>
+            <td style="border-right: none;"></td>
+            <td style="border-left: none;"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+            <td style="border-right: none; background-color:  #d3d3d3"></td>
+            <td style="border-left: none; background-color:  #d3d3d3"></td>
+        </tr>
+        <tr>
+            <td colspan="23" data-key="ConsonantsPulmonicNote">成對出現的音標，右邊為濁輔音。陰影區域表示不可能產生的音。</td>
+        </tr>
+
+
+    </table>
+
+    <h2 onclick="toggleTable(this)" data-key="ConsonantsNonPulmonic">輔音(非肺部氣流) <span class="toggle-icon">+</span></h2>
+    <table>
+        <tr>
+            <th data-key="name">姓名</th>
+            <th data-key="age">年齡</th>
+            <th data-key="city">城市</th>
+        </tr>
+    </table>
+
+    <script>
+        // 多語言字典
+        const translations = {
+            "zh": {
+                "ConsonantsPulmonic": "輔音(肺部氣流)",
+                "ConsonantsNonPulmonic": "輔音(非肺部氣流)",
+                "Bilabial": "雙唇",
+                "Labiodental": "唇齒",
+                "Dental": "齒",
+                "Alveolar": "齦",
+                "Postalveolar": "齦後",
+                "Retroflex": "捲舌",
+                "Palatal": "硬顎",
+                "Velar": "軟顎",
+                "Uvular": "小舌",
+                "Pharyngeal": "咽",
+                "Glottal": "喉",
+                "Plosive": "爆發音",
+                "Nasal": "鼻音",
+                "Trill": "顫音",
+                "Taporflap": "拍音或閃音",
+                "Fricative": "擦音",
+                "Lateralfricative": "邊擦音",
+                "Approximant": "近音",
+                "Lateralapproximant": "邊近音",
+                "ConsonantsPulmonicNote": "成對出現的音標，右邊為濁輔音。陰影區域表示不可能產生的音。",
+                "": "",
+
+            },
+            "en": {
+                "ConsonantsPulmonic": "Consonants (Pulmonic)",
+                "ConsonantsNonPulmonic": "Consonants (Non-Pulmonic)",
+                "Bilabial": "Bilabial",
+                "Labiodental": "Labiodental",
+                "Dental": "Dental",
+                "Alveolar": "Alveolar",
+                "Postalveolar": "Postalveolar",
+                "Retroflex": "Retroflex",
+                "Palatal": "Palatal",
+                "Velar": "Velar",
+                "Uvular": "Uvular",
+                "Pharyngeal": "Pharyngeal",
+                "Glottal": "Glottal",
+                "Plosive": "Plosive",
+                "Nasal": "Nasal",
+                "Trill": "Trill",
+                "Taporflap": "Tap or flap",
+                "Fricative": "Fricative",
+                "Lateralfricative": "Lateral fricative",
+                "Approximant": "Approximant",
+                "Lateralapproximant": "Lateral approximant",
+                "ConsonantsPulmonicNote": "Symbols to the right in a cell are voiced, to the left are voiceless. Shaded areas denote articulations judged impossible.",
+            }
+        };
+
+        function toggleTable(header) {
+            var table = header.nextElementSibling;
+            var icon = header.querySelector(".toggle-icon");
+
+            if (table && table.tagName === "TABLE") {
+                if (table.style.display === "none" || table.style.display === "") {
+                    table.style.display = "table";
+                    icon.textContent = "−"; // 收起時顯示「-」
+                } else {
+                    table.style.display = "none";
+                    icon.textContent = "+"; // 展開時顯示「+」
+                }
+            }
+        }
+
+        function changeLanguage(lang) {
+            document.querySelectorAll("[data-key]").forEach(element => {
+                let key = element.getAttribute("data-key");
+                element.textContent = translations[lang][key];
+            });
+        }
+
+        // 頁面加載時設定隱藏第二行並設置 rowspan
+        window.onload = function () {
+            const row = document.getElementById('hidden-row-1');
+            const firstCell = document.getElementById('first-cell');
+
+            // 預設隱藏第二行
+            row.style.display = "none";
+            // 預設 rowspan 設為 1
+            firstCell.setAttribute("rowspan", "1");
+        };
+
+        function toggleRow() {
+            var checkbox = document.getElementById("toggle-row");
+            var row = document.getElementById("hidden-row-1");
+            var firstCell = document.getElementById("first-cell");
+
+            if (checkbox.checked) {
+                row.style.display = "";
+                firstCell.setAttribute("rowspan", 2);  // 更新為 rowspan="2"
+            } else {
+                row.style.display = "none";
+                firstCell.setAttribute("rowspan", 1);  // 恢復為 rowspan="1"
+            }
+        }
+    </script>
+
+</body>
+
+</html>
