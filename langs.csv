@@ -1,0 +1,50 @@
+﻿chinese,ConsonantsPulmonic,Bilabial,Plosive, voiceless,p,ㄅ
+chinese,ConsonantsPulmonic,Bilabial,Plosive, voiceless,pʰ,ㄆ
+chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,t,ㄉ
+chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tʰ,ㄊ
+chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tʃʲ,ㄐ
+chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tʃʰʲ,ㄑ
+chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,ts,ㄗ
+chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tsʰ,ㄘ
+chinese,ConsonantsPulmonic,Retroflex,Plosive, voiceless,ʈʂ,ㄓ
+chinese,ConsonantsPulmonic,Retroflex,Plosive, voiceless,ʈʂʰ,ㄔ
+chinese,ConsonantsPulmonic,Velar,Plosive, voiceless,k,ㄍ
+chinese,ConsonantsPulmonic,Velar,Plosive, voiceless,kʰ,ㄎ
+chinese,ConsonantsPulmonic,Bilabial,Nasal,voiced,m,ㄇ
+chinese,ConsonantsPulmonic,Alveolar,Nasal,voiced,n,ㄋ
+chinese,ConsonantsPulmonic,Labiodental,Fricative, voiceless,f,ㄈ
+chinese,ConsonantsPulmonic,Alveolar,Fricative, voiceless,s,ㄙ
+chinese,ConsonantsPulmonic,Postalveolar,Fricative, voiceless,ʃʲ(ɕ),ㄒ
+chinese,ConsonantsPulmonic,Retroflex,Fricative, voiceless,ʂ,ㄕ
+chinese,ConsonantsPulmonic,Retroflex,Fricative,voiced,ʐ,ㄖ
+chinese,ConsonantsPulmonic,Glottal,Fricative, voiceless,h,ㄏ
+chinese,ConsonantsPulmonic,Palatal,Approximant,voiced,j,ㄧ
+chinese,ConsonantsPulmonic,Alveolar,LateralApproximant,voiced,l,ㄌ
+English,ConsonantsPulmonic,Bilabia,Plosive, voiced,b,"b, bb"
+English,ConsonantsPulmonic,Bilabia,Alveolar, voiced,d,"d, dd, dh"
+English,ConsonantsPulmonic,DentalFricative,, voiced,ð,th
+English,ConsonantsPulmonic,Bilabia,Alveolar, voiced,dʒ,"dg(e, i, y), -dg, g(e, i, y, ae, oe), j"
+English,ConsonantsPulmonic,Labiodental,Fricative,voiceless,f,"f, ff, ph, pph"
+English,ConsonantsPulmonic,Velar,Plosive, voiced,ɡ,"g(e, i, y, ae, oe), g, gg, gh-"
+English,ConsonantsPulmonic,Velar,Plosive, voiced,ɡz,(e)x(vowel)
+English,ConsonantsPulmonic,Glottal,Fricative, voiced,h,"h, wh- (o)"
+English,ConsonantsPulmonic,Palatal,Approximant, voiced,j,y-
+English,ConsonantsPulmonic,Velar,Plosive,voiceless,k,"c, cc, ch(Greek), ck, k, kk, kh, q"
+English,ConsonantsPulmonic,Velar,Plosive,voiceless,ks,"cc(e, i, y), x, xc(e, i)"
+English,ConsonantsPulmonic,Velar,Plosive,voiceless,kʃ,xh
+English,ConsonantsPulmonic,Alveolar,LateralApproximant, voiced,l,"l, ll"
+English,ConsonantsPulmonic,Bilabial,Nasal, voiced,m,"m, mm"
+English,ConsonantsPulmonic,Alveolar,Nasal, voiced,n,"n, nn"
+English,ConsonantsPulmonic,Alveolar,Nasal, voiced,ndʒ,-ng-
+English,ConsonantsPulmonic,Velar,Nasal, voiced,ŋ,"n(/k, ɡ/), nn(/k, ɡ/), -ng, -ng(non-silent letter)"
+English,ConsonantsPulmonic,Velar,Nasal, voiced,ŋɡ,-ng-
+English,ConsonantsPulmonic,Bilabia,Plosive,voiceless,p,"p, pp"
+English,ConsonantsPulmonic,Alveolar,Trill, voiced,r,"r, rr, rh, rrh, -r, -rr, -rh, -rrh, r(final e), rr(final e), rh(final e), rrh(final e), r(consonant), rr(consonant), rh(consonant), rrh(consonant)"
+English,ConsonantsPulmonic,Alveolar,Fricative,voiceless,s,"c(e, i, y, ae, oe), (fortis sound)s, s, sc(e, i, y), ss"
+English,ConsonantsPulmonic,Postalveolar,Fricative,voiceless,ʃ,"ch(Modern French), sch, sh, x(Chinese or Mesoamerican)"
+English,ConsonantsPulmonic,Alveolar,Fricative,voiceless,sw,sw
+English,ConsonantsPulmonic,Alveolar,Plosive, voiced,t,"t, tt"
+English,ConsonantsPulmonic,Alveolar,Plosive, voiced,tʃ,"ch, q(Chinese), tch"
+English,ConsonantsPulmonic,Labiodental,Plosive, voiced,v,"v, vv"
+English,ConsonantsPulmonic,Alveolar,Fricative, voiced,z,"(lenis sound)s, (vowel)s(vowel), x-, z, zz"
+English,ConsonantsPulmonic,Dental,Fricative,voiceless,θ,th

@@ -83,8 +83,14 @@
     </select>
     <br>
 
-    <input type="checkbox" id="toggle-row" onclick="toggleRow()">
-    <label for="toggle-row">中文</label>
+    <input type="checkbox" id="chk-chinese" onclick="toggleRow()">
+    <label for="chk-chinese">中文</label>
+
+    <input type="checkbox" id="chk-english" onclick="toggleRow()">
+    <label for="chk-english">英文</label>
+
+    <input type="checkbox" id="chk-german" onclick="toggleRow()">
+    <label for="chk-german">德文</label>
 
     <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic">輔音(肺部氣流) <span class="toggle-icon">+</span></h2>
     <table data-type="ConsonantsPulmonic">
@@ -127,41 +133,8 @@
             <td>ʔ</td>
             <td style="background-color: #d3d3d3"></td>
         </tr>
-        <tr id="hidden-row-1" class="hidden-row">
-            <td style="border-right: none;">p:ㄅ<br>
-                pʰ:ㄆ
-            </td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">t:ㄉ<br>
-                tʰ:ㄊ<br>
-                tʃʲ:ㄐ<br>
-                tʃʰʲ:ㄑ<br>
-                ts:ㄗ<br>
-                tsʰ:ㄘ</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;">ʈʂ:ㄓ<br>
-                ʈʂʰ:ㄔ
-            </td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;">k:ㄍ<br>
-                kʰ:ㄎ
-            </td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td></td>
-            <td style="background-color: #d3d3d3;"></td>
-            <td>ʔ</td>
-            <td style="background-color: #d3d3d3"></td>
-        </tr>
+
+
         <tr>
             <td data-key="Nasal">鼻音</td>
             <td style="border-right: none;"></td>
@@ -430,32 +403,9 @@
             });
         }
 
-        // 頁面加載時設定隱藏第二行並設置 rowspan
-        window.onload = function () {
-            const row = document.getElementById('hidden-row-1');
-            const firstCell = document.getElementById('first-cell');
-
-            // 預設隱藏第二行
-            row.style.display = "none";
-            // 預設 rowspan 設為 1
-            firstCell.setAttribute("rowspan", "1");
-        };
-
-        function toggleRow() {
-            var checkbox = document.getElementById("toggle-row");
-            var row = document.getElementById("hidden-row-1");
-            var firstCell = document.getElementById("first-cell");
-
-            if (checkbox.checked) {
-                row.style.display = "";
-                firstCell.setAttribute("rowspan", 2);  // 更新為 rowspan="2"
-            } else {
-                row.style.display = "none";
-                firstCell.setAttribute("rowspan", 1);  // 恢復為 rowspan="1"
-            }
-        }
     </script>
 
 </body>
 
 </html>
+
