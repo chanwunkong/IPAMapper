@@ -134,6 +134,37 @@
             <td style="background-color: #d3d3d3"></td>
         </tr>
 
+        <tr>
+            <td id="language-container-1">
+            <!-- Dynamic divs for the first td will appear here -->
+            </td>
+            <td id="language-container-2">
+            <!-- Dynamic divs for the second td will appear here -->
+            </td>
+            <td id="language-container-3">
+            <!-- Dynamic divs for the third td will appear here -->
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
 
         <tr>
             <td data-key="Nasal">鼻音</td>
@@ -402,6 +433,39 @@
                 element.textContent = translations[lang][key];
             });
         }
+
+
+        function toggleRow() {
+            // Get all the td elements you want to modify
+            const tdElements = document.querySelectorAll('[id^="language-container-"]');
+            
+            // Loop through each td and update the contents
+            tdElements.forEach(td => {
+                td.innerHTML = '';  // Clear the existing divs in this td
+
+                // Add corresponding divs based on the checked checkboxes
+                if (document.getElementById('chk-chinese').checked) {
+                const chineseDiv = document.createElement('div');
+                chineseDiv.textContent = '中文';
+                td.appendChild(chineseDiv);
+                }
+
+                if (document.getElementById('chk-english').checked) {
+                const englishDiv = document.createElement('div');
+                englishDiv.textContent = '英文';
+                td.appendChild(englishDiv);
+                }
+
+                if (document.getElementById('chk-german').checked) {
+                const germanDiv = document.createElement('div');
+                germanDiv.textContent = '德文';
+                td.appendChild(germanDiv);
+                }
+            });
+            }
+
+
+
 
     </script>
 

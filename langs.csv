@@ -1,50 +1,51 @@
-﻿chinese,ConsonantsPulmonic,Bilabial,Plosive, voiceless,p,ㄅ
-chinese,ConsonantsPulmonic,Bilabial,Plosive, voiceless,pʰ,ㄆ
-chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,t,ㄉ
-chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tʰ,ㄊ
-chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tʃʲ,ㄐ
-chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tʃʰʲ,ㄑ
-chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,ts,ㄗ
-chinese,ConsonantsPulmonic,Alveolar,Plosive, voiceless,tsʰ,ㄘ
-chinese,ConsonantsPulmonic,Retroflex,Plosive, voiceless,ʈʂ,ㄓ
-chinese,ConsonantsPulmonic,Retroflex,Plosive, voiceless,ʈʂʰ,ㄔ
-chinese,ConsonantsPulmonic,Velar,Plosive, voiceless,k,ㄍ
-chinese,ConsonantsPulmonic,Velar,Plosive, voiceless,kʰ,ㄎ
-chinese,ConsonantsPulmonic,Bilabial,Nasal,voiced,m,ㄇ
-chinese,ConsonantsPulmonic,Alveolar,Nasal,voiced,n,ㄋ
-chinese,ConsonantsPulmonic,Labiodental,Fricative, voiceless,f,ㄈ
-chinese,ConsonantsPulmonic,Alveolar,Fricative, voiceless,s,ㄙ
-chinese,ConsonantsPulmonic,Postalveolar,Fricative, voiceless,ʃʲ(ɕ),ㄒ
-chinese,ConsonantsPulmonic,Retroflex,Fricative, voiceless,ʂ,ㄕ
-chinese,ConsonantsPulmonic,Retroflex,Fricative,voiced,ʐ,ㄖ
-chinese,ConsonantsPulmonic,Glottal,Fricative, voiceless,h,ㄏ
-chinese,ConsonantsPulmonic,Palatal,Approximant,voiced,j,ㄧ
-chinese,ConsonantsPulmonic,Alveolar,LateralApproximant,voiced,l,ㄌ
-English,ConsonantsPulmonic,Bilabia,Plosive, voiced,b,"b, bb"
-English,ConsonantsPulmonic,Bilabia,Alveolar, voiced,d,"d, dd, dh"
-English,ConsonantsPulmonic,DentalFricative,, voiced,ð,th
-English,ConsonantsPulmonic,Bilabia,Alveolar, voiced,dʒ,"dg(e, i, y), -dg, g(e, i, y, ae, oe), j"
-English,ConsonantsPulmonic,Labiodental,Fricative,voiceless,f,"f, ff, ph, pph"
-English,ConsonantsPulmonic,Velar,Plosive, voiced,ɡ,"g(e, i, y, ae, oe), g, gg, gh-"
-English,ConsonantsPulmonic,Velar,Plosive, voiced,ɡz,(e)x(vowel)
-English,ConsonantsPulmonic,Glottal,Fricative, voiced,h,"h, wh- (o)"
-English,ConsonantsPulmonic,Palatal,Approximant, voiced,j,y-
-English,ConsonantsPulmonic,Velar,Plosive,voiceless,k,"c, cc, ch(Greek), ck, k, kk, kh, q"
-English,ConsonantsPulmonic,Velar,Plosive,voiceless,ks,"cc(e, i, y), x, xc(e, i)"
-English,ConsonantsPulmonic,Velar,Plosive,voiceless,kʃ,xh
-English,ConsonantsPulmonic,Alveolar,LateralApproximant, voiced,l,"l, ll"
-English,ConsonantsPulmonic,Bilabial,Nasal, voiced,m,"m, mm"
-English,ConsonantsPulmonic,Alveolar,Nasal, voiced,n,"n, nn"
-English,ConsonantsPulmonic,Alveolar,Nasal, voiced,ndʒ,-ng-
-English,ConsonantsPulmonic,Velar,Nasal, voiced,ŋ,"n(/k, ɡ/), nn(/k, ɡ/), -ng, -ng(non-silent letter)"
-English,ConsonantsPulmonic,Velar,Nasal, voiced,ŋɡ,-ng-
-English,ConsonantsPulmonic,Bilabia,Plosive,voiceless,p,"p, pp"
-English,ConsonantsPulmonic,Alveolar,Trill, voiced,r,"r, rr, rh, rrh, -r, -rr, -rh, -rrh, r(final e), rr(final e), rh(final e), rrh(final e), r(consonant), rr(consonant), rh(consonant), rrh(consonant)"
-English,ConsonantsPulmonic,Alveolar,Fricative,voiceless,s,"c(e, i, y, ae, oe), (fortis sound)s, s, sc(e, i, y), ss"
-English,ConsonantsPulmonic,Postalveolar,Fricative,voiceless,ʃ,"ch(Modern French), sch, sh, x(Chinese or Mesoamerican)"
-English,ConsonantsPulmonic,Alveolar,Fricative,voiceless,sw,sw
-English,ConsonantsPulmonic,Alveolar,Plosive, voiced,t,"t, tt"
-English,ConsonantsPulmonic,Alveolar,Plosive, voiced,tʃ,"ch, q(Chinese), tch"
-English,ConsonantsPulmonic,Labiodental,Plosive, voiced,v,"v, vv"
-English,ConsonantsPulmonic,Alveolar,Fricative, voiced,z,"(lenis sound)s, (vowel)s(vowel), x-, z, zz"
-English,ConsonantsPulmonic,Dental,Fricative,voiceless,θ,th
+﻿chinese,Bilabial,Plosive, voiceless,/p/,ㄅ
+chinese,Bilabial,Plosive, voiceless,/pʰ/,ㄆ
+chinese,Alveolar,Plosive, voiceless,/t/,ㄉ
+chinese,Alveolar,Plosive, voiceless,/tʰ/,ㄊ
+chinese,Alveolar,Plosive, voiceless,/tɕ/,ㄐ
+chinese,Alveolar,Plosive, voiceless,/tɕʰ/,ㄑ
+chinese,Alveolar,Plosive, voiceless,/ts/,ㄗ
+chinese,Alveolar,Plosive, voiceless,/tsʰ/,ㄘ
+chinese,Retroflex,Plosive, voiceless,/ʈʂ/,ㄓ
+chinese,Retroflex,Plosive, voiceless,/ʈʂʰ/,ㄔ
+chinese,Velar,Plosive, voiceless,/k/,ㄍ
+chinese,Velar,Plosive, voiceless,/kʰ/,ㄎ
+chinese,Bilabial,Nasal,voiced,/m/,ㄇ
+chinese,Alveolar,Nasal,voiced,/n/,ㄋ
+chinese,Labiodental,Fricative, voiceless,/f/,ㄈ
+chinese,Alveolar,Fricative, voiceless,/s/,ㄙ
+chinese,Retroflex,Fricative, voiceless,/ʂ/,ㄕ
+chinese,Retroflex,Fricative,voiced,/ʐ/,ㄖ
+chinese,Glottal,Fricative, voiceless,/h/,ㄏ
+chinese,Palatal,Approximant,voiced,/j/,ㄧ
+chinese,Alveolar,LateralApproximant,voiced,/l/,ㄌ
+English,,,,/m/,"m, mm, chm, gm, lm, mb, mbe, me, mh, mme, mn, mp, sme"
+English,,,,/n/,"n, nn, cn, dn, gn, gne, kn, mn, mp, nd, ne, ng, nh, nne, nt, pn, sn, sne"
+English,,,,/ŋ/,"ng, n, nc, nd, ngh, ngue"
+English,,,,/p/,"p, pp, gh, pe, (ph), ppe"
+English,,,,/b/,"b, bb, be, bh, pb, gb"
+English,,,,/t/,"t, tt, bt, cht, ct, d, dt, ed, ght, kt, pt, phth, st, te, th, tte"
+English,,,,/d/,"d, dd, ddh, bd, de, dh, ed, ld"
+English,,,,/k/,"c, k, cc, cch, ch, ck, cq, cqu, cque, cu, ke, kh, kk, lk, q, qh, qu, que, x, (g)"
+English,,,,/ɡ/,"g, gg, ckg, gge, gh, gu, gue"
+English,,,,/f/,"f, ff, fe, ffe, ft, gh, lf, ph, phe, pph, (u)"
+English,,,,/v/,"v, vv, f, lve, ph, u, ve, w, zv, b, bh"
+English,,,,/θ/,"th, the, chth, phth, tth, h"
+English,,,,/ð/,"th, the, dd, dh, y"
+English,,,,/s/,"s, ss, c, cc, ce, ps, sc, sce, sch, se, sh, sse, sses, st, (sth), sw, t, th, ti, (ts), tsw, tzs, tz, (z)"
+English,,,,/z/,"z, zz, cz, s, (sc), se, sh, sp, ss, (sth), ts, tz, x, ze, zh, zs, c"
+English,,,,/ʃ/,"sh, c, ce, ch, che, chi, chsi, ci, s, sc, sch, sche, schsch, sci, sesh, she, shh, shi, si, sj, ss, ssi, ti, psh, zh, x"
+English,,,,/ʒ/,"(ci), g, ge, j, s, si, ssi, ti, z, zh, zhe, (zi), zs"
+English,,,,/x/,"ch, gh"
+English,,,,/h/,"h, wh, j, ch"
+English,,,,/r/,"r, rh, wr"
+English,,,,/l/,"l, ll, le, lh, lle, gl, sle, ln"
+English,,,,/j/,"y, h, i, j, l, ll, z, r"
+English,,,,/hw/,wh
+English,,,,/w/,"w, u, h, ou, ju, wh (in most dialects)"
+English,,,,/ts/,"ts, tz, zz"
+English,,,,/dz/,"ds, dz, z"
+English,,,,/tʃ/,"ch, tch, c, cc, cch, (che), chi, cs, cz, q, t, tche, te, (th), (ti), ts, tsch, tz, tzs, tzsch"
+English,,,,/dʒ/,"g, j, (ch), d, dg, dge, di, dj, dzh, ge, gg, gi, jj, t, zh"
+English,,,,/ks/,"x, xx, cast, cc, chs, cks, cques, cs, cz, kes, ks, lks, ques, xc, xe, xs, xsc, xsw"
+English,,,,/gz/,"x, ggs, gs"
