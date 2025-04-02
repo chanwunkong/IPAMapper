@@ -600,11 +600,56 @@
     </table>
 
     <h2 onclick="toggleTable(this)" data-key="ConsonantsNonPulmonic">輔音(非肺部氣流) <span class="toggle-icon">+</span></h2>
-    <table>
+    <table data-type="ConsonantsPulmonic">
         <tr>
-            <th data-key="name">姓名</th>
-            <th data-key="age">年齡</th>
-            <th data-key="city">城市</th>
+            <th colspan="2" data-key="Clicks">嘖音</th>
+            <th colspan="2" data-key="VoicedImplosives">濁內爆音</th>
+            <th colspan="2" data-key="Ejectives">噴音</th>
+        </tr>
+
+        <tr>
+            <td style="border-right: none;">ʘ</td>
+            <td style="border-left: none;" data-key="NonP-Bilabial">雙唇音</td>
+            <td style="border-right: none;">ɓ</td>
+            <td style="border-left: none;" data-key="NonP-Bilabial">雙唇音</td>
+            <td style="border-right: none;"> ʼ</td>
+            <td style="border-left: none;" data-key="NonP-Ejective">噴音</td>
+        </tr>
+
+        <tr>
+            <td style="border-right: none;">ǀ</td>
+            <td style="border-left: none;" data-key="NonP-Dental">齒音</td>
+            <td style="border-right: none;">ɗ</td>
+            <td style="border-left: none;" data-key="NonP-DentalAlveolar">齒音/齦音</td>
+            <td style="border-right: none;">pʼ</td>
+            <td style="border-left: none;" data-key="NonP-Bilabial">雙唇音</td>
+        </tr>
+
+        <tr>
+            <td style="border-right: none;">ǃ</td>
+            <td style="border-left: none;" data-key="NonP-Postalveolar">齦(後)音</td>
+            <td style="border-right: none;">ʄ</td>
+            <td style="border-left: none;" data-key="NonP-Palatal">硬顎音</td>
+            <td style="border-right: none;">tʼ</td>
+            <td style="border-left: none;" data-key="NonP-DentalAlveolar">齒音/齦音</td>
+        </tr>
+
+        <tr>
+            <td style="border-right: none;">ǂ</td>
+            <td style="border-left: none;" data-key="NonP-Palatoalveolar">顎齦音</td>
+            <td style="border-right: none;">ɠ</td>
+            <td style="border-left: none;" data-key="NonP-Velar">軟顎音</td>
+            <td style="border-right: none;">kʼ</td>
+            <td style="border-left: none;" data-key="NonP-Velar">軟顎音</td>
+        </tr>
+
+        <tr>
+            <td style="border-right: none;">ǁ</td>
+            <td style="border-left: none;" data-key="NonP-AlveolarLateral">齦邊音</td>
+            <td style="border-right: none;">ʛ</td>
+            <td style="border-left: none;" data-key="NonP-Uvular">小舌音</td>
+            <td style="border-right: none;">sʼ</td>
+            <td style="border-left: none;" data-key="NonP-AlveolarFricative">齦擦音</td>
         </tr>
     </table>
 
@@ -654,8 +699,21 @@
                 "Approximant": "近音",
                 "LateralApproximant": "邊近音",
                 "ConsonantsPulmonicNote": "成對出現的音標，右邊為濁輔音。陰影區域表示不可能產生的音。",
+                "Clicks": "嘖音",
+                "VoicedImplosives": "濁內爆音",
+                "Ejectives": "噴音",
+                "NonP-Bilabial": "雙唇音",
+                "NonP-Ejective": "噴音",
+                "NonP-Dental": "齒音",
+                "NonP-DentalAlveolar": "齒音/齦音",
+                "NonP-Postalveolar": "齦(後)音",
+                "NonP-Palatal": "硬顎音",
+                "NonP-Palatoalveolar": "顎齦音",
+                "NonP-Velar": "軟顎音",
+                "NonP-AlveolarLateral": "齦邊音",
+                "NonP-Uvular": "小舌音",
+                "NonP-AlveolarFricative": "齦擦音",
                 "": "",
-
             },
             "en": {
                 "chinese": "Chinese 🇹🇼",
@@ -700,7 +758,21 @@
                 "Approximant": "Approximant",
                 "LateralApproximant": "Lateral approximant",
                 "ConsonantsPulmonicNote": "Symbols to the right in a cell are voiced, to the left are voiceless. Shaded areas denote articulations judged impossible.",
-            }
+                "Clicks": "Clicks",
+                "VoicedImplosives": "Voiced implosives",
+                "Ejectives": "Ejectives",
+                "NonP-Bilabial": "Bilabial",
+                "NonP-Ejective": "Ejective",
+                "NonP-Dental": "Dental",
+                "NonP-DentalAlveolar": "Dental/alveolar",
+                "NonP-Postalveolar": "(Post)alveolar",
+                "NonP-Palatal": "Palatal",
+                "NonP-Palatoalveolar": "Palatoalveolar",
+                "NonP-Velar": "Velar",
+                "NonP-AlveolarLateral": "Alveolar lateral",
+                "NonP-Uvular": "Uvular",
+                "NonP-AlveolarFricative": "Alveolar fricative",
+                "": "",}
         };
         
 
