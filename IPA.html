@@ -135,35 +135,52 @@
         </tr>
 
         <tr>
-            <td id="language-container-1">
-            <!-- Dynamic divs for the first td will appear here -->
+            <td id="Plosive-head">
             </td>
-            <td id="language-container-2">
-            <!-- Dynamic divs for the second td will appear here -->
+            <td id="Plosive-Bilabial-voiceless">
             </td>
-            <td id="language-container-3">
-            <!-- Dynamic divs for the third td will appear here -->
+            <td id="Plosive-Bilabial-voiced">
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td id="Plosive-Labiodental-voiceless">
+            </td>
+            <td id="Plosive-Labiodental-voiced">
+            </td>
+            <td id="Plosive-Dental-voiceless">
+            </td>
+            <td id="Plosive-Dental-voiced">
+            </td>
+            <td id="Plosive-Alveolar-voiceless">
+            </td>
+            <td id="Plosive-Alveolar-voiced">
+            </td>
+            <td id="Plosive-Postalveolar-voiceless">
+            </td>
+            <td id="Plosive-Postalveolar-voiced">
+            </td>
+            <td id="Plosive-Retroflex-voiceless">
+            </td>
+            <td id="Plosive-Retroflex-voiced">
+            </td>
+            <td id="Plosive-Palatal-voiceless">
+            </td>
+            <td id="Plosive-Palatal-voiced">
+            </td>
+            <td id="Plosive-Velar-voiceless">
+            </td>
+            <td id="Plosive-Velar-voiced">
+            </td>
+            <td id="Plosive-Uvular-voiceless">
+            </td>
+            <td id="Plosive-Uvular-voiced">
+            </td>
+            <td id="Plosive-Pharyngeal-voiceless">
+            </td>
+            <td id="Plosive-Pharyngeal-voiced">
+            </td>
+            <td id="Plosive-Glottal-voiceless">
+            </td>
+            <td id="Plosive-Glottal-voiced">
+            </td>
         </tr>
 
         <tr>
@@ -437,32 +454,32 @@
 
         function toggleRow() {
             // Get all the td elements you want to modify
-            const tdElements = document.querySelectorAll('[id^="language-container-"]');
-            
+            const tdElements = document.querySelectorAll('[id^="Plosive-"]');
+
             // Loop through each td and update the contents
             tdElements.forEach(td => {
                 td.innerHTML = '';  // Clear the existing divs in this td
 
                 // Add corresponding divs based on the checked checkboxes
                 if (document.getElementById('chk-chinese').checked) {
-                const chineseDiv = document.createElement('div');
-                chineseDiv.textContent = '中文';
-                td.appendChild(chineseDiv);
+                    const chineseDiv = document.createElement('div');
+                    chineseDiv.textContent = '中文';
+                    td.appendChild(chineseDiv);
                 }
 
                 if (document.getElementById('chk-english').checked) {
-                const englishDiv = document.createElement('div');
-                englishDiv.textContent = '英文';
-                td.appendChild(englishDiv);
+                    const englishDiv = document.createElement('div');
+                    englishDiv.textContent = 'English';
+                    td.appendChild(englishDiv);
                 }
 
                 if (document.getElementById('chk-german').checked) {
-                const germanDiv = document.createElement('div');
-                germanDiv.textContent = '德文';
-                td.appendChild(germanDiv);
+                    const germanDiv = document.createElement('div');
+                    germanDiv.textContent = 'Deutsch';
+                    td.appendChild(germanDiv);
                 }
             });
-            }
+        }
 
 
 
@@ -472,4 +489,3 @@
 </body>
 
 </html>
-
