@@ -48,3 +48,42 @@ English,Alveolar,Plosive,voiceless,/tʃ/,"ch, tch, c, cc, cch, chi, cs, cz, q, t
 English,Alveolar,Plosive,voiced,/dʒ/,"g, j, d, dg, dge, di, dj, dzh, ge, gg, gi, jj, t, zh"
 English,Velar,Nasal,voiceless,/ks/,"x, xx, cast, cc, chs, cks, cques, cs, cz, kes, ks, lks, ques, xc, xe, xs, xsc, xsw"
 English,Velar,Plosive,voiced,/ɡz/,"x, ggs, gs"
+german,Bilabial,Plosive,voiced,/b/,b
+german,Bilabial,Plosive,voiced,/b̥/,b
+german,"Palatal	",Fricative,voiceless,/ç/,"ch,g"
+german,"Palatal	",Fricative,voiceless,/çs/,chs
+german,Alveolar,Plosive,voiced,/d/,d
+german,Alveolar,Plosive,voiced,/d̥/,d
+german,Alveolar,Plosive,voiced,/dʒ/,dsch
+german,Labiodental,Fricative,voiceless,/f/,"f, ph, v"
+german,Velar,Plosive,voiced,/ɡ/,g
+german,Velar,Plosive,voiced,/ɡ̊/,g
+german,Glottal,Fricative,voiceless,/h/,h
+german,Palatal,Approximant,voiced,/j/,"j, y"
+german,Velar,Nasal,voiceless,/k/,"c, ch, ck, g, k"
+german,Velar,Nasal,voiceless,/ks/,"chs, x"
+german,Velar,Nasal,voiceless,/kv/,qu
+german,Velar,Nasal,voiceless,/kw/,qu
+german,Alveolar,LateralApproximant,voiced,/l/,l
+german,Bilabial,Nasal,voiced,/m/,m
+german,Alveolar,Nasal,voiced,/n/,n
+german,Alveolar,Nasal,voiced,/nɡ/,ng
+german,Alveolar,Nasal,voiced,/nɡ̊/,ng
+german,Velar,Nasal,voiced,/ŋ/,ng
+german,Velar,Nasal,voiced,/ŋk/,nk
+german,Bilabial,Plosive,voiceless,/p/,"b, p"
+german,Bilabial,Plosive,voiceless,/pf/,pf
+german,Uvular,Fricative,voiced,/ʁ/,"r,rh"
+german,Alveolar,Fricative,voiceless,/s/,"s, ss, ß"
+german,Alveolar,Fricative,voiceless,/sç/,sch
+german,Postalveolar,Fricative,voiceless,/ʃ/,"ch, s, sch"
+german,Alveolar,Plosive,voiceless,/t/,"d, dt,t th"
+german,Alveolar,Plosive,voiceless,/ti/,ti
+german,Alveolar,Plosive,voiceless,/ts/,"c, tz, z"
+german,Alveolar,Plosive,voiceless,/tʃ/,"ch, dsch, tsch, tzsch, zsch"
+german,Alveolar,Plosive,voiceless,/tsɪ̯/,ti
+german,Labiodental,Fricative,voiced,/v/,"v, w"
+german,Velar,Fricative,voiceless,/x/,ch
+german,Velar,Fricative,voiceless,/xs/,chs
+german,Alveolar,Fricative,voiced,/z/,s
+german,Alveolar,Fricative,voiced,/z̥/,s

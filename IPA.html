@@ -109,7 +109,7 @@
             <th colspan="2" data-key="Glottal">喉</th>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1">爆發音</td>
+            <td class="first-cell" rowspan="1" data-key="Plosive">爆發音</td>
             <td style="border-right: none;">p</td>
             <td style="border-left: none;">b</td>
             <td style="border-right: none;"></td>
@@ -160,7 +160,7 @@
         </tr>
 
         <tr>
-            <td class="first-cell" rowspan="1" >鼻音</td>
+            <td class="first-cell" rowspan="1" data-key="Nasal">鼻音</td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;">m</td>
             <td style="border-right: none;"></td>
@@ -209,7 +209,7 @@
             <td id="Nasal-Glottal-voiced"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1">顫音</td>
+            <td class="first-cell" rowspan="1" data-key="Trill">顫音</td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;">ʙ</td>
             <td style="border-right: none;"></td>
@@ -258,7 +258,7 @@
             <td id="Trill-Glottal-voiced"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1">拍音或閃音</td>
+            <td class="first-cell" rowspan="1" data-key="TapOrFlap">拍音或閃音</td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;"></td>
             <td style="border-right: none;"></td>
@@ -307,7 +307,7 @@
             <td id="TapOrFlap-Glottal-voiced"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1">擦音</td>
+            <td class="first-cell" rowspan="1" data-key="Fricative">擦音</td>
             <td style="border-right: none;">ɸ</td>
             <td style="border-left: none;">β</td>
             <td style="border-right: none;">f</td>
@@ -356,7 +356,7 @@
             <td id="Fricative-Glottal-voiced"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1">邊擦音</td>
+            <td class="first-cell" rowspan="1" data-key="LateralFricative">邊擦音</td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
             <td style="border-left: none; background-color:  #d3d3d3"></td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
@@ -405,7 +405,7 @@
             <td id="LateralFricative-Glottal-voiced"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1">近音</td>
+            <td class="first-cell" rowspan="1" data-key="Approximant">近音</td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;"></td>
             <td style="border-right: none;"></td>
@@ -454,7 +454,7 @@
             <td id="LateralFricative-Glottal-voiced"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1">邊近音</td>
+            <td class="first-cell" rowspan="1" data-key="LateralApproximant">邊近音</td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
             <td style="border-left: none; background-color:  #d3d3d3"></td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
@@ -621,14 +621,14 @@
         }
 
         function toggleRow() { 
-            const rowElements = document.querySelectorAll(".Compare"); // 取得所有 <tr> Compare
+            const rowElements = document.querySelectorAll(".Compare"); // 取得所有 <tr class="Compare">
             const firstCells = document.querySelectorAll(".first-cell"); // 取得所有 <td class="first-cell">
             let hasChecked = false; // 是否有 checkbox 被選中
 
-        // 清空所有 <tr class="Compare"> 下的 <td>
+            // 清空所有 <tr class="Compare"> 下的 <td>
             rowElements.forEach(row => {
-            row.querySelectorAll("td").forEach(td => td.innerHTML = '');
-        });
+                row.querySelectorAll("td").forEach(td => td.innerHTML = '');
+            });
 
             // 檢查所有 checkbox 是否有勾選
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
@@ -646,8 +646,6 @@
             firstCells.forEach(cell => {
                 cell.setAttribute("rowspan", hasChecked ? "2" : "1");
             });
-
-            
 
             // 處理 CSV 資料
             if (hasChecked) {
@@ -668,6 +666,7 @@
                 });
             }
         }
+
 
 
 
