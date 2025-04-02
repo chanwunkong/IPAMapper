@@ -374,6 +374,10 @@
         </tr>
     </table>
 
+    <h1>Consonants Pulmonic CSV 內容</h1>
+    <pre id="output"></pre>
+
+
     <script>
         // 多語言字典
         const translations = {
@@ -481,6 +485,13 @@
             });
         }
 
+
+        fetch('ConsonantsPulmonic.csv')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('output').textContent = data;
+            })
+            .catch(error => console.error('錯誤:', error));
 
 
 
