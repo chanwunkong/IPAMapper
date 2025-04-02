@@ -600,7 +600,7 @@
     </table>
 
     <h2 onclick="toggleTable(this)" data-key="ConsonantsNonPulmonic">輔音(非肺部氣流) <span class="toggle-icon">+</span></h2>
-    <table data-type="ConsonantsPulmonic">
+    <table data-type="ConsonantsNonPulmonic">
         <tr>
             <th colspan="2" data-key="Clicks">嘖音</th>
             <th colspan="2" data-key="VoicedImplosives">濁內爆音</th>
@@ -653,6 +653,53 @@
         </tr>
     </table>
 
+    <h2 onclick="toggleTable(this)" data-key="OtherSymbols">其他符號<span class="toggle-icon">+</span></h2>
+    <table data-type="OtherSymbols">
+        <tr>
+            <td style="border-right: none;">ʍ</td>
+            <td style="border-left: none;" data-key="Voiceless labial-velar fricative"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">w</td>
+            <td style="border-left: none;" data-key="Voiced labial-velar approximant"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">ɥ</td>
+            <td style="border-left: none;" data-key="Voiced labial-palatal approximant"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">ʜ</td>
+            <td style="border-left: none;" data-key="Voiceless epiglottal fricative"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">ʢ</td>
+            <td style="border-left: none;" data-key="Voiced epiglottal fricative/approximant"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">ʡ</td>
+            <td style="border-left: none;" data-key="Epiglottal plosive"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">ɕ ʑ</td>
+            <td style="border-left: none;" data-key="Alveolo-palatal fricatives"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">  ɺ</td>
+            <td style="border-left: none;" data-key="Voiced alveolar lateral flap"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">ɧ</td>
+            <td style="border-left: none;" data-key="Simultaneous ʃ and x"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">͜  ͡</td>
+            <td style="border-left: none;" data-key="Tie bar"></td>
+        </tr>
+        <tr>
+            <td data-key="Tie bar Note"></td>
+        </tr>
+    </table>
+    
     <script>
         // 多語言字典
         const translations = {
