@@ -38,7 +38,6 @@
             border-collapse: collapse;
         }
 
-        table[data-type="ConsonantsPulmonic"] td:first-child,
         table[data-type="ConsonantsPulmonic"] th:first-child {
             width: 1%;
             /* 第一格根據內容自適應 */
@@ -46,7 +45,6 @@
             /* 避免換行 */
         }
 
-        table[data-type="ConsonantsPulmonic"] td:not(:first-child),
         table[data-type="ConsonantsPulmonic"] th:not(:first-child) {
             width: 1%;
             /* 其餘欄位平均分配剩餘空間 */
@@ -84,13 +82,105 @@
     <br>
 
     <input type="checkbox" id="chk-chinese" onclick="toggleRow()">
-    <label for="chk-chinese">中文</label>
-
+    <label for="chk-chinese" data-key="chinese">
+        中文 <img src="flags/tw.png" alt="台灣國旗" width="20">
+    </label>
+    
     <input type="checkbox" id="chk-english" onclick="toggleRow()">
-    <label for="chk-english">英文</label>
-
+    <label for="chk-english" data-key="english">
+        英文 <img src="flags/us.png" alt="美國國旗" width="20">
+    </label>
+    
     <input type="checkbox" id="chk-german" onclick="toggleRow()">
-    <label for="chk-german">德文</label>
+    <label for="chk-german" data-key="german">
+        德文 <img src="flags/de.png" alt="德國國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-spanish" onclick="toggleRow()">
+    <label for="chk-spanish" data-key="spanish">
+        西班牙語 <img src="flags/es.png" alt="西班牙國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-portuguese" onclick="toggleRow()">
+    <label for="chk-portuguese" data-key="portuguese">
+        葡萄牙語 <img src="flags/pt.png" alt="葡萄牙國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-french" onclick="toggleRow()">
+    <label for="chk-french" data-key="french">
+        法語 <img src="flags/fr.png" alt="法國國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-italian" onclick="toggleRow()">
+    <label for="chk-italian" data-key="italian">
+        意大利語 <img src="flags/it.png" alt="意大利國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-russian" onclick="toggleRow()">
+    <label for="chk-russian" data-key="russian">
+        俄語 <img src="flags/ru.png" alt="俄羅斯國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-hindi-urdu" onclick="toggleRow()">
+    <label for="chk-hindi-urdu" data-key="hindiUrdu">
+        印地-烏爾都語 <img src="flags/in.png" alt="印度國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-bengali" onclick="toggleRow()">
+    <label for="chk-bengali" data-key="bengali">
+        孟加拉語 <img src="flags/bd.png" alt="孟加拉國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-persian" onclick="toggleRow()">
+    <label for="chk-persian" data-key="persian">
+        波斯語 <img src="flags/ir.png" alt="伊朗國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-tamil" onclick="toggleRow()">
+    <label for="chk-tamil" data-key="tamil">
+        坦米爾語 <img src="flags/in.png" alt="印度國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-arabic" onclick="toggleRow()">
+    <label for="chk-arabic" data-key="arabic">
+        阿拉伯語 <img src="flags/sa.png" alt="沙烏地阿拉伯國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-turkish" onclick="toggleRow()">
+    <label for="chk-turkish" data-key="turkish">
+        土耳其語 <img src="flags/tr.png" alt="土耳其國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-japanese" onclick="toggleRow()">
+    <label for="chk-japanese" data-key="japanese">
+        日語 <img src="flags/jp.png" alt="日本國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-korean" onclick="toggleRow()">
+    <label for="chk-korean" data-key="korean">
+        韓語 <img src="flags/kr.png" alt="南韓國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-vietnamese" onclick="toggleRow()">
+    <label for="chk-vietnamese" data-key="vietnamese">
+        越南語 <img src="flags/vn.png" alt="越南國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-indonesian" onclick="toggleRow()">
+    <label for="chk-indonesian" data-key="indonesian">
+        印尼語 <img src="flags/id.png" alt="印尼國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-thai" onclick="toggleRow()">
+    <label for="chk-thai" data-key="thai">
+        泰語 <img src="flags/th.png" alt="泰國國旗" width="20">
+    </label>
+    
+    <input type="checkbox" id="chk-swahili" onclick="toggleRow()">
+    <label for="chk-swahili" data-key="swahili">
+        斯瓦希里語 <img src="flags/ke.png" alt="肯亞國旗" width="20">
+    </label>
+    
 
     <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic">輔音(肺部氣流) <span class="toggle-icon">+</span></h2>
     <table data-type="ConsonantsPulmonic">
@@ -154,9 +244,9 @@
             <td id="Plosive-Uvular-voiceless"></td>
             <td id="Plosive-Uvular-voiced"></td>
             <td id="Plosive-Pharyngeal-voiceless"></td>
-            <td id="Plosive-Pharyngeal-voiced"></td>
+            <td id="Plosive-Pharyngeal-voiced"  style="background-color: #d3d3d3"></td>
             <td id="Plosive-Glottal-voiceless"></td>
-            <td id="Plosive-Glottal-voiced"></td>
+            <td id="Plosive-Glottal-voiced"  style="background-color: #d3d3d3"></td>
         </tr>
 
         <tr>
@@ -203,10 +293,10 @@
             <td id="Nasal-Velar-voiced"></td>
             <td id="Nasal-Uvular-voiceless"></td>
             <td id="Nasal-Uvular-voiced"></td>
-            <td id="Nasal-Pharyngeal-voiceless"></td>
-            <td id="Nasal-Pharyngeal-voiced"></td>
-            <td id="Nasal-Glottal-voiceless"></td>
-            <td id="Nasal-Glottal-voiced"></td>
+            <td id="Nasal-Pharyngeal-voiceless"  style="background-color: #d3d3d3"></td>
+            <td id="Nasal-Pharyngeal-voiced"  style="background-color: #d3d3d3"></td>
+            <td id="Nasal-Glottal-voiceless"  style="background-color: #d3d3d3"></td>
+            <td id="Nasal-Glottal-voiced"  style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
             <td class="first-cell" rowspan="1" data-key="Trill">顫音</td>
@@ -248,14 +338,14 @@
             <td id="Trill-Retroflex-voiced"></td>
             <td id="Trill-Palatal-voiceless"></td>
             <td id="Trill-Palatal-voiced"></td>
-            <td id="Trill-Velar-voiceless"></td>
-            <td id="Trill-Velar-voiced"></td>
+            <td id="Trill-Velar-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="Trill-Velar-voiced" style="background-color: #d3d3d3"></td>
             <td id="Trill-Uvular-voiceless"></td>
             <td id="Trill-Uvular-voiced"></td>
             <td id="Trill-Pharyngeal-voiceless"></td>
             <td id="Trill-Pharyngeal-voiced"></td>
-            <td id="Trill-Glottal-voiceless"></td>
-            <td id="Trill-Glottal-voiced"></td>
+            <td id="Trill-Glottal-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="Trill-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
             <td class="first-cell" rowspan="1" data-key="TapOrFlap">拍音或閃音</td>
@@ -297,14 +387,14 @@
             <td id="TapOrFlap-Retroflex-voiced"></td>
             <td id="TapOrFlap-Palatal-voiceless"></td>
             <td id="TapOrFlap-Palatal-voiced"></td>
-            <td id="TapOrFlap-Velar-voiceless"></td>
-            <td id="TapOrFlap-Velar-voiced"></td>
+            <td id="TapOrFlap-Velar-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="TapOrFlap-Velar-voiced" style="background-color: #d3d3d3"></td>
             <td id="TapOrFlap-Uvular-voiceless"></td>
             <td id="TapOrFlap-Uvular-voiced"></td>
             <td id="TapOrFlap-Pharyngeal-voiceless"></td>
             <td id="TapOrFlap-Pharyngeal-voiced"></td>
-            <td id="TapOrFlap-Glottal-voiceless"></td>
-            <td id="TapOrFlap-Glottal-voiced"></td>
+            <td id="TapOrFlap-Glottal-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="TapOrFlap-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
             <td class="first-cell" rowspan="1" data-key="Fricative">擦音</td>
@@ -381,10 +471,10 @@
             <td style="border-left: none; background-color:  #d3d3d3"></td>
         </tr>
         <tr class="Compare">
-            <td id="LateralFricative-Bilabial-voiceless"></td>
-            <td id="LateralFricative-Bilabial-voiced"></td>
-            <td id="LateralFricative-Labiodental-voiceless"></td>
-            <td id="LateralFricative-Labiodental-voiced"></td>
+            <td id="LateralFricative-Bilabial-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralFricative-Bilabial-voiced" style="background-color: #d3d3d3"></td>
+            <td id="LateralFricative-Labiodental-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralFricative-Labiodental-voiced" style="background-color: #d3d3d3"></td>
             <td id="LateralFricative-Dental-voiceless"></td>
             <td id="LateralFricative-Dental-voiced"></td>
             <td id="LateralFricative-Alveolar-voiceless"></td>
@@ -399,10 +489,10 @@
             <td id="LateralFricative-Velar-voiced"></td>
             <td id="LateralFricative-Uvular-voiceless"></td>
             <td id="LateralFricative-Uvular-voiced"></td>
-            <td id="LateralFricative-Pharyngeal-voiceless"></td>
-            <td id="LateralFricative-Pharyngeal-voiced"></td>
-            <td id="LateralFricative-Glottal-voiceless"></td>
-            <td id="LateralFricative-Glottal-voiced"></td>
+            <td id="LateralFricative-Pharyngeal-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralFricative-Pharyngeal-voiced" style="background-color: #d3d3d3"></td>
+            <td id="LateralFricative-Glottal-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralFricative-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
             <td class="first-cell" rowspan="1" data-key="Approximant">近音</td>
@@ -450,8 +540,8 @@
             <td id="LateralFricative-Uvular-voiced"></td>
             <td id="LateralFricative-Pharyngeal-voiceless"></td>
             <td id="LateralFricative-Pharyngeal-voiced"></td>
-            <td id="LateralFricative-Glottal-voiceless"></td>
-            <td id="LateralFricative-Glottal-voiced"></td>
+            <td id="LateralFricative-Glottal-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralFricative-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
             <td class="first-cell" rowspan="1" data-key="LateralApproximant">邊近音</td>
@@ -479,10 +569,10 @@
             <td style="border-left: none; background-color:  #d3d3d3"></td>
         </tr>
         <tr class="Compare">
-            <td id="LateralApproximant-Bilabial-voiceless"></td>
-            <td id="LateralApproximant-Bilabial-voiced"></td>
-            <td id="LateralApproximant-Labiodental-voiceless"></td>
-            <td id="LateralApproximant-Labiodental-voiced"></td>
+            <td id="LateralApproximant-Bilabial-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralApproximant-Bilabial-voiced" style="background-color: #d3d3d3"></td>
+            <td id="LateralApproximant-Labiodental-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralApproximant-Labiodental-voiced" style="background-color: #d3d3d3"></td>
             <td id="LateralApproximant-Dental-voiceless"></td>
             <td id="LateralApproximant-Dental-voiced"></td>
             <td id="LateralApproximant-Alveolar-voiceless"></td>
@@ -497,10 +587,10 @@
             <td id="LateralApproximant-Velar-voiced"></td>
             <td id="LateralApproximant-Uvular-voiceless"></td>
             <td id="LateralApproximant-Uvular-voiced"></td>
-            <td id="LateralApproximant-Pharyngeal-voiceless"></td>
-            <td id="LateralApproximant-Pharyngeal-voiced"></td>
-            <td id="LateralApproximant-Glottal-voiceless"></td>
-            <td id="LateralApproximant-Glottal-voiced"></td>
+            <td id="LateralApproximant-Pharyngeal-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralApproximant-Pharyngeal-voiced" style="background-color: #d3d3d3"></td>
+            <td id="LateralApproximant-Glottal-voiceless" style="background-color: #d3d3d3"></td>
+            <td id="LateralApproximant-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
             <td colspan="23" data-key="ConsonantsPulmonicNote">成對出現的音標，右邊為濁輔音。陰影區域表示不可能產生的音。</td>
@@ -522,6 +612,26 @@
         // 多語言字典
         const translations = {
             "zh": {
+                "chinese": "中文 🇹🇼",
+                "english": "英文 🇺🇸",
+                "german": "德文 🇩🇪",
+                "spanish": "西班牙語 🇪🇸",
+                "portuguese": "葡萄牙語 🇵🇹",
+                "french": "法語 🇫🇷",
+                "italian": "意大利語 🇮🇹",
+                "russian": "俄語 🇷🇺",
+                "hindiUrdu": "印地-烏爾都語 🇮🇳",
+                "bengali": "孟加拉語 🇧🇩",
+                "persian": "波斯語 🇮🇷",
+                "tamil": "坦米爾語 🇮🇳",
+                "arabic": "阿拉伯語 🇸🇦",
+                "turkish": "土耳其語 🇹🇷",
+                "japanese": "日語 🇯🇵",
+                "korean": "韓語 🇰🇷",
+                "vietnamese": "越南語 🇻🇳",
+                "indonesian": "印尼語 🇮🇩",
+                "thai": "泰語 🇹🇭",
+                "swahili": "斯瓦希里語 🇰🇪",
                 "ConsonantsPulmonic": "輔音(肺部氣流)",
                 "ConsonantsNonPulmonic": "輔音(非肺部氣流)",
                 "Bilabial": "雙唇",
@@ -548,6 +658,26 @@
 
             },
             "en": {
+                "chinese": "Chinese 🇹🇼",
+                "english": "English 🇺🇸",
+                "german": "German 🇩🇪",
+                "spanish": "Spanish 🇪🇸",
+                "portuguese": "Portuguese 🇵🇹",
+                "french": "French 🇫🇷",
+                "italian": "Italian 🇮🇹",
+                "russian": "Russian 🇷🇺",
+                "hindiUrdu": "Hindi-Urdu 🇮🇳",
+                "bengali": "Bengali 🇧🇩",
+                "persian": "Persian 🇮🇷",
+                "tamil": "Tamil 🇮🇳",
+                "arabic": "Arabic 🇸🇦",
+                "turkish": "Turkish 🇹🇷",
+                "japanese": "Japanese 🇯🇵",
+                "korean": "Korean 🇰🇷",
+                "vietnamese": "Vietnamese 🇻🇳",
+                "indonesian": "Indonesian 🇮🇩",
+                "thai": "Thai 🇹🇭",
+                "swahili": "Swahili 🇰🇪",
                 "ConsonantsPulmonic": "Consonants (Pulmonic)",
                 "ConsonantsNonPulmonic": "Consonants (Non-Pulmonic)",
                 "Bilabial": "Bilabial",
@@ -572,6 +702,7 @@
                 "ConsonantsPulmonicNote": "Symbols to the right in a cell are voiced, to the left are voiceless. Shaded areas denote articulations judged impossible.",
             }
         };
+        
 
         function toggleTable(header) {
             var table = header.nextElementSibling;
@@ -649,23 +780,49 @@
 
             // 處理 CSV 資料
             if (hasChecked) {
-                csvData.forEach(row => {
-                    const [language, place, manner, voicing, ipa, examples] = row.map(item => item.trim());
+    csvData.forEach(row => {
+        const [language, place, manner, voicing, ipa, examples] = row.map(item => item.trim());
 
-                    // 建立 TD ID，例如："Plosive-Bilabial-voiceless"
-                    const tdId = `${manner}-${place}-${voicing}`;
-                    const tdElement = document.getElementById(tdId);
+        // 建立 TD ID，例如："Plosive-Bilabial-voiceless"
+        const tdId = `${manner}-${place}-${voicing}`;
+        const tdElement = document.getElementById(tdId);
 
-                    if (tdElement) {
-                        if (document.getElementById(`chk-${language.toLowerCase()}`)?.checked) {
-                            const div = document.createElement('div');
-                            div.innerHTML = `<strong>${ipa}: </strong>${examples}`;
-                            tdElement.appendChild(div);
-                        }
-                    }
-                });
-            }
+        if (tdElement) {
+    if (document.getElementById(`chk-${language.toLowerCase()}`)?.checked) {
+        const div = document.createElement('div');
+        
+        // 根據語言選擇顯示對應的國旗圖片
+        let flagImage = '';
+        switch (language.toLowerCase()) {
+            case 'chinese':
+                flagImage = 'flags/tw.png';  // 台灣國旗
+                break;
+            case 'english':
+                flagImage = 'flags/us.png';  // 美國國旗
+                break;
+            case 'german':
+                flagImage = 'flags/de.png';  // 德國國旗
+                break;
+            default:
+                flagImage = 'flags/default.png';  // 預設圖片，確保有通用圖示
+                break;
         }
+
+        // 創建 img 元素顯示國旗
+        const flagImg = document.createElement('img');
+        flagImg.src = flagImage;
+        flagImg.alt = `${language} 國旗`;
+        flagImg.width = 20; // 設定寬度
+        flagImg.style.marginRight = '5px'; // 添加間距
+
+        div.innerHTML = `<strong>${ipa}: </strong>${examples}`;
+        div.prepend(flagImg);  // 把國旗圖片放到文字前面
+        tdElement.appendChild(div);
+    }
+}
+
+    });
+}}
 
 
 
