@@ -57,3 +57,14 @@ NonP-AlveolarLateral,Alveolar lateral,齦邊音
 NonP-Uvular,Uvular,小舌音
 NonP-AlveolarFricative,Alveolar fricative,齦擦音
 OtherSymbols,Other Symbols,其他符號
+OS-VoicelessLabialvelarFricative,Voiceless labial-velar fricative,唇-軟顎輕擦音
+OS-VoicedLabialvelarApproximant,Voiced labial-velar approximant,唇-軟顎濁近音
+OS-VoicedLabialpalatalApproximant,Voiced labial-palatal approximant,唇-硬顎濁近音
+OS-VoicelessEpiglottalFricative,Voiceless epiglottal fricative,會厭輕擦音
+OS-VoicedEpiglottalFricativeApproximant,Voiced epiglottal fricative,會厭濁擦音
+OS-EpiglottalPlosive,Epiglottal plosive,會厭爆發音
+OS-AlveolopalatalFricatives,Alveolo-palatal fricatives,齦-顎輕擦音
+OS-VoicedAlveolarLateralFlap,Voiced alveolar lateral flap,齦邊濁閃音
+OS-SimultaneousSJ,Simultaneous /ʃ/ and /x/,同時發/ʃ/和/x/
+OS-TieBar,Tie Bar,連音符
+OS-TieBarNote,Affricates and double articulations can be represented by two symbols joined by a tie bar if necessary.,

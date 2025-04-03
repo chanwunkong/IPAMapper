@@ -50,6 +50,29 @@
             /* 其餘欄位平均分配剩餘空間 */
         }
 
+        只針對 CONSONANTSNonPULMONIC 表格設定 table[data-type="ConsonantsNonPulmonic"] {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* 只針對 OtherSymbols 表格設定 */
+        table[data-type="OtherSymbols"] {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table[data-type="OtherSymbols"] th:first-child {
+            width: 1%;
+            /* 第一格根據內容自適應 */
+            white-space: nowrap;
+            /* 避免換行 */
+        }
+
+        table[data-type="OtherSymbols"] th:not(:first-child) {
+            width: 1%;
+            /* 其餘欄位平均分配剩餘空間 */
+        }
+
         h2 {
             cursor: pointer;
             color: black;
@@ -661,46 +684,46 @@
     <table data-type="OtherSymbols">
         <tr>
             <td style="border-right: none;">ʍ</td>
-            <td style="border-left: none;" data-key="Voiceless labial-velar fricative"></td>
+            <td style="border-left: none;" data-key="OS-VoicelessLabialvelarFricative">唇-軟顎輕擦音</td>
         </tr>
         <tr>
             <td style="border-right: none;">w</td>
-            <td style="border-left: none;" data-key="Voiced labial-velar approximant"></td>
+            <td style="border-left: none;" data-key="OS-VoicedLabialvelarApproximant">唇-軟顎濁近音</td>
         </tr>
         <tr>
             <td style="border-right: none;">ɥ</td>
-            <td style="border-left: none;" data-key="Voiced labial-palatal approximant"></td>
+            <td style="border-left: none;" data-key="OS-VoicedLabialpalatalApproximant">唇-硬顎濁近音</td>
         </tr>
         <tr>
             <td style="border-right: none;">ʜ</td>
-            <td style="border-left: none;" data-key="Voiceless epiglottal fricative"></td>
+            <td style="border-left: none;" data-key="OS-VoicelessEpiglottalFricative">會厭輕擦音</td>
         </tr>
         <tr>
             <td style="border-right: none;">ʢ</td>
-            <td style="border-left: none;" data-key="Voiced epiglottal fricative/approximant"></td>
+            <td style="border-left: none;" data-key="OS-VoicedEpiglottalFricativeApproximant">會厭濁擦音</td>
         </tr>
         <tr>
             <td style="border-right: none;">ʡ</td>
-            <td style="border-left: none;" data-key="Epiglottal plosive"></td>
+            <td style="border-left: none;" data-key="OS-EpiglottalPlosive">會厭爆發音</td>
         </tr>
         <tr>
             <td style="border-right: none;">ɕ ʑ</td>
-            <td style="border-left: none;" data-key="Alveolo-palatal fricatives"></td>
+            <td style="border-left: none;" data-key="OS-AlveolopalatalFricatives">齦-顎輕擦音</td>
         </tr>
         <tr>
             <td style="border-right: none;"> ɺ</td>
-            <td style="border-left: none;" data-key="Voiced alveolar lateral flap"></td>
+            <td style="border-left: none;" data-key="OS-VoicedAlveolarLateralFlap">齦邊濁閃音</td>
         </tr>
         <tr>
             <td style="border-right: none;">ɧ</td>
-            <td style="border-left: none;" data-key="Simultaneous ʃ and x"></td>
+            <td style="border-left: none;" data-key="OS-SimultaneousSJ">同時發/ʃ/和/x/ </td>
         </tr>
         <tr>
             <td style="border-right: none;">͜ ͡</td>
-            <td style="border-left: none;" data-key="Tie bar"></td>
+            <td style="border-left: none;" data-key="OS-TieBar">連音符</td>
         </tr>
         <tr>
-            <td data-key="Tie bar Note"></td>
+            <td colspan="2" data-key="OS-TieBarNote">若有必要，塞擦音及雙重調音可以用連音符連接兩個符號</td>
         </tr>
     </table>
 
@@ -839,6 +862,23 @@
                                 case 'chinese': flagImage = 'flags/tw.png'; break;
                                 case 'english': flagImage = 'flags/us.png'; break;
                                 case 'german': flagImage = 'flags/de.png'; break;
+                                case 'spanish': flagImage = 'flags/es.png'; break;
+                                case 'portuguese': flagImage = 'flags/pt.png'; break;
+                                case 'french': flagImage = 'flags/dfr.png'; break;
+                                case 'italian': flagImage = 'flags/it.png'; break;
+                                case 'russian': flagImage = 'flags/ru.png'; break;
+                                case 'hindiUrdu': flagImage = 'flags/in.png'; break;
+                                case 'bengali': flagImage = 'flags/bd.png'; break;
+                                case 'persian': flagImage = 'flags/ir.png'; break;
+                                case 'tamil': flagImage = 'flags/in.png'; break;
+                                case 'arabic': flagImage = 'flags/sa.png'; break;
+                                case 'turkish': flagImage = 'flags/tr.png'; break;
+                                case 'japanese': flagImage = 'flags/jp.png'; break;
+                                case 'korean': flagImage = 'flags/kr.png'; break;
+                                case 'vietnamese': flagImage = 'flags/vn.png'; break;
+                                case 'indonesian': flagImage = 'flags/de.png'; break;
+                                case 'thai': flagImage = 'flags/th.png'; break;
+                                case 'swahili': flagImage = 'flags/ke.png'; break;
                                 default: flagImage = 'flags/default.png'; break;
                             }
 
