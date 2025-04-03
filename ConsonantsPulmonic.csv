@@ -1,53 +1,53 @@
-﻿chinese,Bilabial,Plosive,voiceless,/p/,ㄅ
-chinese,Bilabial,Plosive,voiceless,/pʰ/,ㄆ
-chinese,Alveolar,Plosive,voiceless,/t/,ㄉ
-chinese,Alveolar,Plosive,voiceless,/tʰ/,ㄊ
-chinese,Alveolar,Plosive,voiceless,/tɕ/,ㄐ
-chinese,Alveolar,Plosive,voiceless,/tɕʰ/,ㄑ
-chinese,Alveolar,Plosive,voiceless,/ts/,ㄗ
-chinese,Alveolar,Plosive,voiceless,/tsʰ/,ㄘ
-chinese,Retroflex,Plosive,voiceless,/ʈʂ/,ㄓ
-chinese,Retroflex,Plosive,voiceless,/ʈʂʰ/,ㄔ
-chinese,Velar,Plosive,voiceless,/k/,ㄍ
-chinese,Velar,Plosive,voiceless,/kʰ/,ㄎ
-chinese,Bilabial,Nasal,voiced,/m/,ㄇ
-chinese,Alveolar,Nasal,voiced,/n/,ㄋ
-chinese,Labiodental,Fricative,voiceless,/f/,ㄈ
-chinese,Alveolar,Fricative,voiceless,/s/,ㄙ
-chinese,Retroflex,Fricative,voiceless,/ʂ/,ㄕ
-chinese,Retroflex,Fricative,voiced,/ʐ/,ㄖ
+﻿chinese,Labiodental,Fricative,voiceless,/f/,ㄈ
 chinese,Glottal,Fricative,voiceless,/h/,ㄏ
 chinese,Palatal,Approximant,voiced,/j/,ㄧ
+chinese,Velar,Plosive,voiceless,/k/,ㄍ
+chinese,Velar,Plosive,voiceless,/kʰ/,ㄎ
 chinese,Alveolar,LateralApproximant,voiced,/l/,ㄌ
+chinese,Bilabial,Nasal,voiced,/m/,ㄇ
+chinese,Alveolar,Nasal,voiced,/n/,ㄋ
+chinese,Bilabial,Plosive,voiceless,/p/,ㄅ
+chinese,Bilabial,Plosive,voiceless,/pʰ/,ㄆ
+chinese,Alveolar,Fricative,voiceless,/s/,ㄙ
+chinese,Retroflex,Fricative,voiceless,/ʂ/,ㄕ
+chinese,Alveolar,Plosive,voiceless,/t/,ㄉ
+chinese,Alveolar,Plosive,voiceless,/tɕ/,ㄐ
+chinese,Alveolar,Plosive,voiceless,/tɕʰ/,ㄑ
+chinese,Alveolar,Plosive,voiceless,/tʰ/,ㄊ
+chinese,Alveolar,Plosive,voiceless,/ts/,ㄗ
+chinese,Retroflex,Plosive,voiceless,/ʈʂ/,ㄓ
+chinese,Alveolar,Plosive,voiceless,/tsʰ/,ㄘ
+chinese,Retroflex,Plosive,voiceless,/ʈʂʰ/,ㄔ
+chinese,Retroflex,Fricative,voiced,/ʐ/,ㄖ
+English,Bilabial,Plosive,voiced,/b/,"b, bb, be, bh, pb, gb"
+English,Alveolar,Plosive,voiced,/d/,"d, dd, ddh, bd, de, dh, ed, ld"
+English,Dental,Fricative,voiced,/ð/,"th, the, dd, dh, y"
+English,Alveolar,Plosive,voiced,/dz/,"ds, dz, z"
+English,Alveolar,Plosive,voiced,/dʒ/,"g, j, d, dg, dge, di, dj, dzh, ge, gg, gi, jj, t, zh"
+English,Labiodental,Fricative,voiceless,/f/,"f, ff, fe, ffe, ft, gh, lf, ph, phe, pph"
+English,Velar,Plosive,voiced,/ɡ/,"g, gg, ckg, gge, gh, gu, gue"
+English,Velar,Plosive,voiced,/ɡz/,"x, ggs, gs"
+English,Glottal,Fricative,voiceless,/h/,"h, wh, j, ch"
+English,Glottal,Fricative,voiceless,/hw/,wh
+English,Palatal,Approximant,voiced,/j/,"y, h, i, j, l, ll, z, r"
+English,Velar,Nasal,voiceless,/k/,"c, k, cc, cch, ch, ck, cq, cqu, cque, cu, ke, kh, kk, lk, q, qh, qu, que, x"
+English,Velar,Nasal,voiceless,/ks/,"x, xx, cast, cc, chs, cks, cques, cs, cz, kes, ks, lks, ques, xc, xe, xs, xsc, xsw"
+English,Alveolar,LateralApproximant,voiced,/l/,"l, ll, le, lh, lle, gl, sle, ln"
 English,Bilabial,Nasal,voiced,/m/,"m, mm, chm, gm, lm, mb, mbe, me, mh, mme, mn, mp, sme"
 English,Alveolar,Nasal,voiced,/n/,"n, nn, cn, dn, gn, gne, kn, mn, mp, nd, ne, ng, nh, nne, nt, pn, sn, sne"
 English,Velar,Nasal,voiced,/ŋ/,"ng, n, nc, nd, ngh, ngue"
 English,Bilabial,Plosive,voiceless,/p/,"p, pp, gh, pe, ppe"
-English,Bilabial,Plosive,voiced,/b/,"b, bb, be, bh, pb, gb"
-English,Alveolar,Plosive,voiceless,/t/,"t, tt, bt, cht, ct, d, dt, ed, ght, kt, pt, phth, st, te, th, tte"
-English,Alveolar,Plosive,voiced,/d/,"d, dd, ddh, bd, de, dh, ed, ld"
-English,Velar,Nasal,voiceless,/k/,"c, k, cc, cch, ch, ck, cq, cqu, cque, cu, ke, kh, kk, lk, q, qh, qu, que, x"
-English,Velar,Plosive,voiced,/ɡ/,"g, gg, ckg, gge, gh, gu, gue"
-English,Labiodental,Fricative,voiceless,/f/,"f, ff, fe, ffe, ft, gh, lf, ph, phe, pph"
-English,Labiodental,Fricative,voiced,/v/,"v, vv, f, lve, ph, u, ve, w, zv, b, bh"
-English,Dental,Fricative,voiceless,/θ/,"th, the, chth, phth, tth, h"
-English,Dental,Fricative,voiced,/ð/,"th, the, dd, dh, y"
-English,Alveolar,Fricative,voiceless,/s/,"s, ss, c, cc, ce, ps, sc, sce, sch, se, sh, sse, sses, st, sw, t, th, ti, tsw, tzs, tz"
-English,Alveolar,Fricative,voiced,/z/,"z, zz, cz, s, se, sh, sp, ss, ts, tz, x, ze, zh, zs, c"
-English,Postalveolar,Fricative,voiceless,/ʃ/,"sh, c, ce, ch, che, chi, chsi, ci, s, sc, sch, sche, schsch, sci, sesh, she, shh, shi, si, sj, ss, ssi, ti, psh, zh, x"
-English,Postalveolar,Fricative,voiced,/ʒ/,"g, ge, j, s, si, ssi, ti, z, zh, zhe, zs"
-English,Velar,Fricative,voiceless,/x/,"ch, gh"
-English,Glottal,Fricative,voiceless,/h/,"h, wh, j, ch"
 English,Alveolar,Trill,voiced,/r/,"r, rh, wr"
-English,Alveolar,LateralApproximant,voiced,/l/,"l, ll, le, lh, lle, gl, sle, ln"
-English,Palatal,Approximant,voiced,/j/,"y, h, i, j, l, ll, z, r"
-English,Glottal,Fricative,voiceless,/hw/,wh
+English,Alveolar,Fricative,voiceless,/s/,"s, ss, c, cc, ce, ps, sc, sce, sch, se, sh, sse, sses, st, sw, t, th, ti, tsw, tzs, tz"
+English,Postalveolar,Fricative,voiceless,/ʃ/,"sh, c, ce, ch, che, chi, chsi, ci, s, sc, sch, sche, schsch, sci, sesh, she, shh, shi, si, sj, ss, ssi, ti, psh, zh, x"
+English,Alveolar,Plosive,voiceless,/t/,"t, tt, bt, cht, ct, d, dt, ed, ght, kt, pt, phth, st, te, th, tte"
 English,Alveolar,Plosive,voiceless,/ts/,"ts, tz, zz"
-English,Alveolar,Plosive,voiced,/dz/,"ds, dz, z"
 English,Alveolar,Plosive,voiceless,/tʃ/,"ch, tch, c, cc, cch, chi, cs, cz, q, t, tche, te, ts, tsch, tz, tzs, tzsch"
-English,Alveolar,Plosive,voiced,/dʒ/,"g, j, d, dg, dge, di, dj, dzh, ge, gg, gi, jj, t, zh"
-English,Velar,Nasal,voiceless,/ks/,"x, xx, cast, cc, chs, cks, cques, cs, cz, kes, ks, lks, ques, xc, xe, xs, xsc, xsw"
-English,Velar,Plosive,voiced,/ɡz/,"x, ggs, gs"
+English,Labiodental,Fricative,voiced,/v/,"v, vv, f, lve, ph, u, ve, w, zv, b, bh"
+English,Velar,Fricative,voiceless,/x/,"ch, gh"
+English,Alveolar,Fricative,voiced,/z/,"z, zz, cz, s, se, sh, sp, ss, ts, tz, x, ze, zh, zs, c"
+English,Postalveolar,Fricative,voiced,/ʒ/,"g, ge, j, s, si, ssi, ti, z, zh, zhe, zs"
+English,Dental,Fricative,voiceless,/θ/,"th, the, chth, phth, tth, h"
 german,Bilabial,Plosive,voiced,/b/,b
 german,Bilabial,Plosive,voiced,/b̥/,b
 german,"Palatal	",Fricative,voiceless,/ç/,"ch,g"
@@ -110,3 +110,42 @@ japanese,Alveolar,Plosive,voiceless,/t/,"た, て, と, タ, テ, ト"
 japanese,Alveolar,Plosive,voiceless,/t͡ɕ/,"ち, チ"
 japanese,Alveolar,Plosive,voiceless,/t͡s/,"つ, ツ"
 japanese,Alveolar,Fricative,voiced,/z/,"づ, ず, ヅ, ズ"
+korean,Bilabial,Plosive,voiced,/b/,ㅂ
+korean,Bilabial,Fricative,voiced,/β/,ㅎ
+korean,"Palatal	",Fricative,voiceless,/ç/,ㅎ
+korean,Alveolar,Plosive,voiced,/d/,ㄷ
+korean,Alveolar,Plosive,voiced,/dz/,ㅈ
+korean,Alveolar,Plosive,voiced,/dʑ/,ㅈ
+korean,Bilabial,Fricative,voiceless,/ɸ/,ㅎ
+korean,Velar,Plosive,voiced,/ɡ/,ㄱ
+korean,Velar,Fricative,voiced,/ɣ/,ㄱ
+korean,Glottal,Fricative,voiceless,/h/,ㅎ
+korean,Glottal,Fricative,voiced,/ɦ/,ㅎ
+korean,Palatal,Approximant,voiced,/j/,"ㅛ, ㅠ,ㅑ,ㅕ,ㅖ, ㅒ"
+korean,Palatal,Fricative,voiced,/ʝ/,ㅎ
+korean,Velar,Plosive,voiceless,/k/,ㄱ
+korean,Velar,Plosive,voiceless,/k̚/,"ㄱ, ㅋ"
+korean,Velar,Plosive,voiceless,/k͈/,ㄲ
+korean,Velar,Plosive,voiceless,/kʰ/,ㅋ
+korean,Retroflex,LateralApproximant,voiced,/ɭ/,"ㄹ, ㄴ"
+korean,Bilabial,Nasal,voiced,/m/,"ㅁ, ㅂ"
+korean,Alveolar,Nasal,voiced,/n/,"ㄴ, ㄹ, ㄷ, ㅅ, ㅈ"
+korean,Velar,Nasal,voiced,/ŋ/,"ㅇ, ㄱ"
+korean,Bilabial,Plosive,voiceless,/p/,ㅂ
+korean,Bilabial,Plosive,voiceless,/p̚/,"ㅂ, ㅍ"
+korean,Bilabial,Plosive,voiceless,/p͈/,"ㅃ, ㅂ"
+korean,Bilabial,Plosive,voiceless,/pʰ/,ㅍ
+korean,Alveolar,TapOrFlap,voiced,/ɾ/,ㄹ
+korean,Alveolar,Fricative,voiceless,/sʰ/,ㅅ
+korean,Alveolar,Fricative,voiceless,/s͈/,ㅆ
+korean,Alveolar,Plosive,voiceless,/t/,ㄷ
+korean,Alveolar,Plosive,voiceless,/t̚/,"ㄷ, ㅌ, ㅅ, ㅈ, ㅊ"
+korean,Alveolar,Plosive,voiceless,/t͈/,"ㄸ, ㄷ"
+korean,Alveolar,Plosive,voiceless,/tʰ/,ㅌ
+korean,Alveolar,Plosive,voiceless,/ts/,ㅈ
+korean,Alveolar,Plosive,voiceless,/ts͈/,ㅉ
+korean,Alveolar,Plosive,voiceless,/tsʰ/,ㅊ 
+korean,Alveolar,Plosive,voiceless,/tɕ/,ㅈ
+korean,Alveolar,Plosive,voiceless,/tɕ͈/,ㅉ
+korean,Alveolar,Plosive,voiceless,/tɕʰ/,ㅊ
+korean,Velar,Fricative,voiceless,/x/,ㅎ
