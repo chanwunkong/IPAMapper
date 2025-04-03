@@ -79,6 +79,10 @@
         <option value="zh">繁體中文</option>
         <option value="en">English</option>
     </select>
+
+    <label>
+        <input type="checkbox" id="simpleModeCheckbox" data-key="simpleMode"> 簡易模式
+    </label>
     <br>
 
     <input type="checkbox" id="chk-chinese" onclick="toggleRow()">
@@ -764,7 +768,6 @@
             });
         }
 
-        // === 🔹【處理語音學 CSV】🔹 ===
         let consonantsPulmonicData = [];
 
         // 讀取語音學 CSV
@@ -788,29 +791,40 @@
         }
 
         // 切換對應的發音行
+        document.getElementById("simpleModeCheckbox").addEventListener("change", toggleRow);
+
         function toggleRow() {
             const rowElements = document.querySelectorAll(".Compare");
             const firstCells = document.querySelectorAll(".first-cell");
             let hasChecked = false;
+            const isSimpleMode = document.getElementById("simpleModeCheckbox").checked;
 
+            // 清空表格內容
             rowElements.forEach(row => {
                 row.querySelectorAll("td").forEach(td => td.innerHTML = '');
             });
 
+            // 檢查是否有選中的語言
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                if (checkbox.checked) {
+                if (checkbox.checked && checkbox.id !== "simpleModeCheckbox") {
                     hasChecked = true;
                 }
             });
 
+            // 控制 Compare 行的顯示
             rowElements.forEach(row => {
                 row.style.display = hasChecked ? '' : 'none';
             });
 
+            // 控制 rowspan
             firstCells.forEach(cell => {
                 cell.setAttribute("rowspan", hasChecked ? "2" : "1");
             });
 
+            // 建立一個 Map 來存放每個 td 已出現的語言，避免重複顯示國旗
+            const displayedFlags = new Map();
+
+            // 依據選擇的語言填入表格
             if (hasChecked) {
                 consonantsPulmonicData.forEach(row => {
                     const [language, place, manner, voicing, ipa, examples] = row.map(item => item.trim());
@@ -819,7 +833,6 @@
 
                     if (tdElement) {
                         if (document.getElementById(`chk-${language.toLowerCase()}`)?.checked) {
-                            const div = document.createElement('div');
                             let flagImage = '';
 
                             switch (language.toLowerCase()) {
@@ -829,22 +842,38 @@
                                 default: flagImage = 'flags/default.png'; break;
                             }
 
-                            const flagImg = document.createElement('img');
-                            flagImg.src = flagImage;
-                            flagImg.alt = `${language} 國旗`;
-                            flagImg.width = 20;
-                            flagImg.style.marginRight = '5px';
+                            // 只在該 td 第一次遇到該語言時加入國旗
+                            if (!displayedFlags.has(tdId)) {
+                                displayedFlags.set(tdId, new Set());
+                            }
 
-                            div.innerHTML = `<strong>${ipa}: </strong>${examples}`;
-                            div.prepend(flagImg);
-                            tdElement.appendChild(div);
+                            const tdFlags = displayedFlags.get(tdId);
+                            if (!tdFlags.has(language)) {
+                                const flagImg = document.createElement('img');
+                                flagImg.src = flagImage;
+                                flagImg.alt = `${language} 國旗`;
+                                flagImg.width = 20;
+                                flagImg.style.marginRight = '5px';
+
+                                tdElement.appendChild(flagImg);
+                                tdFlags.add(language);
+                            }
+
+                            // 只在非簡易模式下顯示 IPA 和例子
+                            if (!isSimpleMode) {
+                                const div = document.createElement('div');
+                                div.innerHTML = `<strong>${ipa}: </strong>${examples}`;
+                                tdElement.appendChild(div);
+                            }
                         }
                     }
                 });
             }
         }
 
-        // === 🔹【當頁面載入時，分別載入不同 CSV】🔹 ===
+
+
+
         document.addEventListener("DOMContentLoaded", async () => {
             await loadTranslationsCSV();
             await loadConsonantsCSV();
