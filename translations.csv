@@ -1,0 +1,58 @@
+﻿data-key,en,zh
+chinese,Chinese 🇹🇼,中文 🇹🇼
+english,English 🇺🇸,英文 🇺🇸
+german,German 🇩🇪,德文 🇩🇪
+spanish,Spanish 🇪🇸,西班牙語 🇪🇸
+portuguese,Portuguese 🇵🇹,葡萄牙語 🇵🇹
+french,French 🇫🇷,法語 🇫🇷
+italian,Italian 🇮🇹,意大利語 🇮🇹
+russian,Russian 🇷🇺,俄語 🇷🇺
+hindiUrdu,Hindi-Urdu 🇮🇳,印地-烏爾都語 🇮🇳
+bengali,Bengali 🇧🇩,孟加拉語 🇧🇩
+persian,Persian 🇮🇷,波斯語 🇮🇷
+tamil,Tamil 🇮🇳,坦米爾語 🇮🇳
+arabic,Arabic 🇸🇦,阿拉伯語 🇸🇦
+turkish,Turkish 🇹🇷,土耳其語 🇹🇷
+japanese,Japanese 🇯🇵,日語 🇯🇵
+korean,Korean 🇰🇷,韓語 🇰🇷
+vietnamese,Vietnamese 🇻🇳,越南語 🇻🇳
+indonesian,Indonesian 🇮🇩,印尼語 🇮🇩
+thai,Thai 🇹🇭,泰語 🇹🇭
+swahili,Swahili 🇰🇪,斯瓦希里語 🇰🇪
+ConsonantsPulmonic,Consonants (Pulmonic),輔音(肺部氣流)
+ConsonantsNonPulmonic,Consonants (Non-Pulmonic),輔音(非肺部氣流)
+Bilabial,Bilabial,雙唇
+Labiodental,Labiodental,唇齒
+Dental,Dental,齒
+Alveolar,Alveolar,齦
+Postalveolar,Postalveolar,齦後
+Retroflex,Retroflex,捲舌
+Palatal,Palatal,硬顎
+Velar,Velar,軟顎
+Uvular,Uvular,小舌
+Pharyngeal,Pharyngeal,咽
+Glottal,Glottal,喉
+Plosive,Plosive,爆發音
+Nasal,Nasal,鼻音
+Trill,Trill,顫音
+TapOrFlap,Tap or flap,拍音或閃音
+Fricative,Fricative,擦音
+LateralFricative,Lateral fricative,邊擦音
+Approximant,Approximant,近音
+LateralApproximant,Lateral approximant,邊近音
+ConsonantsPulmonicNote,Symbols to the left in a cell are voiceless. to the right are voiced. Shaded areas denote articulations judged impossible.,成對出現的音標，左邊為清輔音，右邊為濁輔音。陰影區域表示不可能產生的音。
+Clicks,Clicks,嘖音
+VoicedImplosives,Voiced implosives,濁內爆音
+Ejectives,Ejectives,噴音
+NonP-Bilabial,Bilabial,雙唇音
+NonP-Ejective,Ejective,噴音
+NonP-Dental,Dental,齒音
+NonP-DentalAlveolar,Dental/alveolar,齒音/齦音
+NonP-Postalveolar,(Post)alveolar,齦(後)音
+NonP-Palatal,Palatal,硬顎音
+NonP-Palatoalveolar,Palatoalveolar,顎齦音
+NonP-Velar,Velar,軟顎音
+NonP-AlveolarLateral,Alveolar lateral,齦邊音
+NonP-Uvular,Uvular,小舌音
+NonP-AlveolarFricative,Alveolar fricative,齦擦音
+OtherSymbols,Other Symbols,其他符號
