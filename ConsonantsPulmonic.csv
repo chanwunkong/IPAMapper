@@ -149,3 +149,70 @@ korean,Alveolar,Plosive,voiceless,/tɕ/,ㅈ
 korean,Alveolar,Plosive,voiceless,/tɕ͈/,ㅉ
 korean,Alveolar,Plosive,voiceless,/tɕʰ/,ㅊ
 korean,Velar,Fricative,voiceless,/x/,ㅎ
+thai,Bilabial,Plosive,voiced,/b/,บ
+thai,Alveolar,Plosive,voiced,/d/,"ฎ, ฑ, ด"
+thai,Labiodental,Fricative,voiceless,/f/,"ฝ, ฟ"
+thai,Glottal,Fricative,voiceless,/h/,"ห, ฮ"
+thai,Palatal,Approximant,voiced,/j/,"ญ, ย, หญ, หย, อย"
+thai,Velar,Plosive,voiceless,/k/,"ก,กร, ข, ค, คร, ฆ"
+thai,Velar,Plosive,voiceless,/kʰ/,"ข, ฃ, ค, ฅ, ฆ"
+thai,Alveolar,LateralApproximant,voiced,/l/,"ล, หล, ฬ"
+thai,Bilabial,Nasal,voiced,/m/,"ม, หม"
+thai,Alveolar,Nasal,voiced,/n/,"ณ, น, หน, ญ, ร, รุ, ล, ฬ"
+thai,Velar,Nasal,voiced,/ŋ/,"ง, หง"
+thai,Bilabial,Plosive,voiceless,/p/,"ป, บ, พ, ฟ, ภ"
+thai,Bilabial,Plosive,voiceless,/pʰ/,"ผ, พ, ภ"
+thai,Alveolar,Trill,voiced,/r/,"ร, หร"
+thai,Alveolar,Fricative,voiceless,/s/,"ซ, ซร, ทร, ศ, ศร, ษ, ส, สร"
+thai,Alveolar,Plosive,voiceless,/t/,"ฏ, ต, จ, ช, ชร, ซ, ฎ, ฐ, ฑ, ฒ, ฒิ, ด, ตร, ติ, ตุ, ถ, ท, ทร, ธ, ธิ, รถ, รท, ศ, ษ, ส"
+thai,Alveolar,Plosive,voiceless,/tʰ/,"ฐ, ฑ, ฒ, ถ, ท, ธ"
+thai,Alveolar,Plosive,voiceless,/tɕ/,"จ, จร"
+thai,Alveolar,Plosive,voiceless,/tɕʰ/,"ฉ, ช, ฌ"
+vietnamese,Palatal,Plosive,voiceless,/c/,tr
+vietnamese,Labiodental,Fricative,voiceless,/f/,ph
+vietnamese,Velar,Fricative,voiced,/ɣ/,"g, gh"
+vietnamese,Glottal,Fricative,voiceless,/h/,h
+vietnamese,Palatal,Approximant,voiced,/j/,y
+vietnamese,Velar,Plosive,voiceless,/k/,"c, k"
+vietnamese,Velar,Plosive,voiceless,/k̟/,ch
+vietnamese,Velar,Plosive,voiceless,/kp/,c
+vietnamese,Velar,Plosive,voiceless,/kʷ/,qu
+vietnamese,Alveolar,LateralApproximant,voiced,/l/,l
+vietnamese,Bilabial,Nasal,voiced,/m/,m
+vietnamese,Alveolar,Nasal,voiced,/n/,n
+vietnamese,"Palatal	",Nasal,voiced,/ɲ/,nh
+vietnamese,Velar,Nasal,voiced,/ŋ/,"ng, ngh"
+vietnamese,Velar,Nasal,voiced,/ŋ̟/,nh
+vietnamese,Velar,Nasal,voiced,/ŋm/,ng
+vietnamese,Bilabial,Plosive,voiceless,/p/,p
+vietnamese,Bilabial,Plosive,voiceless,/p̚/,p
+vietnamese,Alveolar,Fricative,voiceless,/s/,"x, s"
+vietnamese,Alveolar,Plosive,voiceless,/t/,t
+vietnamese,Alveolar,Plosive,voiceless,/t͡ɕ /,ch
+vietnamese,Alveolar,Plosive,voiceless,/tʰ/,th
+vietnamese,Labiodental,Fricative,voiced,/v/,v
+vietnamese,Velar,Fricative,voiceless,/x/,kh
+vietnamese,Alveolar,Fricative,voiced,/z/,"gi, d, r"
+vietnamese,Palatal,Fricative,voiced,/ʝ/,"gi, d, r"
+indonesian,Bilabial,Plosive,voiced,/b/,b
+indonesian,Alveolar,Plosive,voiced,/d/,d
+indonesian,Alveolar,Plosive,voiced,/dʒ/,j
+indonesian,Labiodental,Fricative,voiceless,/f/,"f, v"
+indonesian,Velar,Plosive,voiced,/ɡ/,g
+indonesian,Glottal,Fricative,voiceless,/h/,h
+indonesian,Palatal,Approximant,voiced,/j/,y
+indonesian,Velar,Plosive,voiceless,/k/,k
+indonesian,Alveolar,LateralApproximant,voiced,/l/,l
+indonesian,Bilabial,Nasal,voiced,/m/,m
+indonesian,Alveolar,Nasal,voiced,/n/,n
+indonesian,Velar,Nasal,voiced,/ŋ/,ng
+indonesian,"Palatal	",Nasal,voiced,/ɲ/,ny
+indonesian,Bilabial,Plosive,voiceless,/p/,p
+indonesian,Alveolar,Trill,voiced,/r/,r
+indonesian,Alveolar,Fricative,voiceless,/s/,s
+indonesian,Postalveolar,Fricative,voiceless,/ʃ/,sy
+indonesian,Alveolar,Plosive,voiceless,/t/,t
+indonesian,Alveolar,Plosive,voiceless,/tʃ/,c
+indonesian,Labiodental,Fricative,voiced,/v/,v
+indonesian,Velar,Fricative,voiceless,/x/,kh
+indonesian,Alveolar,Fricative,voiced,/z/,z
