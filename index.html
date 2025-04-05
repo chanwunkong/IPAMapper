@@ -821,21 +821,23 @@
             });
         }
 
-        let consonantsPulmonicData = [];
 
-        // 讀取語音學 CSV
-        async function loadConsonantsCSV() {
+        let csvDataMap = {};
+        const displayedFlags = new Map();
+
+        // 讀取並解析 CSV
+        async function loadCSVForTable(tableType, csvUrl, config) {
             try {
-                const response = await fetch('ConsonantsPulmonic.csv');
-                const data = await response.text();
-                consonantsPulmonicData = parseCSV(data);
+                const response = await fetch(csvUrl);
+                const text = await response.text();
+                csvDataMap[tableType] = parseCSV(text);
                 toggleRow();
             } catch (error) {
-                console.error('載入語音學 CSV 錯誤:', error);
+                console.error(`載入 ${tableType} CSV 錯誤:`, error);
             }
         }
 
-        // 解析語音學 CSV
+        // 通用 CSV 解析
         function parseCSV(csvText) {
             return csvText.trim().split("\n").map(row => {
                 const match = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
@@ -843,114 +845,120 @@
             });
         }
 
-        // 切換對應的發音行
-        document.getElementById("simpleModeCheckbox").addEventListener("change", toggleRow);
-
+        // 控制是否顯示 Compare 行 & 填入對應資料
         function toggleRow() {
-            const rowElements = document.querySelectorAll(".Compare");
-            const firstCells = document.querySelectorAll(".first-cell");
-            let hasChecked = false;
             const isSimpleMode = document.getElementById("simpleModeCheckbox").checked;
+            let hasChecked = false;
 
-            // 清空表格內容
-            rowElements.forEach(row => {
-                row.querySelectorAll("td").forEach(td => td.innerHTML = '');
-            });
-
-            // 檢查是否有選中的語言
+            // 檢查有無勾選語言
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                 if (checkbox.checked && checkbox.id !== "simpleModeCheckbox") {
                     hasChecked = true;
                 }
             });
 
-            // 控制 Compare 行的顯示
-            rowElements.forEach(row => {
-                row.style.display = hasChecked ? '' : 'none';
+            // 顯示 Compare 行與調整 rowspan
+            document.querySelectorAll(".Compare").forEach(row => {
+                row.style.display = hasChecked ? "" : "none";
+                row.querySelectorAll("td").forEach(td => td.innerHTML = '');
             });
-
-            // 控制 rowspan
-            firstCells.forEach(cell => {
+            document.querySelectorAll(".first-cell").forEach(cell => {
                 cell.setAttribute("rowspan", hasChecked ? "2" : "1");
             });
 
-            // 建立一個 Map 來存放每個 td 已出現的語言，避免重複顯示國旗
-            const displayedFlags = new Map();
+            // 沒有選語言就跳出
+            if (!hasChecked) return;
 
-            // 依據選擇的語言填入表格
-            if (hasChecked) {
-                consonantsPulmonicData.forEach(row => {
-                    const [language, place, manner, voicing, ipa, examples] = row.map(item => item.trim());
-                    const tdId = `${manner}-${place}-${voicing}`;
+            // 清空旗幟記錄
+            displayedFlags.clear();
+
+            // 處理所有表格類型
+            for (const [tableType, rows] of Object.entries(csvDataMap)) {
+                rows.forEach(row => {
+                    const language = row[0].trim().toLowerCase();
+                    if (!document.getElementById(`chk-${language}`)?.checked) return;
+
+                    const config = tableConfigs[tableType];
+                    const tdId = config.getTdId(row);
                     const tdElement = document.getElementById(tdId);
+                    if (!tdElement) return;
 
-                    if (tdElement) {
-                        if (document.getElementById(`chk-${language.toLowerCase()}`)?.checked) {
-                            let flagImage = '';
+                    const flag = getFlagUrl(language);
+                    if (!displayedFlags.has(tdId)) displayedFlags.set(tdId, new Set());
 
-                            switch (language.toLowerCase()) {
-                                case 'chinese': flagImage = 'flags/tw.png'; break;
-                                case 'english': flagImage = 'flags/us.png'; break;
-                                case 'german': flagImage = 'flags/de.png'; break;
-                                case 'spanish': flagImage = 'flags/es.png'; break;
-                                case 'portuguese': flagImage = 'flags/pt.png'; break;
-                                case 'french': flagImage = 'flags/fr.png'; break;
-                                case 'italian': flagImage = 'flags/it.png'; break;
-                                case 'russian': flagImage = 'flags/ru.png'; break;
-                                case 'hindiurdu': flagImage = 'flags/in.png'; break;
-                                case 'bengali': flagImage = 'flags/bd.png'; break;
-                                case 'persian': flagImage = 'flags/ir.png'; break;
-                                case 'tamil': flagImage = 'flags/in.png'; break;
-                                case 'arabic': flagImage = 'flags/sa.png'; break;
-                                case 'turkish': flagImage = 'flags/tr.png'; break;
-                                case 'japanese': flagImage = 'flags/jp.png'; break;
-                                case 'korean': flagImage = 'flags/kr.png'; break;
-                                case 'vietnamese': flagImage = 'flags/vn.png'; break;
-                                case 'indonesian': flagImage = 'flags/id.png'; break;
-                                case 'thai': flagImage = 'flags/th.png'; break;
-                                case 'swahili': flagImage = 'flags/ke.png'; break;
-                                default: flagImage = 'flags/default.png'; break;
-                            }
+                    const tdFlags = displayedFlags.get(tdId);
+                    if (!tdFlags.has(language)) {
+                        const flagImg = document.createElement('img');
+                        flagImg.src = flag;
+                        flagImg.alt = `${language} 國旗`;
+                        flagImg.width = 20;
+                        flagImg.style.marginRight = '5px';
+                        tdElement.appendChild(flagImg);
+                        tdFlags.add(language);
+                    }
 
-                            // 只在該 td 第一次遇到該語言時加入國旗
-                            if (!displayedFlags.has(tdId)) {
-                                displayedFlags.set(tdId, new Set());
-                            }
-
-                            const tdFlags = displayedFlags.get(tdId);
-                            if (!tdFlags.has(language)) {
-                                const flagImg = document.createElement('img');
-                                flagImg.src = flagImage;
-                                flagImg.alt = `${language} 國旗`;
-                                flagImg.width = 20;
-                                flagImg.style.marginRight = '5px';
-
-                                tdElement.appendChild(flagImg);
-                                tdFlags.add(language);
-                            }
-
-                            // 只在非簡易模式下顯示 IPA 和例子
-                            if (!isSimpleMode) {
-                                const div = document.createElement('div');
-                                div.innerHTML = `<strong>${ipa}: </strong>${examples}`;
-                                tdElement.appendChild(div);
-                            }
-                        }
+                    if (!isSimpleMode) {
+                        const ipa = row[config.ipaIndex];
+                        const example = row[config.exampleIndex];
+                        const div = document.createElement('div');
+                        div.innerHTML = `<strong>${ipa}: </strong>${example}`;
+                        tdElement.appendChild(div);
                     }
                 });
             }
         }
 
+        // 語言對應國旗
+        function getFlagUrl(language) {
+            const flagMap = {
+                chinese: 'flags/tw.png',
+                english: 'flags/us.png',
+                german: 'flags/de.png',
+                spanish: 'flags/es.png',
+                portuguese: 'flags/pt.png',
+                french: 'flags/fr.png',
+                italian: 'flags/it.png',
+                russian: 'flags/ru.png',
+                hindiurdu: 'flags/in.png',
+                bengali: 'flags/bd.png',
+                persian: 'flags/ir.png',
+                tamil: 'flags/in.png',
+                arabic: 'flags/sa.png',
+                turkish: 'flags/tr.png',
+                japanese: 'flags/jp.png',
+                korean: 'flags/kr.png',
+                vietnamese: 'flags/vn.png',
+                indonesian: 'flags/id.png',
+                thai: 'flags/th.png',
+                swahili: 'flags/ke.png',
+            };
+            return flagMap[language.toLowerCase()] || 'flags/default.png';
+        }
 
+        // 不同表格對應的資料格式與邏輯
+        const tableConfigs = {
+            ConsonantsPulmonic: {
+                getTdId: row => `${row[2]}-${row[1]}-${row[3]}`, // manner-place-voicing
+                ipaIndex: 4,
+                exampleIndex: 5,
+            },
+            ConsonantsNonPulmonic: {
+                getTdId: row => `${row[1]}-${row[2]}`, // manner-place
+                ipaIndex: 3,
+                exampleIndex: 4,
+            },
+        };
 
+        // 綁定 checkbox 切換事件
+        document.getElementById("simpleModeCheckbox").addEventListener("change", toggleRow);
 
+        // 初始載入
         document.addEventListener("DOMContentLoaded", async () => {
-            await loadTranslationsCSV();
-            await loadConsonantsCSV();
+            await loadCSVForTable("ConsonantsPulmonic", "ConsonantsPulmonic.csv", tableConfigs.ConsonantsPulmonic);
+            await loadCSVForTable("ConsonantsNonPulmonic", "ConsonantsNonPulmonic.csv", tableConfigs.ConsonantsNonPulmonic);
         });
-
-
     </script>
+
 
 </body>
 

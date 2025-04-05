@@ -136,7 +136,8 @@ german,"Palatal	",Fricative,voiceless,/ç/,"ch,g"
 german,"Palatal	",Fricative,voiceless,/çs/,chs
 german,Alveolar,Plosive,voiced,/d/,d
 german,Alveolar,Plosive,voiced,/d̥/,d
-german,Alveolar,Plosive,voiced,/dʒ/,dsch
+german,Alveolar,Plosive,voiced,/dʒ/,"dsch, dg"
+german,Postalveolar,Fricative,voiced,/ʒ/,g
 german,Labiodental,Fricative,voiceless,/f/,"f, ph, v"
 german,Velar,Plosive,voiced,/ɡ/,g
 german,Velar,Plosive,voiced,/ɡ̊/,g
@@ -156,6 +157,9 @@ german,Velar,Nasal,voiced,/ŋk/,nk
 german,Bilabial,Plosive,voiceless,/p/,"b, p"
 german,Bilabial,Plosive,voiceless,/pf/,pf
 german,Uvular,Fricative,voiced,/ʁ/,"r,rh"
+german,Alveolar,Approximant,voiced,/ɹ/,r
+german,Dental,Fricative,voiced,/ð/,th
+german,Dental,Fricative,voiceless,/θ/,th
 german,Alveolar,Fricative,voiceless,/s/,"s, ss, ß"
 german,Postalveolar,Fricative,voiceless,/ʃ/,"ch, s, sch"
 german,Alveolar,Fricative,voiceless,/sç/,sch
@@ -169,6 +173,7 @@ german,Velar,Fricative,voiceless,/x/,ch
 german,Velar,Fricative,voiceless,/xs/,chs
 german,Alveolar,Fricative,voiced,/z/,s
 german,Alveolar,Fricative,voiced,/z̥/,s
+german,Glottal,Plosive,voiceless,/ʔ/,
 hindiurdu,Bilabial,Plosive,voiced,/b/,"ब, ب"
 hindiurdu,Bilabial,Plosive,voiced,/bʱ/,"भ, بھ"
 hindiurdu,Alveolar,Plosive,voiced,/d/,"द, د"
