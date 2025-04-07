@@ -1,5 +1,5 @@
 ﻿data-key,en,zh
-simpleMode,simple Mode,簡易模式
+simpleMode,simpleMode,簡易模式
 chinese,Chinese 🇹🇼,中文 🇹🇼
 english,English 🇺🇸,英文 🇺🇸
 german,German 🇩🇪,德文 🇩🇪
@@ -63,7 +63,7 @@ OS-VoicedLabialpalatalApproximant,Voiced labial-palatal approximant,唇-硬顎�
 OS-VoicelessEpiglottalFricative,Voiceless epiglottal fricative,會厭輕擦音
 OS-VoicedEpiglottalFricativeApproximant,Voiced epiglottal fricative,會厭濁擦音
 OS-EpiglottalPlosive,Epiglottal plosive,會厭爆發音
-OS-AlveolopalatalFricatives,Alveolo-palatal fricatives,齦-顎輕擦音
+OS-AlveolopalatalFricatives,Alveolo-palatal fricatives,齦-顎擦音
 OS-VoicedAlveolarLateralFlap,Voiced alveolar lateral flap,齦邊濁閃音
 OS-SimultaneousSJ,Simultaneous /ʃ/ and /x/,同時發/ʃ/和/x/
 OS-TieBar,Tie Bar,連音符
