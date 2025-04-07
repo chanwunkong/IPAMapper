@@ -32,7 +32,6 @@
             background-color: #f2f2f2;
         }
 
-        /* 只針對 CONSONANTSPULMONIC 表格設定 */
         table[data-type="ConsonantsPulmonic"] {
             width: 100%;
             border-collapse: collapse;
@@ -40,22 +39,18 @@
 
         table[data-type="ConsonantsPulmonic"] th:first-child {
             width: 1%;
-            /* 第一格根據內容自適應 */
             white-space: nowrap;
-            /* 避免換行 */
         }
 
         table[data-type="ConsonantsPulmonic"] th:not(:first-child) {
             width: 1%;
-            /* 其餘欄位平均分配剩餘空間 */
         }
 
-        只針對 CONSONANTSNonPULMONIC 表格設定 table[data-type="ConsonantsNonPulmonic"] {
+        table[data-type="ConsonantsNonPulmonic"] {
             width: 100%;
             border-collapse: collapse;
         }
 
-        /* 只針對 OtherSymbols 表格設定 */
         table[data-type="OtherSymbols"] {
             width: 100%;
             border-collapse: collapse;
@@ -63,14 +58,11 @@
 
         table[data-type="OtherSymbols"] th:first-child {
             width: 1%;
-            /* 第一格根據內容自適應 */
             white-space: nowrap;
-            /* 避免換行 */
         }
 
         table[data-type="OtherSymbols"] th:not(:first-child) {
             width: 1%;
-            /* 其餘欄位平均分配剩餘空間 */
         }
 
         h2 {
@@ -104,129 +96,109 @@
     </select>
 
     <label>
-        <input type="checkbox" id="simpleModeCheckbox" data-key="simpleMode">簡易模式
+        <input type="checkbox" id="simpleModeCheckbox" data-key="simpleMode">simpleMode
     </label>
     <br>
 
     <input type="checkbox" id="chk-chinese" onclick="toggleRow()">
-    <label for="chk-chinese" data-key="chinese">
-        中文 <img src="flags/tw.png" alt="台灣國旗" width="20">
+    <label for="chk-chinese" data-key="chinese"><img src="flags/tw.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-english" onclick="toggleRow()">
-    <label for="chk-english" data-key="english">
-        英文 <img src="flags/us.png" alt="美國國旗" width="20">
+    <label for="chk-english" data-key="english"><img src="flags/us.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-german" onclick="toggleRow()">
-    <label for="chk-german" data-key="german">
-        德文 <img src="flags/de.png" alt="德國國旗" width="20">
+    <label for="chk-german" data-key="german"><img src="flags/de.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-spanish" onclick="toggleRow()">
-    <label for="chk-spanish" data-key="spanish">
-        西班牙語 <img src="flags/es.png" alt="西班牙國旗" width="20">
+    <label for="chk-spanish" data-key="spanish"><img src="flags/es.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-portuguese" onclick="toggleRow()">
-    <label for="chk-portuguese" data-key="portuguese">
-        葡萄牙語 <img src="flags/pt.png" alt="葡萄牙國旗" width="20">
+    <label for="chk-portuguese" data-key="portuguese"><img src="flags/pt.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-french" onclick="toggleRow()">
-    <label for="chk-french" data-key="french">
-        法語 <img src="flags/fr.png" alt="法國國旗" width="20">
+    <label for="chk-french" data-key="french"><img src="flags/fr.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-italian" onclick="toggleRow()">
-    <label for="chk-italian" data-key="italian">
-        意大利語 <img src="flags/it.png" alt="意大利國旗" width="20">
+    <label for="chk-italian" data-key="italian"><img src="flags/it.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-russian" onclick="toggleRow()">
-    <label for="chk-russian" data-key="russian">
-        俄語 <img src="flags/ru.png" alt="俄羅斯國旗" width="20">
+    <label for="chk-russian" data-key="russian"><img src="flags/ru.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-hindiurdu" onclick="toggleRow()">
-    <label for="chk-hindiurdu" data-key="hindiurdu">
-        印地-烏爾都語 <img src="flags/in.png" alt="印度國旗" width="20">
+    <label for="chk-hindiurdu" data-key="hindiurdu"><img src="flags/in.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-bengali" onclick="toggleRow()">
-    <label for="chk-bengali" data-key="bengali">
-        孟加拉語 <img src="flags/bd.png" alt="孟加拉國旗" width="20">
+    <label for="chk-bengali" data-key="bengali"><img src="flags/bd.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-persian" onclick="toggleRow()">
-    <label for="chk-persian" data-key="persian">
-        波斯語 <img src="flags/ir.png" alt="伊朗國旗" width="20">
+    <label for="chk-persian" data-key="persian"><img src="flags/ir.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-tamil" onclick="toggleRow()">
-    <label for="chk-tamil" data-key="tamil">
-        坦米爾語 <img src="flags/in.png" alt="印度國旗" width="20">
+    <label for="chk-tamil" data-key="tamil"><img src="flags/in.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-arabic" onclick="toggleRow()">
-    <label for="chk-arabic" data-key="arabic">
-        阿拉伯語 <img src="flags/sa.png" alt="沙烏地阿拉伯國旗" width="20">
+    <label for="chk-arabic" data-key="arabic"><img src="flags/sa.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-turkish" onclick="toggleRow()">
-    <label for="chk-turkish" data-key="turkish">
-        土耳其語 <img src="flags/tr.png" alt="土耳其國旗" width="20">
+    <label for="chk-turkish" data-key="turkish"><img src="flags/tr.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-japanese" onclick="toggleRow()">
-    <label for="chk-japanese" data-key="japanese">
-        日語 <img src="flags/jp.png" alt="日本國旗" width="20">
+    <label for="chk-japanese" data-key="japanese"><img src="flags/jp.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-korean" onclick="toggleRow()">
-    <label for="chk-korean" data-key="korean">
-        韓語 <img src="flags/kr.png" alt="南韓國旗" width="20">
+    <label for="chk-korean" data-key="korean"><img src="flags/kr.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-vietnamese" onclick="toggleRow()">
-    <label for="chk-vietnamese" data-key="vietnamese">
-        越南語 <img src="flags/vn.png" alt="越南國旗" width="20">
+    <label for="chk-vietnamese" data-key="vietnamese"><img src="flags/vn.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-indonesian" onclick="toggleRow()">
-    <label for="chk-indonesian" data-key="indonesian">
-        印尼語 <img src="flags/id.png" alt="印尼國旗" width="20">
+    <label for="chk-indonesian" data-key="indonesian"><img src="flags/id.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-thai" onclick="toggleRow()">
-    <label for="chk-thai" data-key="thai">
-        泰語 <img src="flags/th.png" alt="泰國國旗" width="20">
+    <label for="chk-thai" data-key="thai"><img src="flags/th.png" width="20">
     </label>
 
     <input type="checkbox" id="chk-swahili" onclick="toggleRow()">
-    <label for="chk-swahili" data-key="swahili">
-        斯瓦希里語 <img src="flags/ke.png" alt="肯亞國旗" width="20">
+    <label for="chk-swahili" data-key="swahili"><img src="flags/ke.png" width="20">
     </label>
 
 
-    <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic">輔音(肺部氣流) <span class="toggle-icon">+</span></h2>
+    <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic"><span class="toggle-icon">+</span></h2>
     <table data-type="ConsonantsPulmonic">
         <tr>
             <th data-key=""></th>
-            <th colspan="2" data-key="Bilabial">雙唇</th>
-            <th colspan="2" data-key="Labiodental">唇齒</th>
-            <th colspan="2" data-key="Dental">齒</th>
-            <th colspan="2" data-key="Alveolar">齦</th>
-            <th colspan="2" data-key="Postalveolar">齦後</th>
-            <th colspan="2" data-key="Retroflex">捲舌</th>
-            <th colspan="2" data-key="Palatal">硬顎</th>
-            <th colspan="2" data-key="Velar">軟顎</th>
-            <th colspan="2" data-key="Uvular">小舌</th>
-            <th colspan="2" data-key="Pharyngeal">咽</th>
-            <th colspan="2" data-key="Glottal">喉</th>
+            <th colspan="2" data-key="Bilabial"></th>
+            <th colspan="2" data-key="Labiodental"></th>
+            <th colspan="2" data-key="Dental"></th>
+            <th colspan="2" data-key="Alveolar"></th>
+            <th colspan="2" data-key="Postalveolar"></th>
+            <th colspan="2" data-key="Retroflex"></th>
+            <th colspan="2" data-key="Palatal"></th>
+            <th colspan="2" data-key="Velar"></th>
+            <th colspan="2" data-key="Uvular"></th>
+            <th colspan="2" data-key="Pharyngeal"></th>
+            <th colspan="2" data-key="Glottal"></th>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1" data-key="Plosive">爆發音</td>
+            <td class="first-cell" rowspan="1" data-key="Plosive"></td>
             <td style="border-right: none;">p</td>
             <td style="border-left: none;">b</td>
             <td style="border-right: none;"></td>
@@ -277,7 +249,7 @@
         </tr>
 
         <tr>
-            <td class="first-cell" rowspan="1" data-key="Nasal">鼻音</td>
+            <td class="first-cell" rowspan="1" data-key="Nasal"></td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;">m</td>
             <td style="border-right: none;"></td>
@@ -326,7 +298,7 @@
             <td id="Nasal-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1" data-key="Trill">顫音</td>
+            <td class="first-cell" rowspan="1" data-key="Trill"></td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;">ʙ</td>
             <td style="border-right: none;"></td>
@@ -375,7 +347,7 @@
             <td id="Trill-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1" data-key="TapOrFlap">拍音或閃音</td>
+            <td class="first-cell" rowspan="1" data-key="TapOrFlap"></td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;"></td>
             <td style="border-right: none;"></td>
@@ -424,7 +396,7 @@
             <td id="TapOrFlap-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1" data-key="Fricative">擦音</td>
+            <td class="first-cell" rowspan="1" data-key="Fricative"></td>
             <td style="border-right: none;">ɸ</td>
             <td style="border-left: none;">β</td>
             <td style="border-right: none;">f</td>
@@ -473,7 +445,7 @@
             <td id="Fricative-Glottal-voiced"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1" data-key="LateralFricative">邊擦音</td>
+            <td class="first-cell" rowspan="1" data-key="LateralFricative"></td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
             <td style="border-left: none; background-color:  #d3d3d3"></td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
@@ -522,7 +494,7 @@
             <td id="LateralFricative-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1" data-key="Approximant">近音</td>
+            <td class="first-cell" rowspan="1" data-key="Approximant"></td>
             <td style="border-right: none;"></td>
             <td style="border-left: none;"></td>
             <td style="border-right: none;"></td>
@@ -571,7 +543,7 @@
             <td id="Approximant-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
-            <td class="first-cell" rowspan="1" data-key="LateralApproximant">邊近音</td>
+            <td class="first-cell" rowspan="1" data-key="LateralApproximant"></td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
             <td style="border-left: none; background-color:  #d3d3d3"></td>
             <td style="border-right: none; background-color:  #d3d3d3"></td>
@@ -620,27 +592,27 @@
             <td id="LateralApproximant-Glottal-voiced" style="background-color: #d3d3d3"></td>
         </tr>
         <tr>
-            <td colspan="23" data-key="ConsonantsPulmonicNote">成對出現的音標，右邊為濁輔音。陰影區域表示不可能產生的音。</td>
+            <td colspan="23" data-key="ConsonantsPulmonicNote"></td>
         </tr>
 
 
     </table>
 
-    <h2 onclick="toggleTable(this)" data-key="ConsonantsNonPulmonic">輔音(非肺部氣流) <span class="toggle-icon">+</span></h2>
+    <h2 onclick="toggleTable(this)" data-key="ConsonantsNonPulmonic"><span class="toggle-icon">+</span></h2>
     <table data-type="ConsonantsNonPulmonic">
         <tr>
-            <th colspan="2" data-key="Clicks">嘖音</th>
-            <th colspan="2" data-key="VoicedImplosives">濁內爆音</th>
-            <th colspan="2" data-key="Ejectives">噴音</th>
+            <th colspan="2" data-key="Clicks"></th>
+            <th colspan="2" data-key="VoicedImplosives"></th>
+            <th colspan="2" data-key="Ejectives"></th>
         </tr>
 
         <tr>
             <td style="border-right: none;">ʘ</td>
-            <td style="border-left: none;" data-key="NonP-Bilabial">雙唇音</td>
+            <td style="border-left: none;" data-key="NonP-Bilabial"></td>
             <td style="border-right: none;">ɓ</td>
-            <td style="border-left: none;" data-key="NonP-Bilabial">雙唇音</td>
+            <td style="border-left: none;" data-key="NonP-Bilabial"></td>
             <td style="border-right: none;"> ʼ</td>
-            <td style="border-left: none;" data-key="NonP-Ejective">噴音</td>
+            <td style="border-left: none;" data-key="NonP-Ejective"></td>
         </tr>
 
         <tr class="Compare">
@@ -651,11 +623,11 @@
 
         <tr>
             <td style="border-right: none;">ǀ</td>
-            <td style="border-left: none;" data-key="NonP-Dental">齒音</td>
+            <td style="border-left: none;" data-key="NonP-Dental"></td>
             <td style="border-right: none;">ɗ</td>
-            <td style="border-left: none;" data-key="NonP-DentalAlveolar">齒音/齦音</td>
+            <td style="border-left: none;" data-key="NonP-DentalAlveolar"></td>
             <td style="border-right: none;">pʼ</td>
-            <td style="border-left: none;" data-key="NonP-Bilabial">雙唇音</td>
+            <td style="border-left: none;" data-key="NonP-Bilabial"></td>
         </tr>
 
         <tr class="Compare">
@@ -666,11 +638,11 @@
 
         <tr>
             <td style="border-right: none;">ǃ</td>
-            <td style="border-left: none;" data-key="NonP-Postalveolar">齦(後)音</td>
+            <td style="border-left: none;" data-key="NonP-Postalveolar"></td>
             <td style="border-right: none;">ʄ</td>
-            <td style="border-left: none;" data-key="NonP-Palatal">硬顎音</td>
+            <td style="border-left: none;" data-key="NonP-Palatal"></td>
             <td style="border-right: none;">tʼ</td>
-            <td style="border-left: none;" data-key="NonP-DentalAlveolar">齒音/齦音</td>
+            <td style="border-left: none;" data-key="NonP-DentalAlveolar"></td>
         </tr>
 
         <tr class="Compare">
@@ -681,11 +653,11 @@
 
         <tr>
             <td style="border-right: none;">ǂ</td>
-            <td style="border-left: none;" data-key="NonP-Palatoalveolar">顎齦音</td>
+            <td style="border-left: none;" data-key="NonP-Palatoalveolar"></td>
             <td style="border-right: none;">ɠ</td>
-            <td style="border-left: none;" data-key="NonP-Velar">軟顎音</td>
+            <td style="border-left: none;" data-key="NonP-Velar"></td>
             <td style="border-right: none;">kʼ</td>
-            <td style="border-left: none;" data-key="NonP-Velar">軟顎音</td>
+            <td style="border-left: none;" data-key="NonP-Velar"></td>
         </tr>
 
         <tr class="Compare">
@@ -696,11 +668,11 @@
 
         <tr>
             <td style="border-right: none;">ǁ</td>
-            <td style="border-left: none;" data-key="NonP-AlveolarLateral">齦邊音</td>
+            <td style="border-left: none;" data-key="NonP-AlveolarLateral"></td>
             <td style="border-right: none;">ʛ</td>
-            <td style="border-left: none;" data-key="NonP-Uvular">小舌音</td>
+            <td style="border-left: none;" data-key="NonP-Uvular"></td>
             <td style="border-right: none;">sʼ</td>
-            <td style="border-left: none;" data-key="NonP-AlveolarFricative">齦擦音</td>
+            <td style="border-left: none;" data-key="NonP-AlveolarFricative"></td>
         </tr>
 
         <tr class="Compare">
@@ -710,17 +682,17 @@
         </tr>
     </table>
 
-    <h2 onclick="toggleTable(this)" data-key="OtherSymbols">其他符號<span class="toggle-icon">+</span></h2>
+    <h2 onclick="toggleTable(this)" data-key="OtherSymbols"><span class="toggle-icon">+</span></h2>
     <table data-type="OtherSymbols">
         <tr>
             <td style="border-right: none;">ʍ</td>
-            <td style="border-left: none;" data-key="OS-VoicelessLabialvelarFricative">唇-軟顎輕擦音</td>
+            <td style="border-left: none;" data-key="OS-VoicelessLabialvelarFricative"></td>
         </tr>
         <tr class="Compare">
             <td colspan="2" id="VoicelessLabialvelarFricative"></td>
         <tr>
             <td style="border-right: none;">w</td>
-            <td style="border-left: none;" data-key="OS-VoicedLabialvelarApproximant">唇-軟顎濁近音</td>
+            <td style="border-left: none;" data-key="OS-VoicedLabialvelarApproximant"></td>
         </tr>
         </tr>
         <tr class="Compare">
@@ -728,35 +700,35 @@
         <tr>
         <tr>
             <td style="border-right: none;">ɥ</td>
-            <td style="border-left: none;" data-key="OS-VoicedLabialpalatalApproximant">唇-硬顎濁近音</td>
+            <td style="border-left: none;" data-key="OS-VoicedLabialpalatalApproximant"></td>
         </tr>
         <tr class="Compare">
             <td colspan="2" id="VoicedLabialpalatalApproximant"></td>
         <tr>
         <tr>
             <td style="border-right: none;">ʜ</td>
-            <td style="border-left: none;" data-key="OS-VoicelessEpiglottalFricative">會厭輕擦音</td>
+            <td style="border-left: none;" data-key="OS-VoicelessEpiglottalFricative"></td>
         </tr>
         <tr class="Compare">
             <td colspan="2" id="VoicelessEpiglottalFricative"></td>
         <tr>
         <tr>
             <td style="border-right: none;">ʢ</td>
-            <td style="border-left: none;" data-key="OS-VoicedEpiglottalFricativeApproximant">會厭濁擦音</td>
+            <td style="border-left: none;" data-key="OS-VoicedEpiglottalFricativeApproximant"></td>
         </tr>
         <tr class="Compare">
             <td colspan="2" id="VoicedEpiglottalFricativeApproximant"></td>
         <tr>
         <tr>
             <td style="border-right: none;">ʡ</td>
-            <td style="border-left: none;" data-key="OS-EpiglottalPlosive">會厭爆發音</td>
+            <td style="border-left: none;" data-key="OS-EpiglottalPlosive"></td>
         </tr>
         <tr class="Compare">
             <td colspan="2" id="EpiglottalPlosive"></td>
         <tr>
         <tr>
             <td style="border-right: none;">ɕ ʑ</td>
-            <td style="border-left: none;" data-key="OS-AlveolopalatalFricatives">齦-顎擦音</td>
+            <td style="border-left: none;" data-key="OS-AlveolopalatalFricatives"></td>
         </tr>
         <tr class="Compare">
             <td colspan="1" id="VoicelessAlveolopalatalFricatives"></td>
@@ -764,25 +736,122 @@
         <tr>
         <tr>
             <td style="border-right: none;"> ɺ</td>
-            <td style="border-left: none;" data-key="OS-VoicedAlveolarLateralFlap">齦邊濁閃音</td>
+            <td style="border-left: none;" data-key="OS-VoicedAlveolarLateralFlap"></td>
         </tr>
         <tr class="Compare">
             <td colspan="2" id="VoicedAlveolarLateralFlap"></td>
         <tr>
         <tr>
             <td style="border-right: none;">ɧ</td>
-            <td style="border-left: none;" data-key="OS-SimultaneousSJ">同時發/ʃ/和/x/ </td>
+            <td style="border-left: none;" data-key="OS-SimultaneousSJ"></td>
         </tr>
         <tr class="Compare">
             <td colspan="2" id="SimultaneousSJ"></td>
         <tr>
         <tr>
             <td style="border-right: none;">◌͜◌ ◌͡◌ </td>
-            <td style="border-left: none;" data-key="OS-TieBar">連音符</td>
+            <td style="border-left: none;" data-key="OS-TieBar"></td>
         </tr>
         <tr>
-            <td colspan="2" data-key="OS-TieBarNote">若有必要，塞擦音及雙重調音可以用連音符連接兩個符號</td>
+            <td colspan="2" data-key="OS-TieBarNote"></td>
         </tr>
+    </table>
+
+
+
+    <h2 onclick="toggleTable(this)" data-key="Diacrtics"><span class="toggle-icon">+</span></h2>
+    <table data-type="Diacrtics">
+        <tr>
+            <td style="border-right: none;">◌̊ ◌̥</td>
+            <td style="border-left: none;" data-key="D-Voiceless"></td>
+            <td style="border-right: none;">◌̤</td>
+            <td style="border-left: none;" data-key="D-BreathyVoiced"></td>
+            <td style="border-right: none;">◌̪</td>
+            <td style="border-left: none;" data-key="D-Dental"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̬</td>
+            <td style="border-left: none;" data-key="D-Voiced"></td>
+            <td style="border-right: none;">◌̰</td>
+            <td style="border-left: none;" data-key="D-CreakyVoiced"></td>
+            <td style="border-right: none;">◌̺</td>
+            <td style="border-left: none;" data-key="D-Apical"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">ʰ</td>
+            <td style="border-left: none;" data-key="D-Aspirated"></td>
+            <td style="border-right: none;">◌̼</td>
+            <td style="border-left: none;" data-key="D-Linguolabial"></td>
+            <td style="border-right: none;">◌̻</td>
+            <td style="border-left: none;" data-key="D-Laminal"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̹</td>
+            <td style="border-left: none;" data-key="D-MoreRounded"></td>
+            <td style="border-right: none;">ʷ</td>
+            <td style="border-left: none;" data-key="D-Labialized"></td>
+            <td style="border-right: none;">◌̃</td>
+            <td style="border-left: none;" data-key="D-Nasalized"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̜</td>
+            <td style="border-left: none;" data-key="D-LessRounded"></td>
+            <td style="border-right: none;">ʲ</td>
+            <td style="border-left: none;" data-key="D-Palatalized"></td>
+            <td style="border-right: none;">ⁿ</td>
+            <td style="border-left: none;" data-key="D-NasalRelease"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̟</td>
+            <td style="border-left: none;" data-key="D-Advanced"></td>
+            <td style="border-right: none;">ˠ</td>
+            <td style="border-left: none;" data-key="D-Velarized"></td>
+            <td style="border-right: none;">ˡ</td>
+            <td style="border-left: none;" data-key="D-	LateralRelease"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̠</td>
+            <td style="border-left: none;" data-key="D-Retracted"></td>
+            <td style="border-right: none;">ˤ</td>
+            <td style="border-left: none;" data-key="D-Pharyngealized"></td>
+            <td style="border-right: none;">◌̚</td>
+            <td style="border-left: none;" data-key="D-NoAudibleRelease"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̈</td>
+            <td style="border-left: none;" data-key="D-Centralized"></td>
+            <td style="border-right: none;">◌̴</td>
+            <td style="border-left: none;" data-key="D-VelarizedOrPharyngealized"></td>
+
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̽</td>
+            <td style="border-left: none;" data-key="D-MidCentralized"></td>
+            <td style="border-right: none;">◌̝</td>
+            <td style="border-left: none;" data-key="D-Raised"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌̩</td>
+            <td style="border-left: none;" data-key="D-Syllabic"></td>
+            <td style="border-right: none;">◌̞</td>
+            <td style="border-left: none;" data-key="D-Lowered"></td>
+        </tr>
+        <tr>
+            <td style="border-right: none;">˞</td>
+            <td style="border-left: none;" data-key="D-NonSyllabic"></td>
+            <td style="border-right: none;">◌̘</td>
+            <td style="border-left: none;" data-key="D-AdvancedTongueRoot"></td>
+
+        </tr>
+        <tr>
+            <td style="border-right: none;">◌˞</td>
+            <td style="border-left: none;" data-key="D-Rhoticity"></td>
+            <td style="border-right: none;">◌̙</td>
+            <td style="border-left: none;" data-key="D-RetractedTongueRoot"></td>
+        </tr>
+        <!-- <tr>
+            <td data-key="D-Note">D-Note</td>
+        </tr> -->
     </table>
 
     <script>
