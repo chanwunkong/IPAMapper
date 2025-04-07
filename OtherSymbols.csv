@@ -1,4 +1,11 @@
-chinese,VlicelessAlveolopalatalFricatives,/ɕ/,ㄒ
+﻿chinese,VoicelessAlveolopalatalFricatives,/ɕ/,ㄒ
 chinese,VoicedLabialvelarApproximant,/w/,ㄨ
-English,VoicedLabialvelarApproximant,/w/,
-
+English,VoicedLabialvelarApproximant,/w/,w
+german,VoicedLabialvelarApproximant,/w/,w
+spanish,VoicedLabialvelarApproximant,/w/,"u, ü, w, ou"
+portuguese,VoicedLabialvelarApproximant,/w/,"u, ü, o, w,"
+french,VoicedLabialvelarApproximant,/w/,"ou, o, w"
+french,VoicedLabialpalatalApproximant,/ɥ/,u
+italian,VoicedLabialvelarApproximant,/w/,u
+russian,VoicelessAlveolopalatalFricatives,/ɕː/,"щ, сч, жч"
+russian,VoicedAlveolopalatalFricatives,/ʑː/,"зж, щ"

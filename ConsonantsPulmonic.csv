@@ -141,29 +141,22 @@ french,Labiodental,Fricative,voiced,/v/,"v, w"
 french,Alveolar,Fricative,voiced,/z/,"z, s, x"
 french,Postalveolar,Fricative,voiced,/ʒ/,"j, g"
 german,Bilabial,Plosive,voiced,/b/,b
-german,Bilabial,Plosive,voiced,/b̥/,b
 german,"Palatal	",Fricative,voiceless,/ç/,"ch,g"
-german,"Palatal	",Fricative,voiceless,/çs/,chs
 german,Alveolar,Plosive,voiced,/d/,d
-german,Alveolar,Plosive,voiced,/d̥/,d
 german,Alveolar,Plosive,voiced,/dʒ/,"dsch, dg"
 german,Postalveolar,Fricative,voiced,/ʒ/,g
 german,Labiodental,Fricative,voiceless,/f/,"f, ph, v"
 german,Velar,Plosive,voiced,/ɡ/,g
-german,Velar,Plosive,voiced,/ɡ̊/,g
 german,Glottal,Fricative,voiceless,/h/,h
 german,Palatal,Approximant,voiced,/j/,"j, y"
 german,Velar,Nasal,voiceless,/k/,"c, ch, ck, g, k"
-german,Velar,Nasal,voiceless,/ks/,"chs, x"
-german,Velar,Nasal,voiceless,/kv/,qu
-german,Velar,Nasal,voiceless,/kw/,qu
 german,Alveolar,LateralApproximant,voiced,/l/,l
+german,Alveolar,LateralApproximant,voiced,/l̩/,el
 german,Bilabial,Nasal,voiced,/m/,m
+german,Bilabial,Nasal,voiced,/m̩/,em
 german,Alveolar,Nasal,voiced,/n/,n
-german,Alveolar,Nasal,voiced,/nɡ/,ng
-german,Alveolar,Nasal,voiced,/nɡ̊/,ng
+german,Alveolar,Nasal,voiced,/n̩/,en
 german,Velar,Nasal,voiced,/ŋ/,ng
-german,Velar,Nasal,voiced,/ŋk/,nk
 german,Bilabial,Plosive,voiceless,/p/,"b, p"
 german,Bilabial,Plosive,voiceless,/pf/,pf
 german,Uvular,Fricative,voiced,/ʁ/,"r,rh"
@@ -171,18 +164,13 @@ german,Alveolar,Approximant,voiced,/ɹ/,r
 german,Dental,Fricative,voiced,/ð/,th
 german,Dental,Fricative,voiceless,/θ/,th
 german,Alveolar,Fricative,voiceless,/s/,"s, ss, ß"
-german,Postalveolar,Fricative,voiceless,/ʃ/,"ch, s, sch"
-german,Alveolar,Fricative,voiceless,/sç/,sch
-german,Alveolar,Plosive,voiceless,/t/,"d, dt,t th"
-german,Alveolar,Plosive,voiceless,/ti/,ti
-german,Alveolar,Plosive,voiceless,/ts/,"c, tz, z"
-german,Alveolar,Plosive,voiceless,/tʃ/,"ch, dsch, tsch, tzsch, zsch"
-german,Alveolar,Plosive,voiceless,/tsɪ̯/,ti
+german,Postalveolar,Fricative,voiceless,/ʃ/,"ch, s, sch, sk"
+german,Alveolar,Plosive,voiceless,/t/,"d, dt,t"
+german,Alveolar,Plosive,voiceless,/tʃ/,"c, tsch"
+german,Alveolar,Plosive,voiceless,/ts/,"c, ts, tz, z"
 german,Labiodental,Fricative,voiced,/v/,"v, w"
 german,Velar,Fricative,voiceless,/x/,ch
-german,Velar,Fricative,voiceless,/xs/,chs
 german,Alveolar,Fricative,voiced,/z/,s
-german,Alveolar,Fricative,voiced,/z̥/,s
 german,Glottal,Plosive,voiceless,/ʔ/,
 hindiurdu,Bilabial,Plosive,voiced,/b/,"ब, ب"
 hindiurdu,Bilabial,Plosive,voiced,/bʱ/,"भ, بھ"
@@ -435,28 +423,29 @@ russian,Retroflex,Fricative,voiced,/ʐ/,"ж, ш"
 russian,Alveolar,Fricative,voiced,/zʲ/,"з, зь, сь"
 spanish,Bilabial,Plosive,voiced,/b/,"b, v"
 spanish,Alveolar,Plosive,voiced,/d/,d
-spanish,Dental,Fricative,voiced,/ð/,d
+spanish,Dental,Fricative,voiced,/ð/,"d, t"
 spanish,Labiodental,Fricative,voiceless,/f/,f
 spanish,Velar,Fricative,voiced,/ɣ/,"g, gu, c"
 spanish,Velar,Plosive,voiced,/ɡ/,"g, gu"
 spanish,Palatal,Fricative,voiced,/ʝ/,"y, j, g"
-spanish,"Palatal	",Plosive,voiced,/ɟʝ/,"y, j, g"
+spanish,"Palatal	",Plosive,voiced,/ɟʝ/,"y, I, j, g"
+spanish,Palatal,Approximant,voiced,/j/,"I, y"
 spanish,Velar,Plosive,voiceless,/k/,"c, qu, k, ck"
 spanish,Alveolar,LateralApproximant,voiced,/l/,"l, ll"
 spanish,Bilabial,Nasal,voiced,/m/,m
 spanish,Labiodental,Nasal,voiced,/ɱ/,n
 spanish,Alveolar,Nasal,voiced,/n/,"n, m, ng"
-spanish,Palatal,Nasal,voiced,/ɲ/,"ñu, n"
+spanish,Palatal,Nasal,voiced,/ɲ/,"ñ, n"
 spanish,Velar,Nasal,voiced,/ŋ/,n
 spanish,Bilabial,Plosive,voiceless,/p/,p
-spanish,Alveolar,Trill,voiced,/r/,r
+spanish,Alveolar,Trill,voiced,/r/,"r, rr"
 spanish,Alveolar,TapOrFlap,voiced,/ɾ/,r
 spanish,Alveolar,Fricative,voiceless,/s/,"s, x"
 spanish,Postalveolar,Fricative,voiceless,/ʃ/,"sh, g, ch, x"
 spanish,Alveolar,Plosive,voiceless,/t/,t
 spanish,Alveolar,Plosive,voiceless,/tʃ/,"ch, dg"
 spanish,Velar,Fricative,voiceless,/x/,"j, g, x, h"
-spanish,Palatal,LateralApproximant,voiced,/ʎ/,"ll, l"
+spanish,Palatal,LateralApproximant,voiced,/ʎ/,"l, ll"
 spanish,Bilabial,Fricative,voiced,/β/,"b, v, p"
 spanish,Dental,Fricative,voiceless,/θ/,"c, z"
 swahili,Dental,Fricative,voiced,/ð/,dh
