@@ -772,7 +772,7 @@
                 }
             }
         }
-        // === 🔹【處理語言翻譯的 CSV】🔹 ===
+
         let translationsData = [];
 
         // 讀取翻譯 CSV
@@ -954,6 +954,7 @@
 
         // 初始載入
         document.addEventListener("DOMContentLoaded", async () => {
+            await loadTranslationsCSV();
             await loadCSVForTable("ConsonantsPulmonic", "ConsonantsPulmonic.csv", tableConfigs.ConsonantsPulmonic);
             await loadCSVForTable("ConsonantsNonPulmonic", "ConsonantsNonPulmonic.csv", tableConfigs.ConsonantsNonPulmonic);
         });
