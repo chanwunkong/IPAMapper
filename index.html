@@ -13,6 +13,7 @@
         body {
             font-family: 'Noto Sans', sans-serif;
             margin: 20px;
+            font-size: 20px;
         }
 
         table {
@@ -87,7 +88,7 @@
     </style>
 </head>
 
-<body style="background-color: rgb(254, 242, 223)">
+<body style="background-color: rgb(254, 242, 223)">/
 
     <label for="language-selector">Lang：</label>
     <select id="language-selector" onchange="changeLanguage(this.value)">
@@ -805,7 +806,7 @@
             <td style="border-right: none;">ˠ</td>
             <td style="border-left: none;" data-key="D-Velarized"></td>
             <td style="border-right: none;">ˡ</td>
-            <td style="border-left: none;" data-key="D-	LateralRelease"></td>
+            <td style="border-left: none;" data-key="D-LateralRelease"></td>
         </tr>
         <tr>
             <td style="border-right: none;">◌̠</td>
@@ -819,37 +820,37 @@
             <td style="border-right: none;">◌̈</td>
             <td style="border-left: none;" data-key="D-Centralized"></td>
             <td style="border-right: none;">◌̴</td>
-            <td style="border-left: none;" data-key="D-VelarizedOrPharyngealized"></td>
+            <td colspan="3" style="border-left: none;" data-key="D-VelarizedOrPharyngealized"></td>
 
         </tr>
         <tr>
             <td style="border-right: none;">◌̽</td>
             <td style="border-left: none;" data-key="D-MidCentralized"></td>
             <td style="border-right: none;">◌̝</td>
-            <td style="border-left: none;" data-key="D-Raised"></td>
+            <td colspan="3" style="border-left: none;" data-key="D-Raised"></td>
         </tr>
         <tr>
             <td style="border-right: none;">◌̩</td>
             <td style="border-left: none;" data-key="D-Syllabic"></td>
             <td style="border-right: none;">◌̞</td>
-            <td style="border-left: none;" data-key="D-Lowered"></td>
+            <td colspan="3" style="border-left: none;" data-key="D-Lowered"></td>
         </tr>
         <tr>
             <td style="border-right: none;">˞</td>
             <td style="border-left: none;" data-key="D-NonSyllabic"></td>
             <td style="border-right: none;">◌̘</td>
-            <td style="border-left: none;" data-key="D-AdvancedTongueRoot"></td>
+            <td colspan="3" style="border-left: none;" data-key="D-AdvancedTongueRoot"></td>
 
         </tr>
         <tr>
             <td style="border-right: none;">◌˞</td>
             <td style="border-left: none;" data-key="D-Rhoticity"></td>
             <td style="border-right: none;">◌̙</td>
-            <td style="border-left: none;" data-key="D-RetractedTongueRoot"></td>
+            <td colspan="3" style="border-left: none;" data-key="D-RetractedTongueRoot"></td>
         </tr>
-        <!-- <tr>
-            <td data-key="D-Note">D-Note</td>
-        </tr> -->
+        <tr>
+            <td colspan="6" data-key="D-Note">D-Note</td>
+        </tr>
     </table>
 
     <script>
