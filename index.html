@@ -182,7 +182,7 @@
         </label>
     </div>
 
-    <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic">test<span class="toggle-icon">+</span></h2>
+    <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic"><span class="toggle-icon">+</span></h2>
     <table data-type="ConsonantsPulmonic">
         <tr>
             <th data-key=""></th>
@@ -850,6 +850,198 @@
         </tr>
         <tr>
             <td colspan="6" data-key="D-Note">D-Note</td>
+        </tr>
+    </table>
+
+    <h2 onclick="toggleTable(this)" data-key="Vowels"><span class="toggle-icon">+</span></h2>
+    <table data-type="Vowels">
+        <tr>
+            <th></th>
+            <th colspan="2" data-key="V-Foront"></th>
+            <th colspan="2"></th>
+            <th colspan="2" data-key="V-Central"></th>
+            <th colspan="2"></th>
+            <th colspan="2" data-key="V-Back"></th>
+        </tr>
+        <tr>
+            <td data-key="V-Close"></td>
+            <td>i</td>
+            <td>y</td>
+            <td></td>
+            <td></td>
+            <td>ɨ</td>
+            <td>ʉ</td>
+            <td></td>
+            <td></td>
+            <td>ɯ</td>
+            <td>u</td>
+        </tr>
+        <tr class="Compare">
+            <td></td>
+            <td id="CloseFrontUnrounded"></td>
+            <td id="CloseFrontRounded"></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="CloseCentralUnrounded"></td>
+            <td id="CloseCentralRounded"></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="CloseBackUnrounded"></td>
+            <td id="CloseBackRounded"></td>
+        </tr>
+        <tr>
+            <td data-key="V-NearClose"></td>
+            <td></td>
+            <td></td>
+            <td>ɪ</td>
+            <td>ʏ</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>ʊ</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr class="Compare">
+            <td></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="NearcloseNearfrontUnrounded">ɪ</td>
+            <td id="NearcloseNearfrontRounded">ʏ</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="NearcloseNearbackRounded">ʊ</td>
+            <td id=""></td>
+            <td id=""></td>
+        </tr>
+        <tr>
+            <td data-key="V-CloseMid"></td>
+            <td>e</td>
+            <td>ø</td>
+            <td></td>
+            <td></td>
+            <td>ɘ</td>
+            <td>ɵ</td>
+            <td></td>
+            <td></td>
+            <td>ɤ</td>
+            <td>o</td>
+        </tr>
+        <tr class="Compare">
+            <td></td>
+            <td id="ClosemidFrontUnrounded">e</td>
+            <td id="losemidFrontRounded">ø</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="ClosemidCentralUnrounded">ɘ</td>
+            <td id="ClosemidCentralRounded">ɵ</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="ClosemidBackUnrounded">ɤ</td>
+            <td id="ClosemidBackRounded">o</td>
+        </tr>
+        <tr>
+            <td data-key="V-Mid"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>ə</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr class="Compare">
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="MidCentral">ə</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+        </tr>
+        <tr>
+            <td data-key="V-OpenMid"></td>
+            <td>ɛ</td>
+            <td>œ</td>
+            <td></td>
+            <td></td>
+            <td>ɜ</td>
+            <td>ɞ</td>
+            <td></td>
+            <td></td>
+            <td>ʌ</td>
+            <td>ɔ</td>
+        </tr>
+        <tr class="Compare">
+            <td id="OpenMid"></td>
+            <td id="OpenmidFrontUnrounded">ɛ</td>
+            <td id="OpenmidFrontRounded">œ</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="OpenmidCentralUnrounded">ɜ</td>
+            <td id="OpenmidCentralRounded">ɞ</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="OpenmidBackUnrounded">ʌ</td>
+            <td id="OpenmidBackRounded">ɔ</td>
+        </tr>
+        <tr>
+            <td data-key="V-NearOpen"></td>
+            <td>æ</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="2">ɐ</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr class="Compare">
+            <td id="NearOpen"></td>
+            <td id="NearopenFrontUnrounded">æ</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td colspan="2" id="NearopenCentral">ɐ</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+        </tr>
+        <tr>
+            <td data-key="V-Open"></td>
+            <td>a</td>
+            <td>ɶ</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>ɑ</td>
+            <td>ɒ</td>
+        </tr>
+        <tr class="Compare">
+            <td id="Open"></td>
+            <td did="OpenFrontUnrounded">a</td>
+            <td id="OpenFrontRounded">ɶ</td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id=""></td>
+            <td id="OpenbackUnrounded">ɑ</td>
+            <td id="OpenbackRounded">ɒ</td>
         </tr>
     </table>
 
