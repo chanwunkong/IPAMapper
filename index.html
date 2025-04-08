@@ -1230,6 +1230,11 @@
                 ipaIndex: 2,
                 exampleIndex: 3,
             },
+            Vowels: {
+                getTdId: row => `${row[1]}`,
+                ipaIndex: 2,
+                exampleIndex: 3,
+            },
         };
 
         // 綁定 checkbox 切換事件
@@ -1241,6 +1246,8 @@
             await loadCSVForTable("ConsonantsPulmonic", "ConsonantsPulmonic.csv", tableConfigs.ConsonantsPulmonic);
             await loadCSVForTable("ConsonantsNonPulmonic", "ConsonantsNonPulmonic.csv", tableConfigs.ConsonantsNonPulmonic);
             await loadCSVForTable("OtherSymbols", "OtherSymbols.csv", tableConfigs.OtherSymbols);
+            await loadCSVForTable("Vowels", "Vowels.csv", tableConfigs.Vowels);
+
 
             // 確保 DOM 已準備好才切換語言
             changeLanguage('zh');
