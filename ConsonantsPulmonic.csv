@@ -90,7 +90,7 @@ chinese,Retroflex,Plosive,voiceless,/ʈʂɭ/,ㄓ
 chinese,Retroflex,Fricative,voiced,/ʐ/,ㄖ
 English,Bilabial,Plosive,voiced,/b/,b
 English,Alveolar,Plosive,voiced,/d/,th
-English,Alveolar,Plosive,voiced,/ð/,"j, dg"
+English,Dental,Fricative,voiced,/ð/,"j, dg"
 English,Alveolar,Plosive,voiced,/dj/,"d, dd"
 English,Alveolar,Plosive,voiced,/dʒ/,"d, dd"
 English,Labiodental,Fricative,voiceless,/f/,f
@@ -98,7 +98,7 @@ English,Velar,Plosive,voiced,/ɡ/,g
 English,Glottal,Fricative,voiceless,/h/,h
 English,Glottal,Fricative,voiceless,/hw/,wh
 English,Palatal,Approximant,voiced,/j/,"y, j"
-English,Velar,Nasal,voiceless,/k/,"k, c, ck"
+English,Velar,Plosive,voiceless,/k/,"k, c, ck"
 English,Alveolar,LateralApproximant,voiced,/l/,"l, ll"
 English,Alveolar,LateralApproximant,voiced,/lj/,l
 English,Bilabial,Nasal,voiced,/m/,m
