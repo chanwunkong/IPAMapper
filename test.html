@@ -2,262 +2,412 @@
 <html lang="zh-Hant">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>手寫練習 (含語音 & IPA)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: #0b1020;
-      color: #f1f5f9;
-    }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>多語手寫朗讀工具</title>
+    <meta name="theme-color" content="#0ea5e9" />
+    <style>
+        :root {
+            --bg: #0b1220;
+            --card: #111827;
+            --muted: #6b7280;
+            --text: #e5e7eb;
+            --accent: #22d3ee;
+            --btn: #0ea5e9;
+            --danger: #ef4444;
+        }
 
-    canvas {
-      touch-action: none;
-      background: #111827;
-      border-radius: 1rem;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    .input-big {
-      @apply w-full rounded-xl text-center border;
-      height: 56px;
-      font-size: 18px;
-      padding: 14px 16px;
-      background-color: #1f2937;
-      color: #f1f5f9;
-      border-color: #4b5563;
-    }
+        html,
+        body {
+            height: 100%;
+        }
 
-    .btn {
-      @apply w-full rounded-xl font-bold;
-      height: 56px;
-      font-size: 18px;
-      padding: 14px 16px;
-    }
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, #0b1220, #0f172a);
+            color: var(--text);
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        }
 
-    .btn-clear {
-      @apply bg-red-500 hover:bg-red-600 text-white;
-    }
+        .wrap {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: clamp(16px, 5vw, 28px);
+        }
 
-    .btn-tts {
-      @apply bg-blue-500 hover:bg-blue-600 text-white;
-    }
+        .app {
+            background: linear-gradient(180deg, #0c1222, #0c1827);
+            border: 1px solid #1f2937;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+        }
 
-    .btn-ipa {
-      @apply bg-green-500 hover:bg-green-600 text-white;
-    }
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 1px solid #1f2937;
+            background: #0b1220;
+            position: sticky;
+            top: 0;
+        }
 
-    .select-lang {
-      width: 100%;
-      height: 56px;
-      font-size: 16px;
-      border-radius: 12px;
-      padding: 0 12px;
-      background-color: #1f2937;
-      color: #f1f5f9;
-      border: 1px solid #4b5563;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='24' height='24' fill='white' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 20px;
-    }
-  </style>
+        header .logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: radial-gradient(circle at 30% 30%, #22d3ee, #0ea5e9 60%, #0369a1);
+        }
+
+        .section {
+            padding: 16px
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 14px
+        }
+
+        .label {
+            font-size: 13px;
+            color: #cbd5e1
+        }
+
+        textarea,
+        select,
+        input[type=range] {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid #1f2937;
+            background: #0b1220;
+            color: var(--text);
+            padding: 14px;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        canvas {
+            width: 100%;
+            height: 50vh;
+            background: #111827;
+            border-radius: 16px;
+            touch-action: none;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0
+        }
+
+        .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid #1f2937;
+            background: #0b1220;
+            color: #cbd5e1;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        button {
+            flex: 1;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .primary {
+            background: var(--btn);
+            color: #00111a
+        }
+
+        .danger {
+            background: var(--danger);
+            color: #fff
+        }
+
+        #ipa {
+            color: #22d3ee;
+            text-align: center;
+            padding: 8px 0;
+            white-space: pre-wrap
+        }
+
+        /* ---- 並排 row ---- */
+        .row-fields {
+            display: flex;
+            flex-direction: row;
+            gap: 16px;
+            margin-bottom: 14px;
+            flex-wrap: nowrap;
+        }
+
+        .row-fields .sub-field {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .pad-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+    </style>
 </head>
 
-<body class="p-2 flex flex-col h-screen overflow-hidden">
+<body>
+    <div class="wrap">
+        <div class="app">
+            <header>
+                <div class="logo" aria-hidden="true"></div>
+                <div>
+                    <h1 style="margin:0;font-size:18px;">多語手寫語音工具</h1>
+                    <p style="margin:0;font-size:12px;color:#6b7280">支援手寫 + 語音 + IPA · Mobile-first</p>
+                </div>
+            </header>
 
-  <!-- 手寫區域 -->
-  <div class="flex-1 flex items-center justify-center overflow-hidden">
-    <canvas id="pad" class="w-full h-full max-w-md"></canvas>
-  </div>
+            <div class="section">
 
-  <!-- 工具列 (固定在底部) -->
-  <div class="mt-4 space-y-3 bg-[#0b1020] sticky bottom-0 left-0 right-0 p-2">
-    <input id="sampleText" type="text" placeholder="輸入範例文字…" class="input-big" />
+                <!-- 語言 / 語音 -->
+                <div class="row-fields">
+                    <div class="sub-field">
+                        <label class="label" for="lang">選擇語言</label>
+                        <select id="lang">
+                            <option value="en-US">English 🇺🇸</option>
+                            <option value="it-IT">Italiano 🇮🇹</option>
+                            <option value="zh-TW">中文 (繁體) 🇹🇼</option>
+                            <option value="ja-JP">日本語 🇯🇵</option>
+                            <option value="fr-FR">Français 🇫🇷</option>
+                            <option value="de-DE">Deutsch 🇩🇪</option>
+                            <option value="es-ES">Español 🇪🇸</option>
+                            <option value="pt-PT">Português 🇵🇹</option>
+                            <option value="ru-RU">Русский 🇷🇺</option>
+                            <option value="hi-IN">हिन्दी / اُردُو (印地-烏爾都語) 🇮🇳</option>
+                            <option value="bn-BD">বাংলা (孟加拉語) 🇧🇩</option>
+                            <option value="fa-IR">فارسی (波斯語) 🇮🇷</option>
+                            <option value="ta-IN">தமிழ் (坦米爾語) 🇮🇳</option>
+                            <option value="ar-SA">العربية (阿拉伯語) 🇸🇦</option>
+                            <option value="tr-TR">Türkçe (土耳其語) 🇹🇷</option>
+                            <option value="ko-KR">한국어 🇰🇷</option>
+                            <option value="vi-VN">Tiếng Việt 🇻🇳</option>
+                            <option value="id-ID">Bahasa Indonesia / Melayu 🇮🇩</option>
+                            <option value="th-TH">ไทย 🇹🇭</option>
+                            <option value="sw-KE">Kiswahili (斯瓦希里語) 🇰🇪</option>
+                        </select>
+                    </div>
+                    <div class="sub-field">
+                        <label class="label" for="voice">語音選擇</label>
+                        <select id="voice"></select>
+                    </div>
+                </div>
 
-    <!-- 語言選擇器 -->
-    <select id="lang" class="select-lang">
-      <option value="en-US">English</option>
-      <option value="de-DE">Deutsch (德文)</option>
-      <option value="es-ES">Español (西班牙語)</option>
-      <option value="pt-PT">Português (葡萄牙語)</option>
-      <option value="fr-FR">Français (法語)</option>
-      <option value="it-IT">Italiano (義大利語)</option>
-      <option value="ru-RU">Русский (俄語)</option>
-      <option value="fa-IR">فارسی (波斯語)</option>
-      <option value="bn-BD">বাংলা (孟加拉語)</option>
-      <option value="hi-IN">हिन्दी / اردو (印地-烏爾都語)</option>
-      <option value="ta-IN">தமிழ் (坦米爾語)</option>
-      <option value="ar-SA">العربية (阿拉伯語)</option>
-      <option value="tr-TR">Türkçe (土耳其語)</option>
-      <option value="zh-CN">中文 (簡體)</option>
-      <option value="zh-TW">中文 (繁體)</option>
-      <option value="ja-JP">日本語</option>
-      <option value="ko-KR">한국어</option>
-      <option value="vi-VN">Tiếng Việt (越南語)</option>
-      <option value="th-TH">ไทย (泰語)</option>
-      <option value="id-ID">Bahasa Indonesia / Melayu</option>
-      <option value="sw-KE">Kiswahili (斯瓦希里語)</option>
-    </select>
 
-    <!-- 語速調整 -->
-    <div>
-      <label class="block mb-1 text-sm opacity-80">語速</label>
-      <input id="rate" type="range" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-500" />
+                <!-- 輸入文字 -->
+                <div class="field">
+                    <label class="label">輸入要朗讀的文字（也會顯示在手寫區背景）</label>
+                    <textarea id="text" placeholder="例如：Ciao! Come stai?"></textarea>
+                    <div class="chips" id="samples"></div>
+                </div>
+
+                <!-- 語速 / 音高 -->
+                <div class="row-fields">
+                    <div class="sub-field">
+                        <label class="label">語速 <span id="rateVal">1.0</span></label>
+                        <input type="range" id="rate" min="0.6" max="1.6" step="0.1" value="1.0">
+                    </div>
+                    <div class="sub-field">
+                        <label class="label">音高 <span id="pitchVal">1.0</span></label>
+                        <input type="range" id="pitch" min="0.6" max="1.4" step="0.1" value="1.0">
+                    </div>
+                </div>
+
+                <!-- 字體大小 -->
+                <div class="field">
+                    <label class="label">字體大小 <span id="fontSizeVal">72</span> px</label>
+                    <input type="range" id="fontSize" min="16" max="240" step="1" value="32">
+                </div>
+
+                <div id="ipa" style="display:none"></div>
+
+                <!-- 手寫區 -->
+                <div class="field">
+                    <label class="label">手寫練習區</label>
+                    <canvas id="pad"></canvas>
+                    <div class="pad-actions">
+                        <button class="danger" id="clearBtn">🧹 清除畫布</button>
+                        <button class="primary" id="speakBtn">▶ 開始朗讀</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
-    <!-- IPA 顯示 -->
-    <div id="ipaResult" class="text-center text-lg text-green-300"></div>
+    <script>
+        const langEl = document.getElementById('lang');
+        const voiceEl = document.getElementById('voice');
+        const textEl = document.getElementById('text');
+        const rateEl = document.getElementById('rate');
+        const pitchEl = document.getElementById('pitch');
+        const rateVal = document.getElementById('rateVal');
+        const pitchVal = document.getElementById('pitchVal');
+        const fontSizeEl = document.getElementById('fontSize');
+        const fontSizeVal = document.getElementById('fontSizeVal');
+        const ipaEl = document.getElementById('ipa');
+        const canvas = document.getElementById('pad');
+        const ctx = canvas.getContext('2d');
+        const samplesEl = document.getElementById('samples');
+        const DPR = window.devicePixelRatio || 1;
+        let strokes = []; let isDrawing = false; let currentStroke = null;
+        let customFontSize = 72; // 由滑桿控制
 
-    <!-- 功能按鈕 -->
-    <button id="ipaBtn" class="btn btn-ipa hidden">🔎 查 IPA (英文)</button>
-    <button id="tts" class="btn btn-tts">🔊 朗讀</button>
-    <button id="clear" class="btn btn-clear">🧹 清除</button>
-  </div>
+        const SAMPLE_TEXTS = {
+            "en-US": ["Hello", "Hi", "Good morning", "Good evening"],
+            "it-IT": ["Ciao", "Salve", "Buongiorno", "Buonasera"],
+            "zh-TW": ["你好", "嗨", "早安", "晚安"],
+            "ja-JP": ["こんにちは", "やあ", "おはよう", "こんばんは"],
+            "fr-FR": ["Bonjour", "Salut", "Bonsoir", "Coucou"],
+            "de-DE": ["Hallo", "Guten Tag", "Guten Morgen", "Guten Abend"],
+            "es-ES": ["Hola", "Buenos días", "Buenas tardes", "Buenas noches"],
+            "pt-PT": ["Olá", "Oi", "Bom dia", "Boa noite"],
+            "ru-RU": ["Привет", "Здравствуйте", "Доброе утро", "Добрый вечер"],
+            "hi-IN": ["नमस्ते", "हैलो", "सुप्रभात", "शुभ संध्या"],
+            "bn-BD": ["হ্যালো", "নমস্কার", "শুভ সকাল", "শুভ সন্ধ্যা"],
+            "fa-IR": ["سلام", "درود", "صبح بخیر", "عصر بخیر"],
+            "ta-IN": ["வணக்கம்", "ஹலோ", "காலை வணக்கம்", "மாலை வணக்கம்"],
+            "ar-SA": ["مرحبا", "أهلا", "صباح الخير", "مساء الخير"],
+            "tr-TR": ["Merhaba", "Selam", "Günaydın", "İyi akşamlar"],
+            "ko-KR": ["안녕하세요", "안녕", "좋은 아침", "안녕히 주무세요"],
+            "vi-VN": ["Xin chào", "Chào bạn", "Chào buổi sáng", "Chào buổi tối"],
+            "id-ID": ["Halo", "Hai", "Selamat pagi", "Selamat malam"],
+            "th-TH": ["สวัสดี", "หวัดดี", "อรุณสวัสดิ์", "สวัสดีตอนเย็น"],
+            "sw-KE": ["Hujambo", "Habari", "Asubuhi njema", "Usiku mwema"]
+        };
 
-  <script>
-    const canvas = document.getElementById('pad');
-    const ctx = canvas.getContext('2d');
-    const DPR = window.devicePixelRatio || 1;
-    let strokes = [], currentStroke = null, isDrawing = false;
-    let sampleText = "";
-    let currentLang = "en-US";
-    let currentRate = 1;
 
-    function resizeCanvas() {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * DPR;
-      canvas.height = rect.height * DPR;
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      redraw();
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function drawStroke(s) {
-      ctx.strokeStyle = "#3b82f6";
-      ctx.lineWidth = 6;
-      ctx.lineCap = "round"; ctx.lineJoin = "round";
-      ctx.beginPath();
-      ctx.moveTo(s.points[0].x, s.points[0].y);
-      for (let i = 1; i < s.points.length; i++) ctx.lineTo(s.points[i].x, s.points[i].y);
-      ctx.stroke();
-    }
-
-    function getFittedFontSize(text, maxWidth, maxHeight) {
-      if (!text) return 0;
-      let fontSize = maxHeight * 0.2;
-      ctx.font = `${fontSize}px sans-serif`;
-      let textWidth = ctx.measureText(text).width;
-      while ((textWidth > maxWidth * 0.9) && fontSize > 12) {
-        fontSize -= 2;
-        ctx.font = `${fontSize}px sans-serif`;
-        textWidth = ctx.measureText(text).width;
-      }
-      return fontSize;
-    }
-
-    function wrapText(text, maxWidth, fontSize) {
-      ctx.font = `${fontSize}px sans-serif`;
-      let words = text.split("");
-      let lines = [];
-      let currentLine = "";
-      for (let i = 0; i < words.length; i++) {
-        let testLine = currentLine + words[i];
-        let testWidth = ctx.measureText(testLine).width;
-        if (testWidth > maxWidth * 0.9 && currentLine !== "") {
-          lines.push(currentLine);
-          currentLine = words[i];
-        } else {
-          currentLine = testLine;
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * DPR; canvas.height = rect.height * DPR;
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.strokeStyle = '#22d3ee';
+            redraw();
         }
-      }
-      if (currentLine) lines.push(currentLine);
-      return lines;
-    }
+        window.addEventListener('resize', resizeCanvas);
 
-    function redraw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function wrapTextSmart(text, maxW, fontSize) {
+            ctx.font = `${fontSize}px sans-serif`;
+            const useWords = /\s/.test(text);
+            const units = useWords ? text.split(/\s+/) : [...text];
+            const lines = []; let line = '';
+            for (const u of units) {
+                const test = line ? (useWords ? line + ' ' + u : line + u) : u;
+                if (ctx.measureText(test).width > maxW * 0.92 && line) { lines.push(line); line = u; }
+                else line = test;
+            }
+            if (line) lines.push(line);
+            return lines.slice(0, 6);
+        }
+        function drawBackgroundText() {
+            const text = textEl.value.trim();
+            ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(200,200,200,0.25)';
+            const maxW = canvas.width / DPR, maxH = canvas.height / DPR;
+            if (text) {
+                const fs = customFontSize;
+                const lines = wrapTextSmart(text, maxW, fs);
+                ctx.font = `${fs}px sans-serif`; const lh = fs * 1.2;
+                const startY = (maxH / 2) - ((lines.length - 1) * lh / 2);
+                lines.forEach((line, i) => ctx.fillText(line, maxW / 2, startY + i * lh));
+            } else { ctx.font = '20px sans-serif'; ctx.fillText('在此手寫…', maxW / 2, maxH / 2); }
+            ctx.restore();
+        }
+        function drawStrokes() {
+            ctx.save(); ctx.strokeStyle = '#22d3ee'; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+            const draw = s => {
+                if (!s || s.length < 2) return; ctx.beginPath(); ctx.moveTo(s[0].x, s[0].y);
+                for (let i = 1; i < s.length; i++)ctx.lineTo(s[i].x, s[i].y); ctx.stroke();
+            };
+            strokes.forEach(draw); if (currentStroke) draw(currentStroke); ctx.restore();
+        }
+        function redraw() { ctx.clearRect(0, 0, canvas.width, canvas.height); drawBackgroundText(); drawStrokes(); }
 
-      if (sampleText) {
-        ctx.save();
-        let fontSize = getFittedFontSize(sampleText, canvas.width / DPR, canvas.height / DPR);
-        let lines = wrapText(sampleText, canvas.width / DPR, fontSize);
+        function posFromEvent(e) { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+        canvas.addEventListener('pointerdown', e => { canvas.setPointerCapture(e.pointerId); isDrawing = true; currentStroke = [posFromEvent(e)]; redraw(); });
+        canvas.addEventListener('pointermove', e => { if (!isDrawing) return; currentStroke.push(posFromEvent(e)); redraw(); });
+        function endStroke() { if (isDrawing && currentStroke?.length) { strokes.push(currentStroke); currentStroke = null; redraw(); } isDrawing = false; }
+        canvas.addEventListener('pointerup', endStroke);
+        canvas.addEventListener('pointercancel', endStroke);
+        canvas.addEventListener('pointerleave', endStroke);
+        document.getElementById('clearBtn').addEventListener('click', () => { strokes = []; redraw(); });
 
-        ctx.fillStyle = "rgba(200,200,200,0.25)";
-        ctx.font = `${fontSize}px sans-serif`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        function loadVoices() {
+            const voices = speechSynthesis.getVoices(); const lang = langEl.value;
+            voiceEl.innerHTML = ''; const list = voices.filter(v => v.lang === lang);
+            (list.length ? list : voices).forEach(v => {
+                const opt = document.createElement('option'); opt.value = v.name; opt.textContent = `${v.name} (${v.lang})`;
+                voiceEl.appendChild(opt);
+            });
+        }
+        speechSynthesis.onvoiceschanged = loadVoices;
 
-        let lineHeight = fontSize * 1.2;
-        let startY = canvas.height / (2 * DPR) - (lines.length - 1) * lineHeight / 2;
+        function speakNow() {
+            const text = textEl.value.trim(); if (!text) return;
+            const u = new SpeechSynthesisUtterance(text);
+            const voices = speechSynthesis.getVoices(); const sel = voices.find(v => v.name === voiceEl.value);
+            if (sel) u.voice = sel; u.lang = langEl.value; u.rate = parseFloat(rateEl.value); u.pitch = parseFloat(pitchEl.value);
+            speechSynthesis.cancel(); speechSynthesis.speak(u);
+            if (langEl.value === 'en-US') fetchIPA(text);
+        }
+        function fetchIPA(text) {
+            ipaEl.style.display = 'block'; ipaEl.textContent = '🔄 查詢 IPA 中...';
+            const word = text.split(/\s+/)[0] || '';
+            fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`)
+                .then(res => res.json())
+                .then(data => {
+                    const phon = data?.[0]?.phonetics?.find(p => p.text)?.text;
+                    const meanings = data?.[0]?.meanings?.[0]?.definitions?.[0]?.definition;
+                    ipaEl.textContent = phon ? `📘 IPA: ${phon}${meanings ? '\n' + meanings : ''}` : '找不到 IPA 資訊';
+                })
+                .catch(() => ipaEl.textContent = '❌ 查詢失敗');
+        }
 
-        lines.forEach((line, i) => {
-          ctx.fillText(line, canvas.width / (2 * DPR), startY + i * lineHeight);
+        langEl.addEventListener('change', () => {
+            loadVoices(); textEl.placeholder = SAMPLE_TEXTS[langEl.value]?.[0] || ''; renderChips();
+            if (langEl.value !== 'en-US') { ipaEl.style.display = 'none'; ipaEl.textContent = ''; }
         });
-        ctx.restore();
-      }
+        rateEl.addEventListener('input', () => { rateVal.textContent = rateEl.value; });
+        pitchEl.addEventListener('input', () => { pitchVal.textContent = pitchEl.value; });
+        fontSizeEl.addEventListener('input', () => {
+            customFontSize = parseInt(fontSizeEl.value, 10);
+            fontSizeVal.textContent = customFontSize; redraw();
+        });
+        textEl.addEventListener('input', () => redraw());
+        document.getElementById('speakBtn').addEventListener('click', speakNow);
 
-      strokes.forEach(drawStroke);
-      if (currentStroke) drawStroke(currentStroke);
-    }
+        function renderChips() {
+            const samples = SAMPLE_TEXTS[langEl.value] || [];
+            samplesEl.innerHTML = ''; samples.forEach(txt => {
+                const chip = document.createElement('div'); chip.className = 'chip'; chip.textContent = txt;
+                chip.onclick = () => { textEl.value = txt; redraw(); if (langEl.value === 'en-US') fetchIPA(txt); };
+                samplesEl.appendChild(chip);
+            });
+        }
 
-    function pos(e) {
-      const r = canvas.getBoundingClientRect();
-      return { x: e.clientX - r.left, y: e.clientY - r.top };
-    }
-    canvas.addEventListener('pointerdown', e => {
-      isDrawing = true;
-      const { x, y } = pos(e);
-      currentStroke = { points: [{ x, y }] };
-    });
-    canvas.addEventListener('pointermove', e => {
-      if (!isDrawing) return;
-      const { x, y } = pos(e);
-      currentStroke.points.push({ x, y });
-      redraw();
-    });
-    canvas.addEventListener('pointerup', () => {
-      if (isDrawing) { strokes.push(currentStroke); currentStroke = null; redraw(); }
-      isDrawing = false;
-    });
-
-    document.getElementById('clear').onclick = () => { strokes = []; redraw(); }
-    document.getElementById('sampleText').oninput = e => { sampleText = e.target.value; redraw(); }
-    document.getElementById('lang').onchange = e => {
-      currentLang = e.target.value;
-      document.getElementById('ipaBtn').classList.toggle("hidden", currentLang !== "en-US");
-    };
-    document.getElementById('rate').oninput = e => { currentRate = parseFloat(e.target.value); }
-
-    document.getElementById('tts').onclick = () => {
-      if (!sampleText) return alert("請先輸入範例文字！");
-      const utterance = new SpeechSynthesisUtterance(sampleText);
-      utterance.lang = currentLang;
-      utterance.rate = currentRate;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utterance);
-    };
-
-    document.getElementById('ipaBtn').onclick = async () => {
-      if (!sampleText) return alert("請先輸入範例文字！");
-      const url = `https://en.wiktionary.org/w/api.php?action=query&prop=extracts&explaintext&titles=${encodeURIComponent(sampleText)}&format=json&origin=*`;
-      const res = await fetch(url);
-      const data = await res.json();
-      const pages = data.query.pages;
-      const page = pages[Object.keys(pages)[0]];
-      if (!page.extract) {
-        document.getElementById('ipaResult').textContent = "❌ 沒找到 IPA";
-        return;
-      }
-      const lines = page.extract.split("\n");
-      const ipaLine = lines.find(l => l.includes("IPA"));
-      document.getElementById('ipaResult').textContent = ipaLine ? ipaLine : "⚠️ 沒有 IPA 標記";
-    };
-  </script>
+        loadVoices(); renderChips(); resizeCanvas();
+    </script>
 </body>
 
 </html>
