@@ -1,24 +1,263 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!doctype html>
+<html lang="zh-Hant">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>讀取 CSV</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>手寫練習 (含語音 & IPA)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #0b1020;
+      color: #f1f5f9;
+    }
+
+    canvas {
+      touch-action: none;
+      background: #111827;
+      border-radius: 1rem;
+    }
+
+    .input-big {
+      @apply w-full rounded-xl text-center border;
+      height: 56px;
+      font-size: 18px;
+      padding: 14px 16px;
+      background-color: #1f2937;
+      color: #f1f5f9;
+      border-color: #4b5563;
+    }
+
+    .btn {
+      @apply w-full rounded-xl font-bold;
+      height: 56px;
+      font-size: 18px;
+      padding: 14px 16px;
+    }
+
+    .btn-clear {
+      @apply bg-red-500 hover:bg-red-600 text-white;
+    }
+
+    .btn-tts {
+      @apply bg-blue-500 hover:bg-blue-600 text-white;
+    }
+
+    .btn-ipa {
+      @apply bg-green-500 hover:bg-green-600 text-white;
+    }
+
+    .select-lang {
+      width: 100%;
+      height: 56px;
+      font-size: 16px;
+      border-radius: 12px;
+      padding: 0 12px;
+      background-color: #1f2937;
+      color: #f1f5f9;
+      border: 1px solid #4b5563;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='24' height='24' fill='white' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 20px;
+    }
+  </style>
 </head>
 
-<body>
-    <h1>Consonants Pulmonic CSV 內容</h1>
-    <pre id="output"></pre>
+<body class="p-2 flex flex-col h-screen overflow-hidden">
 
-    <script>
-        fetch('ConsonantsPulmonic.csv')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('output').textContent = data;
-            })
-            .catch(error => console.error('錯誤:', error));
-    </script>
+  <!-- 手寫區域 -->
+  <div class="flex-1 flex items-center justify-center overflow-hidden">
+    <canvas id="pad" class="w-full h-full max-w-md"></canvas>
+  </div>
+
+  <!-- 工具列 (固定在底部) -->
+  <div class="mt-4 space-y-3 bg-[#0b1020] sticky bottom-0 left-0 right-0 p-2">
+    <input id="sampleText" type="text" placeholder="輸入範例文字…" class="input-big" />
+
+    <!-- 語言選擇器 -->
+    <select id="lang" class="select-lang">
+      <option value="en-US">English</option>
+      <option value="de-DE">Deutsch (德文)</option>
+      <option value="es-ES">Español (西班牙語)</option>
+      <option value="pt-PT">Português (葡萄牙語)</option>
+      <option value="fr-FR">Français (法語)</option>
+      <option value="it-IT">Italiano (義大利語)</option>
+      <option value="ru-RU">Русский (俄語)</option>
+      <option value="fa-IR">فارسی (波斯語)</option>
+      <option value="bn-BD">বাংলা (孟加拉語)</option>
+      <option value="hi-IN">हिन्दी / اردو (印地-烏爾都語)</option>
+      <option value="ta-IN">தமிழ் (坦米爾語)</option>
+      <option value="ar-SA">العربية (阿拉伯語)</option>
+      <option value="tr-TR">Türkçe (土耳其語)</option>
+      <option value="zh-CN">中文 (簡體)</option>
+      <option value="zh-TW">中文 (繁體)</option>
+      <option value="ja-JP">日本語</option>
+      <option value="ko-KR">한국어</option>
+      <option value="vi-VN">Tiếng Việt (越南語)</option>
+      <option value="th-TH">ไทย (泰語)</option>
+      <option value="id-ID">Bahasa Indonesia / Melayu</option>
+      <option value="sw-KE">Kiswahili (斯瓦希里語)</option>
+    </select>
+
+    <!-- 語速調整 -->
+    <div>
+      <label class="block mb-1 text-sm opacity-80">語速</label>
+      <input id="rate" type="range" min="0.5" max="2" step="0.1" value="1" class="w-full accent-blue-500" />
+    </div>
+
+    <!-- IPA 顯示 -->
+    <div id="ipaResult" class="text-center text-lg text-green-300"></div>
+
+    <!-- 功能按鈕 -->
+    <button id="ipaBtn" class="btn btn-ipa hidden">🔎 查 IPA (英文)</button>
+    <button id="tts" class="btn btn-tts">🔊 朗讀</button>
+    <button id="clear" class="btn btn-clear">🧹 清除</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('pad');
+    const ctx = canvas.getContext('2d');
+    const DPR = window.devicePixelRatio || 1;
+    let strokes = [], currentStroke = null, isDrawing = false;
+    let sampleText = "";
+    let currentLang = "en-US";
+    let currentRate = 1;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * DPR;
+      canvas.height = rect.height * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      redraw();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawStroke(s) {
+      ctx.strokeStyle = "#3b82f6";
+      ctx.lineWidth = 6;
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.beginPath();
+      ctx.moveTo(s.points[0].x, s.points[0].y);
+      for (let i = 1; i < s.points.length; i++) ctx.lineTo(s.points[i].x, s.points[i].y);
+      ctx.stroke();
+    }
+
+    function getFittedFontSize(text, maxWidth, maxHeight) {
+      if (!text) return 0;
+      let fontSize = maxHeight * 0.2;
+      ctx.font = `${fontSize}px sans-serif`;
+      let textWidth = ctx.measureText(text).width;
+      while ((textWidth > maxWidth * 0.9) && fontSize > 12) {
+        fontSize -= 2;
+        ctx.font = `${fontSize}px sans-serif`;
+        textWidth = ctx.measureText(text).width;
+      }
+      return fontSize;
+    }
+
+    function wrapText(text, maxWidth, fontSize) {
+      ctx.font = `${fontSize}px sans-serif`;
+      let words = text.split("");
+      let lines = [];
+      let currentLine = "";
+      for (let i = 0; i < words.length; i++) {
+        let testLine = currentLine + words[i];
+        let testWidth = ctx.measureText(testLine).width;
+        if (testWidth > maxWidth * 0.9 && currentLine !== "") {
+          lines.push(currentLine);
+          currentLine = words[i];
+        } else {
+          currentLine = testLine;
+        }
+      }
+      if (currentLine) lines.push(currentLine);
+      return lines;
+    }
+
+    function redraw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (sampleText) {
+        ctx.save();
+        let fontSize = getFittedFontSize(sampleText, canvas.width / DPR, canvas.height / DPR);
+        let lines = wrapText(sampleText, canvas.width / DPR, fontSize);
+
+        ctx.fillStyle = "rgba(200,200,200,0.25)";
+        ctx.font = `${fontSize}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        let lineHeight = fontSize * 1.2;
+        let startY = canvas.height / (2 * DPR) - (lines.length - 1) * lineHeight / 2;
+
+        lines.forEach((line, i) => {
+          ctx.fillText(line, canvas.width / (2 * DPR), startY + i * lineHeight);
+        });
+        ctx.restore();
+      }
+
+      strokes.forEach(drawStroke);
+      if (currentStroke) drawStroke(currentStroke);
+    }
+
+    function pos(e) {
+      const r = canvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+    canvas.addEventListener('pointerdown', e => {
+      isDrawing = true;
+      const { x, y } = pos(e);
+      currentStroke = { points: [{ x, y }] };
+    });
+    canvas.addEventListener('pointermove', e => {
+      if (!isDrawing) return;
+      const { x, y } = pos(e);
+      currentStroke.points.push({ x, y });
+      redraw();
+    });
+    canvas.addEventListener('pointerup', () => {
+      if (isDrawing) { strokes.push(currentStroke); currentStroke = null; redraw(); }
+      isDrawing = false;
+    });
+
+    document.getElementById('clear').onclick = () => { strokes = []; redraw(); }
+    document.getElementById('sampleText').oninput = e => { sampleText = e.target.value; redraw(); }
+    document.getElementById('lang').onchange = e => {
+      currentLang = e.target.value;
+      document.getElementById('ipaBtn').classList.toggle("hidden", currentLang !== "en-US");
+    };
+    document.getElementById('rate').oninput = e => { currentRate = parseFloat(e.target.value); }
+
+    document.getElementById('tts').onclick = () => {
+      if (!sampleText) return alert("請先輸入範例文字！");
+      const utterance = new SpeechSynthesisUtterance(sampleText);
+      utterance.lang = currentLang;
+      utterance.rate = currentRate;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+    };
+
+    document.getElementById('ipaBtn').onclick = async () => {
+      if (!sampleText) return alert("請先輸入範例文字！");
+      const url = `https://en.wiktionary.org/w/api.php?action=query&prop=extracts&explaintext&titles=${encodeURIComponent(sampleText)}&format=json&origin=*`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const pages = data.query.pages;
+      const page = pages[Object.keys(pages)[0]];
+      if (!page.extract) {
+        document.getElementById('ipaResult').textContent = "❌ 沒找到 IPA";
+        return;
+      }
+      const lines = page.extract.split("\n");
+      const ipaLine = lines.find(l => l.includes("IPA"));
+      document.getElementById('ipaResult').textContent = ipaLine ? ipaLine : "⚠️ 沒有 IPA 標記";
+    };
+  </script>
 </body>
 
 </html>
