@@ -166,10 +166,15 @@
             gap: 8px;
             margin-top: 8px;
         }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
 <body>
+
     <div class="wrap">
         <div class="app">
             <header>
@@ -178,6 +183,24 @@
                     <h1 style="margin:0;font-size:18px;">多語手寫語音工具</h1>
                     <p style="margin:0;font-size:12px;color:#6b7280">支援手寫 + 語音 + IPA · Mobile-first</p>
                 </div>
+                <!-- firebase -->
+                <!-- 登入面板 -->
+                <div id="loginPanel">
+                    <button id="loginBtn">使用 Google 登入</button>
+                    <button id="logoutBtn" class="hidden">登出</button>
+                    <span id="userInfo"></span>
+                </div>
+
+                <!-- API Key 設定（可收合） -->
+                <div id="keyWrapper" class="hidden" style="margin-top:10px;">
+                    <button id="toggleKeyBtn" class="primary" style="margin-bottom:5px;">▼ 顯示 GPT 設定</button>
+                    <div id="keySection" style="display:none;">
+                        <input id="gptKey" placeholder="輸入你的 OpenAI API Key" style="width:300px;">
+                        <button id="saveKeyBtn">儲存 API Key</button>
+                        <p id="status"></p>
+                    </div>
+                </div>
+
             </header>
 
             <div class="section">
@@ -257,6 +280,219 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- Firebase 初始化（用你的專案資訊） ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBqZLFskqgyiAEc127dh95rXsOPQVLSurM",
+            authDomain: "test-5dbba.firebaseapp.com",
+            projectId: "test-5dbba",
+            storageBucket: "test-5dbba.appspot.com",
+            messagingSenderId: "878665537417",
+            appId: "1:878665537417:web:xxxxxx" // 請到 Firebase 專案設定複製正確 appId
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // === Google TTS 主要口音分組設定 ===
+        const VOICE_VARIANTS = {
+            "zh-TW": { include: ["cmn-TW", "cmn-CN"], labels: { "cmn-TW": "台灣", "cmn-CN": "中國" } },
+            "en-US": { include: ["en-US", "en-GB", "en-AU", "en-CA"], labels: { "en-US": "美式", "en-GB": "英式", "en-AU": "澳洲", "en-CA": "加拿大" } },
+            "de-DE": { include: ["de-DE", "de-AT", "de-CH"], labels: { "de-DE": "德國", "de-AT": "奧地利", "de-CH": "瑞士" } },
+            "es-ES": { include: ["es-ES", "es-MX", "es-US", "es-AR"], labels: { "es-ES": "西班牙", "es-MX": "墨西哥", "es-US": "美國", "es-AR": "阿根廷" } },
+            "pt-PT": { include: ["pt-PT", "pt-BR"], labels: { "pt-PT": "歐洲", "pt-BR": "巴西" } },
+            "fr-FR": { include: ["fr-FR", "fr-CA"], labels: { "fr-FR": "法國", "fr-CA": "加拿大" } },
+            "it-IT": { include: ["it-IT"], labels: { "it-IT": "義大利" } },
+            "ru-RU": { include: ["ru-RU"], labels: { "ru-RU": "俄羅斯" } },
+            "hi-IN": { include: ["hi-IN", "ur-PK"], labels: { "hi-IN": "印地語", "ur-PK": "烏爾都語" } },
+            "bn-BD": { include: ["bn-BD", "bn-IN"], labels: { "bn-BD": "孟加拉", "bn-IN": "印度孟加拉" } },
+            "fa-IR": { include: ["fa-IR", "fa-AF"], labels: { "fa-IR": "伊朗", "fa-AF": "阿富汗" } },
+            "ta-IN": { include: ["ta-IN", "ta-LK"], labels: { "ta-IN": "印度", "ta-LK": "斯里蘭卡" } },
+            "ar-SA": { include: ["ar-SA", "ar-EG", "ar-XA"], labels: { "ar-SA": "沙烏地", "ar-EG": "埃及", "ar-XA": "汎阿拉伯" } },
+            "tr-TR": { include: ["tr-TR"], labels: { "tr-TR": "土耳其" } },
+            "ja-JP": { include: ["ja-JP"], labels: { "ja-JP": "日本" } },
+            "ko-KR": { include: ["ko-KR"], labels: { "ko-KR": "韓國" } },
+            "vi-VN": { include: ["vi-VN"], labels: { "vi-VN": "越南（北部）" } },
+            "id-ID": { include: ["id-ID", "ms-MY"], labels: { "id-ID": "印尼語", "ms-MY": "馬來語" } },
+            "th-TH": { include: ["th-TH"], labels: { "th-TH": "泰國" } },
+            "sw-KE": { include: ["sw-KE", "sw-TZ"], labels: { "sw-KE": "肯亞", "sw-TZ": "坦尚尼亞" } }
+        };
+
+        // --- UI 元素 ---
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const keySection = document.getElementById('keySection');
+        const gptKeyInput = document.getElementById('gptKey');
+        const saveKeyBtn = document.getElementById('saveKeyBtn');
+        const statusEl = document.getElementById('status');
+
+        const langSel = document.getElementById('langSel');
+        const accentWrap = document.getElementById('accentWrap');
+        const accentSel = document.getElementById('accentSel');
+        const accentHint = document.getElementById('accentHint');
+        const wordInput = document.getElementById('wordInput');
+        const promptBox = document.getElementById('promptBox');
+        const genBtn = document.getElementById('genBtn');
+        const resultBox = document.getElementById('resultBox');
+        const runStatus = document.getElementById('runStatus');
+
+        let currentUser = null;
+        let gptKey = null;
+
+        // === 登入 / 登出 ===
+        loginBtn.onclick = () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .catch(err => alert("登入失敗：" + err.message));
+        };
+        logoutBtn.onclick = () => auth.signOut();
+
+        // ✅ 監聽登入狀態（這段一定要放在 Firebase 初始化之後）
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                userInfo.textContent = `已登入：${user.email}`;
+                keyWrapper.classList.remove('hidden');   // 顯示 API Key 區塊
+
+                // 讀取 Firestore 使用者的 Key
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    const gptKey = doc.exists ? doc.data().gptApiKey : null;
+                    if (gptKey) {
+                        gptKeyInput.value = gptKey;
+                        statusEl.textContent = "✅ 已載入 Firestore 中的 gptApiKey";
+                    } else {
+                        statusEl.textContent = "⚠️ 尚未儲存 API Key";
+                    }
+                } catch (e) {
+                    statusEl.textContent = "❌ 讀取失敗：" + e.message;
+                }
+            } else {
+                loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                userInfo.textContent = '';
+                keyWrapper.classList.add('hidden'); // 登出時隱藏 API Key 區塊
+            }
+        });
+
+        // ✅ 切換展開/收起
+        toggleKeyBtn.addEventListener('click', () => {
+            const isHidden = keySection.style.display === 'none';
+            keySection.style.display = isHidden ? 'block' : 'none';
+            toggleKeyBtn.textContent = isHidden ? '▲ 隱藏 GPT 設定' : '▼ 顯示 GPT 設定';
+        });
+
+        // ✅ 儲存 Key
+        saveKeyBtn.onclick = async () => {
+            if (!auth.currentUser) return alert("請先登入！");
+            const key = gptKeyInput.value.trim();
+            if (!key) return alert("請輸入 API Key");
+            try {
+                await db.collection('users').doc(auth.currentUser.uid).set({
+                    gptApiKey: key,
+                    gptUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                statusEl.textContent = "✅ 已儲存到 Firestore！";
+            } catch (err) {
+                statusEl.textContent = "❌ 儲存失敗：" + err.message;
+            }
+        };
+
+        // --- 根據語言載入口音選項 ---
+        function refreshAccents() {
+            const lang = langSel.value;
+            accentSel.innerHTML = '';
+            const variant = VOICE_VARIANTS[lang];
+
+            if (variant && variant.include?.length) {
+                accentWrap.classList.remove('hidden');
+                variant.include.forEach(code => {
+                    const opt = document.createElement('option');
+                    opt.value = code;
+                    opt.textContent = variant.labels?.[code] || code;
+                    accentSel.appendChild(opt);
+                });
+                accentHint.textContent = "（可選擇主要口音/變體）";
+            } else {
+                accentWrap.classList.add('hidden');
+                accentHint.textContent = "";
+            }
+            updatePromptPreview();
+        }
+
+        // --- 生成 Prompt 預覽 ---
+        function updatePromptPreview() {
+            const lang = langSel.options[langSel.selectedIndex].textContent.replace(/ ?🇧🇩| ?🇮🇳| ?🇯🇵| ?🇹🇼| ?🇺🇸| ?🇩🇪| ?🇪🇸| ?🇵🇹| ?🇫🇷| ?🇮🇹| ?🇷🇺| ?🇮🇷| ?🇸🇦| ?🇹🇷| ?🇰🇷| ?🇻🇳| ?🇮🇩| ?🇹🇭| ?🇰🇪/g, '').trim();
+            const langCode = langSel.value;
+            const hasAccent = !accentWrap.classList.contains('hidden');
+            const accentCode = hasAccent ? accentSel.value : null;
+            const accentLabel = hasAccent ? (VOICE_VARIANTS[langCode].labels?.[accentCode] || accentCode) : null;
+            const word = (wordInput.value || "").trim();
+
+            const prompt = `IPA for "${word}" in ${lang}${accentLabel ? ' (' + accentLabel + ')' : ''}. Only IPA.`;
+
+            promptBox.value = prompt;
+        }
+
+        langSel.onchange = refreshAccents;
+        accentSel.onchange = updatePromptPreview;
+        wordInput.oninput = updatePromptPreview;
+
+        // 初始載入
+        refreshAccents();
+
+        // --- 呼叫 OpenAI（用 Firestore 內的 gptApiKey 或輸入框的） ---
+        async function callOpenAI(prompt) {
+            const key = (gptKeyInput.value || '').trim();
+            if (!key) throw new Error("尚未提供 OpenAI API Key");
+            const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${key}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini",
+                    messages: [{ role: "user", content: prompt }],
+                    temperature: 0
+                })
+            });
+            const data = await resp.json();
+            if (!resp.ok) {
+                throw new Error(data.error?.message || "OpenAI 呼叫失敗");
+            }
+            return (data.choices?.[0]?.message?.content || "").trim();
+        }
+
+        // --- 執行產生 ---
+        genBtn.onclick = async () => {
+            const word = (wordInput.value || "").trim();
+            if (!word) { alert("請先輸入單詞"); return; }
+            const prompt = promptBox.value;
+            runStatus.textContent = "⏳ 正在向 GPT 產生 IPA...";
+            resultBox.textContent = "（產生中…）";
+            genBtn.disabled = true;
+
+            try {
+                const ipa = await callOpenAI(prompt);
+                resultBox.textContent = ipa || "（沒有回傳內容）";
+                runStatus.textContent = "✅ 完成";
+            } catch (e) {
+                console.error(e);
+                runStatus.textContent = "❌ 失敗";
+                resultBox.textContent = "錯誤：" + e.message;
+            } finally {
+                genBtn.disabled = false;
+            }
+        };
+    </script>
     <script>
         const langEl = document.getElementById('lang');
         const voiceEl = document.getElementById('voice');
@@ -298,187 +534,6 @@
             "sw-KE": ["Hujambo", "Habari", "Asubuhi njema", "Usiku mwema"]
         };
 
-        // === Google TTS 主要口音分組設定 ===
-        const VOICE_VARIANTS = {
-            // 中文
-            "zh-TW": {
-                include: ["cmn-TW", "cmn-CN"],
-                labels: {
-                    "cmn-TW": "台灣",
-                    "cmn-CN": "中國"
-                }
-            },
-
-            // 英文
-            "en-US": {
-                include: ["en-US", "en-GB", "en-AU", "en-CA"],
-                labels: {
-                    "en-US": "美式",
-                    "en-GB": "英式",
-                    "en-AU": "澳洲",
-                    "en-CA": "加拿大"
-                }
-            },
-
-            // 德文
-            "de-DE": {
-                include: ["de-DE", "de-AT", "de-CH"],
-                labels: {
-                    "de-DE": "德國",
-                    "de-AT": "奧地利",
-                    "de-CH": "瑞士"
-                }
-            },
-
-            // 西班牙語
-            "es-ES": {
-                include: ["es-ES", "es-MX", "es-US", "es-AR"],
-                labels: {
-                    "es-ES": "西班牙",
-                    "es-MX": "墨西哥",
-                    "es-US": "美國",
-                    "es-AR": "阿根廷"
-                }
-            },
-
-            // 葡萄牙語
-            "pt-PT": {
-                include: ["pt-PT", "pt-BR"],
-                labels: {
-                    "pt-PT": "歐洲",
-                    "pt-BR": "巴西"
-                }
-            },
-
-            // 法語
-            "fr-FR": {
-                include: ["fr-FR", "fr-CA"],
-                labels: {
-                    "fr-FR": "法國",
-                    "fr-CA": "加拿大"
-                }
-            },
-
-            // 意大利語
-            "it-IT": {
-                include: ["it-IT"],
-                labels: {
-                    "it-IT": "義大利"
-                }
-            },
-
-            // 俄語
-            "ru-RU": {
-                include: ["ru-RU"],
-                labels: {
-                    "ru-RU": "俄羅斯"
-                }
-            },
-
-            // 印地 & 烏爾都
-            "hi-IN": {
-                include: ["hi-IN", "ur-PK"],
-                labels: {
-                    "hi-IN": "印地語",
-                    "ur-PK": "烏爾都語"
-                }
-            },
-
-            // 孟加拉語
-            "bn-BD": {
-                include: ["bn-BD", "bn-IN"],
-                labels: {
-                    "bn-BD": "孟加拉",
-                    "bn-IN": "印度孟加拉"
-                }
-            },
-
-            // 波斯語
-            "fa-IR": {
-                include: ["fa-IR", "fa-AF"],
-                labels: {
-                    "fa-IR": "伊朗",
-                    "fa-AF": "阿富汗"
-                }
-            },
-
-            // 坦米爾語
-            "ta-IN": {
-                include: ["ta-IN", "ta-LK"],
-                labels: {
-                    "ta-IN": "印度",
-                    "ta-LK": "斯里蘭卡"
-                }
-            },
-
-            // 阿拉伯語
-            "ar-SA": {
-                include: ["ar-SA", "ar-EG", "ar-XA"],
-                labels: {
-                    "ar-SA": "沙烏地",
-                    "ar-EG": "埃及",
-                    "ar-XA": "汎阿拉伯"
-                }
-            },
-
-            // 土耳其語
-            "tr-TR": {
-                include: ["tr-TR"],
-                labels: {
-                    "tr-TR": "土耳其"
-                }
-            },
-
-            // 日語
-            "ja-JP": {
-                include: ["ja-JP"],
-                labels: {
-                    "ja-JP": "日本"
-                }
-            },
-
-            // 韓語
-            "ko-KR": {
-                include: ["ko-KR"],
-                labels: {
-                    "ko-KR": "韓國"
-                }
-            },
-
-            // 越南語
-            "vi-VN": {
-                include: ["vi-VN"],
-                labels: {
-                    "vi-VN": "越南（北部）"
-                }
-            },
-
-            // 印尼 & 馬來
-            "id-ID": {
-                include: ["id-ID", "ms-MY"],
-                labels: {
-                    "id-ID": "印尼語",
-                    "ms-MY": "馬來語"
-                }
-            },
-
-            // 泰語
-            "th-TH": {
-                include: ["th-TH"],
-                labels: {
-                    "th-TH": "泰國"
-                }
-            },
-
-            // 斯瓦希里語
-            "sw-KE": {
-                include: ["sw-KE", "sw-TZ"],
-                labels: {
-                    "sw-KE": "肯亞",
-                    "sw-TZ": "坦尚尼亞"
-                }
-            }
-        };
 
 
 
@@ -576,20 +631,61 @@
             const voices = speechSynthesis.getVoices(); const sel = voices.find(v => v.name === voiceEl.value);
             if (sel) u.voice = sel; u.lang = langEl.value; u.rate = parseFloat(rateEl.value); u.pitch = parseFloat(pitchEl.value);
             speechSynthesis.cancel(); speechSynthesis.speak(u);
-            if (langEl.value === 'en-US') fetchIPA(text);
+            fetchIPA(text, langEl.value);
         }
-        function fetchIPA(text) {
-            ipaEl.style.display = 'block'; ipaEl.textContent = '🔄 查詢 IPA 中...';
+        async function fetchIPA(text, langCode) {
+            ipaEl.style.display = 'block';
+            ipaEl.textContent = '🔄 查詢 IPA 中...';
             const word = text.split(/\s+/)[0] || '';
-            fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`)
-                .then(res => res.json())
-                .then(data => {
+
+            // 嘗試用 GPT API
+            const gptKey = (document.getElementById('gptKey')?.value || '').trim();
+            if (gptKey) {
+                try {
+                    // 用選擇的語言名稱 (例如 "Italiano", "日本語")
+                    const langName = langEl.options[langEl.selectedIndex].textContent.replace(/ ?🇧🇩| ?🇮🇳| ?🇯🇵| ?🇹🇼| ?🇺🇸| ?🇩🇪| ?🇪🇸| ?🇵🇹| ?🇫🇷| ?🇮🇹| ?🇷🇺| ?🇮🇷| ?🇸🇦| ?🇹🇷| ?🇰🇷| ?🇻🇳| ?🇮🇩| ?🇹🇭| ?🇰🇪/g, '').trim();
+                    const prompt = `Please write the International Phonetic Alphabet (IPA) transcription for the word "${word}" in ${langName}. Only output the IPA, no explanations.`;
+
+                    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${gptKey}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            model: "gpt-4o-mini",
+                            messages: [{ role: "user", content: prompt }],
+                            temperature: 0
+                        })
+                    });
+                    const data = await resp.json();
+                    if (resp.ok && data.choices?.[0]?.message?.content) {
+                        ipaEl.textContent = `📘 IPA: ${data.choices[0].message.content.trim()}`;
+                        return;
+                    } else {
+                        console.warn("GPT 失敗，fallback 字典API", data);
+                    }
+                } catch (e) {
+                    console.warn("GPT 查詢錯誤，fallback 字典API", e);
+                }
+            }
+
+            // fallback：目前只對英文有效的字典API
+            if (langCode.startsWith("en")) {
+                try {
+                    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+                    const data = await res.json();
                     const phon = data?.[0]?.phonetics?.find(p => p.text)?.text;
                     const meanings = data?.[0]?.meanings?.[0]?.definitions?.[0]?.definition;
                     ipaEl.textContent = phon ? `📘 IPA: ${phon}${meanings ? '\n' + meanings : ''}` : '找不到 IPA 資訊';
-                })
-                .catch(() => ipaEl.textContent = '❌ 查詢失敗');
+                } catch {
+                    ipaEl.textContent = '❌ 查詢失敗';
+                }
+            } else {
+                ipaEl.textContent = '⚠️ 無備用字典，請確認 GPT Key 是否可用';
+            }
         }
+
 
         langEl.addEventListener('change', () => {
             loadVoices(); textEl.placeholder = SAMPLE_TEXTS[langEl.value]?.[0] || ''; renderChips();
