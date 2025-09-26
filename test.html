@@ -344,6 +344,8 @@
 
         let currentUser = null;
         let gptKey = null;
+        let lastIPAQuery = { text: '', lang: '', ipa: '' };
+
 
         // === 登入 / 登出 ===
         loginBtn.onclick = () => {
@@ -626,26 +628,46 @@
         speechSynthesis.onvoiceschanged = loadVoices;
 
         function speakNow() {
-            const text = textEl.value.trim(); if (!text) return;
+            const text = textEl.value.trim();
+            if (!text) return;
             const u = new SpeechSynthesisUtterance(text);
-            const voices = speechSynthesis.getVoices(); const sel = voices.find(v => v.name === voiceEl.value);
-            if (sel) u.voice = sel; u.lang = langEl.value; u.rate = parseFloat(rateEl.value); u.pitch = parseFloat(pitchEl.value);
-            speechSynthesis.cancel(); speechSynthesis.speak(u);
-            fetchIPA(text, langEl.value);
+            const voices = speechSynthesis.getVoices();
+            const sel = voices.find(v => v.name === voiceEl.value);
+            if (sel) u.voice = sel;
+            u.lang = langEl.value;
+            u.rate = parseFloat(rateEl.value);
+            u.pitch = parseFloat(pitchEl.value);
+            speechSynthesis.cancel();
+            speechSynthesis.speak(u);
+
+            // ⚡ 如果文字有變才去查 GPT
+            if (lastIPAQuery.text !== text || lastIPAQuery.lang !== langEl.value) {
+                fetchIPA(text, langEl.value);
+            } else {
+                // 直接顯示快取
+                ipaEl.style.display = 'block';
+                ipaEl.textContent = `📘 IPA: ${lastIPAQuery.ipa}`;
+            }
         }
         async function fetchIPA(text, langCode) {
+            // 如果文字和語言都沒變，就直接用上次的結果
+            if (lastIPAQuery.text === text && lastIPAQuery.lang === langCode && lastIPAQuery.ipa) {
+                ipaEl.style.display = 'block';
+                ipaEl.textContent = `📘 IPA: ${lastIPAQuery.ipa}`;
+                return;
+            }
+
             ipaEl.style.display = 'block';
             ipaEl.textContent = '🔄 查詢 IPA 中...';
-            const word = text.split(/\s+/)[0] || '';
+            const sentence = text.trim();
 
-            // 嘗試用 GPT API
             const gptKey = (document.getElementById('gptKey')?.value || '').trim();
+            let ipa = '';
+
             if (gptKey) {
                 try {
-                    // 用選擇的語言名稱 (例如 "Italiano", "日本語")
                     const langName = langEl.options[langEl.selectedIndex].textContent.replace(/ ?🇧🇩| ?🇮🇳| ?🇯🇵| ?🇹🇼| ?🇺🇸| ?🇩🇪| ?🇪🇸| ?🇵🇹| ?🇫🇷| ?🇮🇹| ?🇷🇺| ?🇮🇷| ?🇸🇦| ?🇹🇷| ?🇰🇷| ?🇻🇳| ?🇮🇩| ?🇹🇭| ?🇰🇪/g, '').trim();
-                    const prompt = `Please write the International Phonetic Alphabet (IPA) transcription for the word "${word}" in ${langName}. Only output the IPA, no explanations.`;
-
+                    const prompt = `Please write the full International Phonetic Alphabet (IPA) transcription for the following sentence in ${langName}: "${sentence}". Only output the IPA transcription, no explanations.`;
                     const resp = await fetch("https://api.openai.com/v1/chat/completions", {
                         method: "POST",
                         headers: {
@@ -660,29 +682,27 @@
                     });
                     const data = await resp.json();
                     if (resp.ok && data.choices?.[0]?.message?.content) {
-                        ipaEl.textContent = `📘 IPA: ${data.choices[0].message.content.trim()}`;
-                        return;
-                    } else {
-                        console.warn("GPT 失敗，fallback 字典API", data);
+                        ipa = data.choices[0].message.content.trim();
                     }
                 } catch (e) {
                     console.warn("GPT 查詢錯誤，fallback 字典API", e);
                 }
             }
 
-            // fallback：目前只對英文有效的字典API
-            if (langCode.startsWith("en")) {
+            // 如果 GPT 沒回傳，fallback 英文字典
+            if (!ipa && langCode.startsWith("en")) {
                 try {
                     const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
                     const data = await res.json();
-                    const phon = data?.[0]?.phonetics?.find(p => p.text)?.text;
-                    const meanings = data?.[0]?.meanings?.[0]?.definitions?.[0]?.definition;
-                    ipaEl.textContent = phon ? `📘 IPA: ${phon}${meanings ? '\n' + meanings : ''}` : '找不到 IPA 資訊';
-                } catch {
-                    ipaEl.textContent = '❌ 查詢失敗';
-                }
+                    ipa = data?.[0]?.phonetics?.find(p => p.text)?.text || '';
+                } catch { }
+            }
+
+            if (ipa) {
+                ipaEl.textContent = `📘 IPA: ${ipa}`;
+                lastIPAQuery = { text, lang: langCode, ipa }; // 更新快取
             } else {
-                ipaEl.textContent = '⚠️ 無備用字典，請確認 GPT Key 是否可用';
+                ipaEl.textContent = '⚠️ 無法取得 IPA';
             }
         }
 
