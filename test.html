@@ -594,38 +594,41 @@
         document.getElementById('clearBtn').addEventListener('click', () => { strokes = []; redraw(); });
 
         function loadVoices() {
-            const voices = speechSynthesis.getVoices();
+            let voices = speechSynthesis.getVoices();
+            if (!voices.length) {
+                // 部分瀏覽器第一次會回傳空，延遲再試
+                setTimeout(loadVoices, 200);
+                return;
+            }
+
             const lang = langEl.value;
             voiceEl.innerHTML = '';
 
             const variant = VOICE_VARIANTS[lang];
+            let list = [];
+
             if (variant) {
-                // 有設定主要口音的語言
-                const list = voices.filter(v =>
-                    variant.include.some(code => v.lang.startsWith(code))
+                // 優先依主要口音設定過濾
+                list = voices.filter(v =>
+                    variant.include.some(code => v.lang?.startsWith(code))
                 );
-                if (list.length) {
-                    list.forEach(v => {
-                        const opt = document.createElement('option');
-                        const label = variant.labels[v.lang] || v.lang;
-                        opt.value = v.name;
-                        opt.textContent = `${v.name}（${label}）`;
-                        voiceEl.appendChild(opt);
-                    });
-                    return;
-                }
+            }
+            // 如果沒找到，退回用 lang 精確比對
+            if (!list.length) {
+                list = voices.filter(v => v.lang?.startsWith(lang));
             }
 
-            // 沒有特別分組或找不到對應語音，就用原本的方式
-            const list = voices.filter(v => v.lang === lang);
+            // 最後保底：如果還是空就用所有 voices
             (list.length ? list : voices).forEach(v => {
                 const opt = document.createElement('option');
+                const label = variant?.labels?.[v.lang] || v.lang;
                 opt.value = v.name;
-                opt.textContent = `${v.name} (${v.lang})`;
+                opt.textContent = `${v.name} (${label})`;
                 voiceEl.appendChild(opt);
             });
         }
         speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices(); // 頁面初始化時先跑一次
 
         function speakNow() {
             const text = textEl.value.trim();
@@ -708,9 +711,11 @@
 
 
         langEl.addEventListener('change', () => {
-            loadVoices(); textEl.placeholder = SAMPLE_TEXTS[langEl.value]?.[0] || ''; renderChips();
-            if (langEl.value !== 'en-US') { ipaEl.style.display = 'none'; ipaEl.textContent = ''; }
+            loadVoices();   // <- 再次過濾
+            textEl.placeholder = SAMPLE_TEXTS[langEl.value]?.[0] || '';
+            renderChips();
         });
+
         rateEl.addEventListener('input', () => { rateVal.textContent = rateEl.value; });
         pitchEl.addEventListener('input', () => { pitchVal.textContent = pitchEl.value; });
         fontSizeEl.addEventListener('input', () => {
