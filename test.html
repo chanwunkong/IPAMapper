@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>多語手寫朗讀工具</title>
     <meta name="theme-color" content="#0ea5e9" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b1220;
@@ -24,13 +25,14 @@
         html,
         body {
             height: 100%;
+
         }
 
         body {
             margin: 0;
             background: linear-gradient(180deg, #0b1220, #0f172a);
             color: var(--text);
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+            font-family: 'Noto Sans', sans-serif;
         }
 
         .wrap {
@@ -219,21 +221,21 @@
                             <option value="es-ES">Español 🇪🇸</option>
                             <option value="pt-PT">Português 🇵🇹</option>
                             <option value="ru-RU">Русский 🇷🇺</option>
-                            <option value="hi-IN">हिन्दी / اُردُو (印地-烏爾都語) 🇮🇳</option>
-                            <option value="bn-BD">বাংলা (孟加拉語) 🇧🇩</option>
-                            <option value="fa-IR">فارسی (波斯語) 🇮🇷</option>
-                            <option value="ta-IN">தமிழ் (坦米爾語) 🇮🇳</option>
-                            <option value="ar-SA">العربية (阿拉伯語) 🇸🇦</option>
-                            <option value="tr-TR">Türkçe (土耳其語) 🇹🇷</option>
+                            <option value="hi-IN">हिन्दी / اُردُو 🇮🇳</option>
+                            <option value="bn-BD">বাংলা 🇧🇩</option>
+                            <option value="fa-IR">فارسی 🇮🇷</option>
+                            <option value="ta-IN">தமிழ் 🇮🇳</option>
+                            <option value="ar-SA">العربية 🇸🇦</option>
+                            <option value="tr-TR">Türkçe 🇹🇷</option>
                             <option value="ko-KR">한국어 🇰🇷</option>
                             <option value="vi-VN">Tiếng Việt 🇻🇳</option>
                             <option value="id-ID">Bahasa Indonesia / Melayu 🇮🇩</option>
                             <option value="th-TH">ไทย 🇹🇭</option>
-                            <option value="sw-KE">Kiswahili (斯瓦希里語) 🇰🇪</option>
+                            <option value="sw-KE">Kiswahili 🇰🇪</option>
                         </select>
                     </div>
                     <div class="sub-field">
-                        <label class="label" for="voice">語音選擇</label>
+                        <label class="label" for="voice">語音選擇(手機不支援)</label>
                         <select id="voice"></select>
                     </div>
                 </div>
@@ -264,7 +266,12 @@
                     <input type="range" id="fontSize" min="16" max="240" step="1" value="32">
                 </div>
 
-                <div id="ipa" style="display:none"></div>
+                <div id="ipaWrap" style="display:none; text-align:center; margin-top:8px;">
+                    <img id="ipaImg" src="" alt=""
+                        style="max-width:100%; max-height:120px; display:none; margin-bottom:6px;">
+                    <div id="ipa"></div>
+                </div>
+
 
                 <!-- 手寫區 -->
                 <div class="field">
@@ -284,6 +291,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
     <script>
         // --- Firebase 初始化（用你的專案資訊） ---
@@ -513,31 +521,27 @@
         let strokes = []; let isDrawing = false; let currentStroke = null;
         let customFontSize = 72; // 由滑桿控制
 
-        const SAMPLE_TEXTS = {
-            "en-US": ["Hello", "Hi", "Good morning", "Good evening"],
-            "it-IT": ["Ciao", "Salve", "Buongiorno", "Buonasera"],
-            "zh-TW": ["你好", "嗨", "早安", "晚安"],
-            "ja-JP": ["こんにちは", "やあ", "おはよう", "こんばんは"],
-            "fr-FR": ["Bonjour", "Salut", "Bonsoir", "Coucou"],
-            "de-DE": ["Hallo", "Guten Tag", "Guten Morgen", "Guten Abend"],
-            "es-ES": ["Hola", "Buenos días", "Buenas tardes", "Buenas noches"],
-            "pt-PT": ["Olá", "Oi", "Bom dia", "Boa noite"],
-            "ru-RU": ["Привет", "Здравствуйте", "Доброе утро", "Добрый вечер"],
-            "hi-IN": ["नमस्ते", "हैलो", "सुप्रभात", "शुभ संध्या"],
-            "bn-BD": ["হ্যালো", "নমস্কার", "শুভ সকাল", "শুভ সন্ধ্যা"],
-            "fa-IR": ["سلام", "درود", "صبح بخیر", "عصر بخیر"],
-            "ta-IN": ["வணக்கம்", "ஹலோ", "காலை வணக்கம்", "மாலை வணக்கம்"],
-            "ar-SA": ["مرحبا", "أهلا", "صباح الخير", "مساء الخير"],
-            "tr-TR": ["Merhaba", "Selam", "Günaydın", "İyi akşamlar"],
-            "ko-KR": ["안녕하세요", "안녕", "좋은 아침", "안녕히 주무세요"],
-            "vi-VN": ["Xin chào", "Chào bạn", "Chào buổi sáng", "Chào buổi tối"],
-            "id-ID": ["Halo", "Hai", "Selamat pagi", "Selamat malam"],
-            "th-TH": ["สวัสดี", "หวัดดี", "อรุณสวัสดิ์", "สวัสดีตอนเย็น"],
-            "sw-KE": ["Hujambo", "Habari", "Asubuhi njema", "Usiku mwema"]
-        };
 
 
+        async function loadSwadeshCSV() {
+            const resp = await fetch('swadesh.csv');
+            const csvText = await resp.text();
+            const data = Papa.parse(csvText, { header: true }).data;
+            const SAMPLE_TEXTS = {};
 
+            data.forEach(row => {
+                for (const [lang, word] of Object.entries(row)) {
+                    if (!word) continue;
+                    if (!SAMPLE_TEXTS[lang]) SAMPLE_TEXTS[lang] = [];
+                    SAMPLE_TEXTS[lang].push(word);
+                }
+            });
+
+            window.SAMPLE_TEXTS = SAMPLE_TEXTS;
+            renderChips();
+        }
+
+        loadSwadeshCSV();
 
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
@@ -679,21 +683,23 @@
                 ipaEl.textContent = `📘 IPA: ${lastIPAQuery.ipa}`;
             }
         }
+        const ipaWrap = document.getElementById('ipaWrap');
+        const ipaImg = document.getElementById('ipa');
+
         async function fetchIPA(text, langCode) {
-            // 如果文字和語言都沒變，就直接用上次的結果
             if (lastIPAQuery.text === text && lastIPAQuery.lang === langCode && lastIPAQuery.ipa) {
-                ipaEl.style.display = 'block';
-                ipaEl.textContent = `📘 IPA: ${lastIPAQuery.ipa}`;
+                ipaWrap.style.display = 'block';
+                ipaImg.textContent = `📘 IPA: ${lastIPAQuery.ipa}`;
+                showWordImage(text);
                 return;
             }
 
-            ipaEl.style.display = 'block';
-            ipaEl.textContent = '🔄 查詢 IPA 中...';
+            ipaWrap.style.display = 'block';
+            ipaImg.textContent = '🔄 查詢 IPA 中...';
             const sentence = text.trim();
-
-            const gptKey = (document.getElementById('gptKey')?.value || '').trim();
             let ipa = '';
 
+            const gptKey = (document.getElementById('gptKey')?.value || '').trim();
             if (gptKey) {
                 try {
                     const langName = langEl.options[langEl.selectedIndex].textContent.replace(/ ?🇧🇩| ?🇮🇳| ?🇯🇵| ?🇹🇼| ?🇺🇸| ?🇩🇪| ?🇪🇸| ?🇵🇹| ?🇫🇷| ?🇮🇹| ?🇷🇺| ?🇮🇷| ?🇸🇦| ?🇹🇷| ?🇰🇷| ?🇻🇳| ?🇮🇩| ?🇹🇭| ?🇰🇪/g, '').trim();
@@ -719,21 +725,41 @@
                 }
             }
 
-            // 如果 GPT 沒回傳，fallback 英文字典
+            // fallback
             if (!ipa && langCode.startsWith("en")) {
                 try {
-                    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+                    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(text)}`);
                     const data = await res.json();
                     ipa = data?.[0]?.phonetics?.find(p => p.text)?.text || '';
                 } catch { }
             }
 
             if (ipa) {
-                ipaEl.textContent = `📘 IPA: ${ipa}`;
-                lastIPAQuery = { text, lang: langCode, ipa }; // 更新快取
+                ipaImg.textContent = `📘 IPA: ${ipa}`;
+                lastIPAQuery = { text, lang: langCode, ipa };
             } else {
-                ipaEl.textContent = '⚠️ 無法取得 IPA';
+                ipaImg.textContent = '⚠️ 無法取得 IPA';
             }
+
+            // ✅ 新增：顯示對應圖片
+            showWordImage(text);
+        }
+
+        function showWordImage(word) {
+            const imgEl = document.getElementById('ipaImg');
+            const base = `swadesh/${encodeURIComponent(word)}`;
+            imgEl.style.display = 'none';
+
+            // 嘗試 jpg → png
+            imgEl.src = `${base}.jpg`;
+            imgEl.onerror = () => {
+                imgEl.onerror = null;
+                imgEl.src = `${base}.png`;
+            };
+
+            imgEl.onload = () => {
+                imgEl.style.display = 'block';
+            };
         }
 
 
