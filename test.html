@@ -595,11 +595,7 @@
 
         function loadVoices() {
             let voices = speechSynthesis.getVoices();
-            if (!voices.length) {
-                // 部分瀏覽器第一次會回傳空，延遲再試
-                setTimeout(loadVoices, 200);
-                return;
-            }
+            if (!voices.length) return;  // 這裡不要再 setTimeout
 
             const lang = langEl.value;
             voiceEl.innerHTML = '';
@@ -608,17 +604,14 @@
             let list = [];
 
             if (variant) {
-                // 優先依主要口音設定過濾
                 list = voices.filter(v =>
-                    variant.include.some(code => v.lang?.startsWith(code))
+                    variant.include.some(code => v.lang?.toLowerCase().startsWith(code.toLowerCase()))
                 );
             }
-            // 如果沒找到，退回用 lang 精確比對
             if (!list.length) {
-                list = voices.filter(v => v.lang?.startsWith(lang));
+                list = voices.filter(v => v.lang?.toLowerCase().startsWith(lang.toLowerCase()));
             }
 
-            // 最後保底：如果還是空就用所有 voices
             (list.length ? list : voices).forEach(v => {
                 const opt = document.createElement('option');
                 const label = variant?.labels?.[v.lang] || v.lang;
@@ -627,8 +620,42 @@
                 voiceEl.appendChild(opt);
             });
         }
+
         speechSynthesis.onvoiceschanged = loadVoices;
-        loadVoices(); // 頁面初始化時先跑一次
+        waitForVoices().then(loadVoices);
+
+        voiceEl.addEventListener('change', () => {
+            if (textEl.value.trim()) speakNow();
+        });
+
+        // 等待 voices 載入（Android Chrome 常第一次是空的）
+        function waitForVoices() {
+            return new Promise(resolve => {
+                let id = setInterval(() => {
+                    if (speechSynthesis.getVoices().length) {
+                        clearInterval(id);
+                        resolve();
+                    }
+                }, 250);
+            });
+        }
+
+        speechSynthesis.onvoiceschanged = loadVoices;
+        waitForVoices().then(loadVoices);
+
+        voiceEl.addEventListener('change', () => {
+            console.log('切換語音:', voiceEl.value);
+            if (textEl.value.trim()) {
+                speakNow();   // 直接重新朗讀，測試選到的新聲音
+            }
+        });
+
+        langEl.addEventListener('change', () => {
+            loadVoices();
+            textEl.placeholder = SAMPLE_TEXTS[langEl.value]?.[0] || '';
+            renderChips();
+        });
+
 
         function speakNow() {
             const text = textEl.value.trim();
