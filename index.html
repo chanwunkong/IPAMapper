@@ -1,1123 +1,410 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPA Chart</title>
-
-    <!-- 引入 Noto Sans 字體 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IPA Chart Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-
     <style>
         body {
             font-family: 'Noto Sans', sans-serif;
-            margin: 20px;
-            font-size: 20px;
+            background-color: #f8fafc;
+            overscroll-behavior-y: none;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .table-wrapper {
+            position: relative;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            background: white;
+            height: 100%;
+        }
+
+        table.ipa-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: max-content;
+        }
+
+        div.ipa-table.active {
+            display: flex;
+        }
+
+        table.ipa-table.active {
+            display: table;
+        }
+
+        .ipa-table.hidden {
+            display: none !important;
         }
 
         th,
         td {
-            border: 1px solid black;
-            padding: 8px;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 2px;
             text-align: center;
+            vertical-align: middle;
+            min-width: 48px;
+            height: 56px;
         }
 
         th {
-            background-color: #f2f2f2;
-        }
-
-        table[data-type="ConsonantsPulmonic"] {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table[data-type="ConsonantsPulmonic"] th:first-child {
-            width: 1%;
-            white-space: nowrap;
-        }
-
-        table[data-type="ConsonantsPulmonic"] th:not(:first-child) {
-            width: 1%;
-        }
-
-        table[data-type="ConsonantsNonPulmonic"] {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table[data-type="OtherSymbols"] {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table[data-type="OtherSymbols"] th:first-child {
-            width: 1%;
-            white-space: nowrap;
-        }
-
-        table[data-type="OtherSymbols"] th:not(:first-child) {
-            width: 1%;
-        }
-
-        h2 {
-            cursor: pointer;
-            color: black;
+            background-color: #f1f5f9;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            font-size: 12px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
         }
 
-        span.toggle-icon {
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            background-color: #f1f5f9;
+            z-index: 20;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .sticky-corner {
+            position: sticky;
+            top: 0;
+            left: 0;
+            z-index: 30;
+            background-color: #e2e8f0;
+            border-left: 1px solid #e2e8f0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .ipa-cell {
+            position: relative;
+            cursor: pointer;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+
+        .ipa-cell:active,
+        .ipa-cell.active {
+            background-color: #e0f2fe;
+        }
+
+        .ipa-cell.void {
+            background-color: #cbd5e1;
+            pointer-events: none;
+        }
+
+        /* 保留邊框與背景，僅隱藏內部內容以維持表格完整性 */
+        .empty-placeholder {
+            pointer-events: none;
+            background-color: #f8fafc;
+        }
+
+        .empty-placeholder * {
+            display: none !important;
+        }
+
+        .symbol-text {
+            display: block;
             font-size: 18px;
             font-weight: bold;
+            color: #0f172a;
+            transform: translateY(-4px);
         }
 
-        #language-selector {
-            font-size: 16px;
-            margin-bottom: 10px;
-            padding: 5px;
+        .indicator-container {
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2px;
+            padding: 0 2px;
+            pointer-events: none;
+        }
+
+        .micro-flag {
+            width: 12px;
+            height: 8px;
+            object-fit: cover;
+            border-radius: 1px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+        }
+
+        .lang-toggle {
+            transition: all 0.2s;
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .lang-toggle.active {
+            opacity: 1;
+            filter: grayscale(0%);
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+
+        .toggle-checkbox:checked+.toggle-label {
+            background-color: #3b82f6;
         }
     </style>
 </head>
-<a href="test.html">
-    <button class="btn btn-tts">去 手寫練習</button>
-</a>
-<br>
 
-<body style="background-color: rgb(254, 242, 223)">
+<body class="h-screen flex flex-col overflow-hidden relative">
 
+    <header class="flex-shrink-0 bg-white border-b border-slate-200 z-10 shadow-sm relative">
+        <div class="px-4 py-3 flex justify-between items-center">
+            <h1 class="text-lg font-bold text-slate-800">IPA Mapper</h1>
 
-    <label for="language-selector">Lang：</label>
-    <select id="language-selector" onchange="changeLanguage(this.value)">
-        <option value="zh">繁體中文</option>
-        <option value="en">English</option>
-    </select>
+            <div class="flex items-center gap-3">
+                <label class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" id="hide-empty-toggle" class="sr-only" onchange="filterTable()">
+                        <div class="block bg-slate-200 w-10 h-6 rounded-full transition-colors toggle-label"></div>
+                        <div
+                            class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform transform">
+                        </div>
+                    </div>
+                    <div class="ml-2 text-sm font-medium text-slate-700">隱藏空欄位</div>
+                </label>
+                <a href="test.html" class="text-sm bg-slate-800 text-white px-3 py-1.5 rounded-md font-medium">手寫</a>
+            </div>
+        </div>
 
-    <label>
-        <input type="checkbox" id="simpleModeCheckbox" data-key="simpleMode">simpleMode
-    </label>
-    <br>
+        <div class="px-4 pb-3">
+            <button onclick="toggleLangPanel()"
+                class="w-full flex justify-between items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 focus:outline-none shadow-sm">
+                <span id="lang-btn-text">選擇對比語言 (已選: 0)</span>
+                <svg id="lang-btn-icon" class="w-4 h-4 transition-transform duration-200" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="language-toggles" class="hidden flex-wrap gap-2 pt-3"></div>
+        </div>
+    </header>
 
-    <div> <input type="checkbox" id="chk-chinese" onclick="toggleRow()">
-        <label for="chk-chinese" data-key="chinese"><img src="flags/tw.png" width="20">
-        </label>
+    <main class="flex-1 relative bg-slate-50 flex flex-col min-h-0 z-0">
+        <div class="flex-shrink-0 px-4 py-2 border-b border-slate-200 bg-white flex gap-4 overflow-x-auto no-scrollbar">
+            <button class="tab-btn font-bold text-blue-600 border-b-2 border-blue-600 pb-1 whitespace-nowrap"
+                data-tab="pulmonic" onclick="switchTab('pulmonic')">Pulmonic</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="nonpulmonic"
+                onclick="switchTab('nonpulmonic')">Non-Pulmonic</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="vowels"
+                onclick="switchTab('vowels')">Vowels</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="others"
+                onclick="switchTab('others')">Other Symbols</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="diacritics"
+                onclick="switchTab('diacritics')">Diacritics</button>
+        </div>
 
-        <input type="checkbox" id="chk-english" onclick="toggleRow()">
-        <label for="chk-english" data-key="english"><img src="flags/us.png" width="20">
-        </label>
+        <div class="flex-1 table-wrapper pb-24">
+            <table id="table-pulmonic" class="ipa-table active">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+            <table id="table-vowels" class="ipa-table hidden"></table>
+            <div id="table-nonpulmonic"
+                class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
+            <div id="table-others"
+                class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
+            <div id="table-diacritics"
+                class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
+        </div>
+    </main>
 
-        <input type="checkbox" id="chk-german" onclick="toggleRow()">
-        <label for="chk-german" data-key="german"><img src="flags/de.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-spanish" onclick="toggleRow()">
-        <label for="chk-spanish" data-key="spanish"><img src="flags/es.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-portuguese" onclick="toggleRow()">
-        <label for="chk-portuguese" data-key="portuguese"><img src="flags/pt.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-french" onclick="toggleRow()">
-        <label for="chk-french" data-key="french"><img src="flags/fr.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-italian" onclick="toggleRow()">
-        <label for="chk-italian" data-key="italian"><img src="flags/it.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-russian" onclick="toggleRow()">
-        <label for="chk-russian" data-key="russian"><img src="flags/ru.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-hindiurdu" onclick="toggleRow()">
-        <label for="chk-hindiurdu" data-key="hindiurdu"><img src="flags/in.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-bengali" onclick="toggleRow()">
-        <label for="chk-bengali" data-key="bengali"><img src="flags/bd.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-persian" onclick="toggleRow()">
-        <label for="chk-persian" data-key="persian"><img src="flags/ir.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-tamil" onclick="toggleRow()">
-        <label for="chk-tamil" data-key="tamil"><img src="flags/in.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-arabic" onclick="toggleRow()">
-        <label for="chk-arabic" data-key="arabic"><img src="flags/sa.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-turkish" onclick="toggleRow()">
-        <label for="chk-turkish" data-key="turkish"><img src="flags/tr.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-japanese" onclick="toggleRow()">
-        <label for="chk-japanese" data-key="japanese"><img src="flags/jp.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-korean" onclick="toggleRow()">
-        <label for="chk-korean" data-key="korean"><img src="flags/kr.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-vietnamese" onclick="toggleRow()">
-        <label for="chk-vietnamese" data-key="vietnamese"><img src="flags/vn.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-indonesian" onclick="toggleRow()">
-        <label for="chk-indonesian" data-key="indonesian"><img src="flags/id.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-thai" onclick="toggleRow()">
-        <label for="chk-thai" data-key="thai"><img src="flags/th.png" width="20">
-        </label>
-
-        <input type="checkbox" id="chk-swahili" onclick="toggleRow()">
-        <label for="chk-swahili" data-key="swahili"><img src="flags/ke.png" width="20">
-        </label>
-    </div>
-
-    <h2 onclick="toggleTable(this)" data-key="ConsonantsPulmonic"><span class="toggle-icon">+</span></h2>
-    <table data-type="ConsonantsPulmonic">
-        <tr>
-            <th data-key=""></th>
-            <th colspan="2" data-key="Bilabial"></th>
-            <th colspan="2" data-key="Labiodental"></th>
-            <th colspan="2" data-key="Dental"></th>
-            <th colspan="2" data-key="Alveolar"></th>
-            <th colspan="2" data-key="Postalveolar"></th>
-            <th colspan="2" data-key="Retroflex"></th>
-            <th colspan="2" data-key="Palatal"></th>
-            <th colspan="2" data-key="Velar"></th>
-            <th colspan="2" data-key="Uvular"></th>
-            <th colspan="2" data-key="Pharyngeal"></th>
-            <th colspan="2" data-key="Glottal"></th>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="Plosive"></td>
-            <td style="border-right: none;">p</td>
-            <td style="border-left: none;">b</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">t</td>
-            <td style="border-right: none; border-left: none;">d</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;">ʈ</td>
-            <td style="border-left: none;">ɖ</td>
-            <td style="border-right: none;">c</td>
-            <td style="border-left: none;">ɟ</td>
-            <td style="border-right: none;">k</td>
-            <td style="border-left: none;">ɡ</td>
-            <td style="border-right: none;">q</td>
-            <td style="border-left: none;">ɢ</td>
-            <td></td>
-            <td style="background-color: #d3d3d3;"></td>
-            <td>ʔ</td>
-            <td style="background-color: #d3d3d3"></td>
-        </tr>
-
-        <tr class="Compare">
-            <td id="Plosive-Bilabial-voiceless"></td>
-            <td id="Plosive-Bilabial-voiced"></td>
-            <td id="Plosive-Labiodental-voiceless"></td>
-            <td id="Plosive-Labiodental-voiced"></td>
-            <td id="Plosive-Dental-voiceless"></td>
-            <td id="Plosive-Dental-voiced"></td>
-            <td id="Plosive-Alveolar-voiceless"></td>
-            <td id="Plosive-Alveolar-voiced"></td>
-            <td id="Plosive-Postalveolar-voiceless"></td>
-            <td id="Plosive-Postalveolar-voiced"></td>
-            <td id="Plosive-Retroflex-voiceless"></td>
-            <td id="Plosive-Retroflex-voiced"></td>
-            <td id="Plosive-Palatal-voiceless"></td>
-            <td id="Plosive-Palatal-voiced"></td>
-            <td id="Plosive-Velar-voiceless"></td>
-            <td id="Plosive-Velar-voiced"></td>
-            <td id="Plosive-Uvular-voiceless"></td>
-            <td id="Plosive-Uvular-voiced"></td>
-            <td id="Plosive-Pharyngeal-voiceless"></td>
-            <td id="Plosive-Pharyngeal-voiced" style="background-color: #d3d3d3"></td>
-            <td id="Plosive-Glottal-voiceless"></td>
-            <td id="Plosive-Glottal-voiced" style="background-color: #d3d3d3"></td>
-        </tr>
-
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="Nasal"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">m</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɱ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">n</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɳ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɲ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ŋ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɴ</td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-        </tr>
-        <tr class="Compare">
-            <td id="Nasal-Bilabial-voiceless"></td>
-            <td id="Nasal-Bilabial-voiced"></td>
-            <td id="Nasal-Labiodental-voiceless"></td>
-            <td id="Nasal-Labiodental-voiced"></td>
-            <td id="Nasal-Dental-voiceless"></td>
-            <td id="Nasal-Dental-voiced"></td>
-            <td id="Nasal-Alveolar-voiceless"></td>
-            <td id="Nasal-Alveolar-voiced"></td>
-            <td id="Nasal-Postalveolar-voiceless"></td>
-            <td id="Nasal-Postalveolar-voiced"></td>
-            <td id="Nasal-Retroflex-voiceless"></td>
-            <td id="Nasal-Retroflex-voiced"></td>
-            <td id="Nasal-Palatal-voiceless"></td>
-            <td id="Nasal-Palatal-voiced"></td>
-            <td id="Nasal-Velar-voiceless"></td>
-            <td id="Nasal-Velar-voiced"></td>
-            <td id="Nasal-Uvular-voiceless"></td>
-            <td id="Nasal-Uvular-voiced"></td>
-            <td id="Nasal-Pharyngeal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="Nasal-Pharyngeal-voiced" style="background-color: #d3d3d3"></td>
-            <td id="Nasal-Glottal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="Nasal-Glottal-voiced" style="background-color: #d3d3d3"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="Trill"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ʙ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">r</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ʀ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-        </tr>
-        <tr class="Compare">
-            <td id="Trill-Bilabial-voiceless"></td>
-            <td id="Trill-Bilabial-voiced"></td>
-            <td id="Trill-Labiodental-voiceless"></td>
-            <td id="Trill-Labiodental-voiced"></td>
-            <td id="Trill-Dental-voiceless"></td>
-            <td id="Trill-Dental-voiced"></td>
-            <td id="Trill-Alveolar-voiceless"></td>
-            <td id="Trill-Alveolar-voiced"></td>
-            <td id="Trill-Postalveolar-voiceless"></td>
-            <td id="Trill-Postalveolar-voiced"></td>
-            <td id="Trill-Retroflex-voiceless"></td>
-            <td id="Trill-Retroflex-voiced"></td>
-            <td id="Trill-Palatal-voiceless"></td>
-            <td id="Trill-Palatal-voiced"></td>
-            <td id="Trill-Velar-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="Trill-Velar-voiced" style="background-color: #d3d3d3"></td>
-            <td id="Trill-Uvular-voiceless"></td>
-            <td id="Trill-Uvular-voiced"></td>
-            <td id="Trill-Pharyngeal-voiceless"></td>
-            <td id="Trill-Pharyngeal-voiced"></td>
-            <td id="Trill-Glottal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="Trill-Glottal-voiced" style="background-color: #d3d3d3"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="TapOrFlap"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ⱱ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">ɾ</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɽ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-        </tr>
-        <tr class="Compare">
-            <td id="TapOrFlap-Bilabial-voiceless"></td>
-            <td id="TapOrFlap-Bilabial-voiced"></td>
-            <td id="TapOrFlap-Labiodental-voiceless"></td>
-            <td id="TapOrFlap-Labiodental-voiced"></td>
-            <td id="TapOrFlap-Dental-voiceless"></td>
-            <td id="TapOrFlap-Dental-voiced"></td>
-            <td id="TapOrFlap-Alveolar-voiceless"></td>
-            <td id="TapOrFlap-Alveolar-voiced"></td>
-            <td id="TapOrFlap-Postalveolar-voiceless"></td>
-            <td id="TapOrFlap-Postalveolar-voiced"></td>
-            <td id="TapOrFlap-Retroflex-voiceless"></td>
-            <td id="TapOrFlap-Retroflex-voiced"></td>
-            <td id="TapOrFlap-Palatal-voiceless"></td>
-            <td id="TapOrFlap-Palatal-voiced"></td>
-            <td id="TapOrFlap-Velar-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="TapOrFlap-Velar-voiced" style="background-color: #d3d3d3"></td>
-            <td id="TapOrFlap-Uvular-voiceless"></td>
-            <td id="TapOrFlap-Uvular-voiced"></td>
-            <td id="TapOrFlap-Pharyngeal-voiceless"></td>
-            <td id="TapOrFlap-Pharyngeal-voiced"></td>
-            <td id="TapOrFlap-Glottal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="TapOrFlap-Glottal-voiced" style="background-color: #d3d3d3"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="Fricative"></td>
-            <td style="border-right: none;">ɸ</td>
-            <td style="border-left: none;">β</td>
-            <td style="border-right: none;">f</td>
-            <td style="border-left: none;">v</td>
-            <td style="border-right: none;">θ</td>
-            <td style="border-left: none;">ð</td>
-            <td style="border-right: none;">s</td>
-            <td style="border-left: none;">z</td>
-            <td style="border-right: none;">ʃ</td>
-            <td style="border-left: none;">ʒ</td>
-            <td style="border-right: none;">ʂ</td>
-            <td style="border-left: none;">ʐ</td>
-            <td style="border-right: none;">ç</td>
-            <td style="border-left: none;">ʝ</td>
-            <td style="border-right: none;">x</td>
-            <td style="border-left: none;">ɣ</td>
-            <td style="border-right: none;">χ</td>
-            <td style="border-left: none;">ʁ</td>
-            <td style="border-right: none;">ħ</td>
-            <td style="border-left: none;">ʕ</td>
-            <td style="border-right: none;">h</td>
-            <td style="border-left: none;">ɦ</td>
-        </tr>
-        <tr class="Compare">
-            <td id="Fricative-Bilabial-voiceless"></td>
-            <td id="Fricative-Bilabial-voiced"></td>
-            <td id="Fricative-Labiodental-voiceless"></td>
-            <td id="Fricative-Labiodental-voiced"></td>
-            <td id="Fricative-Dental-voiceless"></td>
-            <td id="Fricative-Dental-voiced"></td>
-            <td id="Fricative-Alveolar-voiceless"></td>
-            <td id="Fricative-Alveolar-voiced"></td>
-            <td id="Fricative-Postalveolar-voiceless"></td>
-            <td id="Fricative-Postalveolar-voiced"></td>
-            <td id="Fricative-Retroflex-voiceless"></td>
-            <td id="Fricative-Retroflex-voiced"></td>
-            <td id="Fricative-Palatal-voiceless"></td>
-            <td id="Fricative-Palatal-voiced"></td>
-            <td id="Fricative-Velar-voiceless"></td>
-            <td id="Fricative-Velar-voiced"></td>
-            <td id="Fricative-Uvular-voiceless"></td>
-            <td id="Fricative-Uvular-voiced"></td>
-            <td id="Fricative-Pharyngeal-voiceless"></td>
-            <td id="Fricative-Pharyngeal-voiced"></td>
-            <td id="Fricative-Glottal-voiceless"></td>
-            <td id="Fricative-Glottal-voiced"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="LateralFricative"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">ɬ</td>
-            <td style="border-right: none; border-left: none;">ɮ</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-        </tr>
-        <tr class="Compare">
-            <td id="LateralFricative-Bilabial-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralFricative-Bilabial-voiced" style="background-color: #d3d3d3"></td>
-            <td id="LateralFricative-Labiodental-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralFricative-Labiodental-voiced" style="background-color: #d3d3d3"></td>
-            <td id="LateralFricative-Dental-voiceless"></td>
-            <td id="LateralFricative-Dental-voiced"></td>
-            <td id="LateralFricative-Alveolar-voiceless"></td>
-            <td id="LateralFricative-Alveolar-voiced"></td>
-            <td id="LateralFricative-Postalveolar-voiceless"></td>
-            <td id="LateralFricative-Postalveolar-voiced"></td>
-            <td id="LateralFricative-Retroflex-voiceless"></td>
-            <td id="LateralFricative-Retroflex-voiced"></td>
-            <td id="LateralFricative-Palatal-voiceless"></td>
-            <td id="LateralFricative-Palatal-voiced"></td>
-            <td id="LateralFricative-Velar-voiceless"></td>
-            <td id="LateralFricative-Velar-voiced"></td>
-            <td id="LateralFricative-Uvular-voiceless"></td>
-            <td id="LateralFricative-Uvular-voiced"></td>
-            <td id="LateralFricative-Pharyngeal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralFricative-Pharyngeal-voiced" style="background-color: #d3d3d3"></td>
-            <td id="LateralFricative-Glottal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralFricative-Glottal-voiced" style="background-color: #d3d3d3"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="Approximant"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ʋ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">ɹ</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɻ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">j</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɰ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-        </tr>
-        <tr class="Compare">
-            <td id="Approximant-Bilabial-voiceless"></td>
-            <td id="Approximant-Bilabial-voiced"></td>
-            <td id="Approximant-Labiodental-voiceless"></td>
-            <td id="Approximant-Labiodental-voiced"></td>
-            <td id="Approximant-Dental-voiceless"></td>
-            <td id="Approximant-Dental-voiced"></td>
-            <td id="Approximant-Alveolar-voiceless"></td>
-            <td id="Approximant-Alveolar-voiced"></td>
-            <td id="Approximant-Postalveolar-voiceless"></td>
-            <td id="Approximant-Postalveolar-voiced"></td>
-            <td id="Approximant-Retroflex-voiceless"></td>
-            <td id="Approximant-Retroflex-voiced"></td>
-            <td id="Approximant-Palatal-voiceless"></td>
-            <td id="Approximant-Palatal-voiced"></td>
-            <td id="Approximant-Velar-voiceless"></td>
-            <td id="Approximant-Velar-voiced"></td>
-            <td id="Approximant-Uvular-voiceless"></td>
-            <td id="Approximant-Uvular-voiced"></td>
-            <td id="Approximant-Pharyngeal-voiceless"></td>
-            <td id="Approximant-Pharyngeal-voiced"></td>
-            <td id="Approximant-Glottal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="Approximant-Glottal-voiced" style="background-color: #d3d3d3"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="LateralApproximant"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;">l</td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ɭ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ʎ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;">ʟ</td>
-            <td style="border-right: none;"></td>
-            <td style="border-left: none;"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-            <td style="border-right: none; background-color:  #d3d3d3"></td>
-            <td style="border-left: none; background-color:  #d3d3d3"></td>
-        </tr>
-        <tr class="Compare">
-            <td id="LateralApproximant-Bilabial-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralApproximant-Bilabial-voiced" style="background-color: #d3d3d3"></td>
-            <td id="LateralApproximant-Labiodental-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralApproximant-Labiodental-voiced" style="background-color: #d3d3d3"></td>
-            <td id="LateralApproximant-Dental-voiceless"></td>
-            <td id="LateralApproximant-Dental-voiced"></td>
-            <td id="LateralApproximant-Alveolar-voiceless"></td>
-            <td id="LateralApproximant-Alveolar-voiced"></td>
-            <td id="LateralApproximant-Postalveolar-voiceless"></td>
-            <td id="LateralApproximant-Postalveolar-voiced"></td>
-            <td id="LateralApproximant-Retroflex-voiceless"></td>
-            <td id="LateralApproximant-Retroflex-voiced"></td>
-            <td id="LateralApproximant-Palatal-voiceless"></td>
-            <td id="LateralApproximant-Palatal-voiced"></td>
-            <td id="LateralApproximant-Velar-voiceless"></td>
-            <td id="LateralApproximant-Velar-voiced"></td>
-            <td id="LateralApproximant-Uvular-voiceless"></td>
-            <td id="LateralApproximant-Uvular-voiced"></td>
-            <td id="LateralApproximant-Pharyngeal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralApproximant-Pharyngeal-voiced" style="background-color: #d3d3d3"></td>
-            <td id="LateralApproximant-Glottal-voiceless" style="background-color: #d3d3d3"></td>
-            <td id="LateralApproximant-Glottal-voiced" style="background-color: #d3d3d3"></td>
-        </tr>
-        <tr>
-            <td colspan="23" data-key="ConsonantsPulmonicNote"></td>
-        </tr>
-
-
-    </table>
-
-    <h2 onclick="toggleTable(this)" data-key="ConsonantsNonPulmonic"><span class="toggle-icon">+</span></h2>
-    <table data-type="ConsonantsNonPulmonic">
-        <tr>
-            <th colspan="2" data-key="Clicks"></th>
-            <th colspan="2" data-key="VoicedImplosives"></th>
-            <th colspan="2" data-key="Ejectives"></th>
-        </tr>
-
-        <tr>
-            <td style="border-right: none;">ʘ</td>
-            <td style="border-left: none;" data-key="NonP-Bilabial"></td>
-            <td style="border-right: none;">ɓ</td>
-            <td style="border-left: none;" data-key="NonP-Bilabial"></td>
-            <td style="border-right: none;"> ʼ</td>
-            <td style="border-left: none;" data-key="NonP-Ejective"></td>
-        </tr>
-
-        <tr class="Compare">
-            <td colspan="2" id="Clicks-Bilabial"></td>
-            <td colspan="2" id="VoicedImplosives-Bilabial"></td>
-            <td colspan="2" id="Ejectives-Ejective"></td>
-        </tr>
-
-        <tr>
-            <td style="border-right: none;">ǀ</td>
-            <td style="border-left: none;" data-key="NonP-Dental"></td>
-            <td style="border-right: none;">ɗ</td>
-            <td style="border-left: none;" data-key="NonP-DentalAlveolar"></td>
-            <td style="border-right: none;">pʼ</td>
-            <td style="border-left: none;" data-key="NonP-Bilabial"></td>
-        </tr>
-
-        <tr class="Compare">
-            <td colspan="2" id="Clicks-Dental"></td>
-            <td colspan="2" id="VoicedImplosives-DentalAlveolar"></td>
-            <td colspan="2" id="Ejectives-Bilabial"></td>
-        </tr>
-
-        <tr>
-            <td style="border-right: none;">ǃ</td>
-            <td style="border-left: none;" data-key="NonP-Postalveolar"></td>
-            <td style="border-right: none;">ʄ</td>
-            <td style="border-left: none;" data-key="NonP-Palatal"></td>
-            <td style="border-right: none;">tʼ</td>
-            <td style="border-left: none;" data-key="NonP-DentalAlveolar"></td>
-        </tr>
-
-        <tr class="Compare">
-            <td colspan="2" id="Clicks-Postalveolar"></td>
-            <td colspan="2" id="VoicedImplosives-Palatal"></td>
-            <td colspan="2" id="Ejectives-DentalAlveolar"></td>
-        </tr>
-
-        <tr>
-            <td style="border-right: none;">ǂ</td>
-            <td style="border-left: none;" data-key="NonP-Palatoalveolar"></td>
-            <td style="border-right: none;">ɠ</td>
-            <td style="border-left: none;" data-key="NonP-Velar"></td>
-            <td style="border-right: none;">kʼ</td>
-            <td style="border-left: none;" data-key="NonP-Velar"></td>
-        </tr>
-
-        <tr class="Compare">
-            <td colspan="2" id="Clicks-Palatoalveolar"></td>
-            <td colspan="2" id="VoicedImplosives-Velar"></td>
-            <td colspan="2" id="Ejectives-Velar"></td>
-        </tr>
-
-        <tr>
-            <td style="border-right: none;">ǁ</td>
-            <td style="border-left: none;" data-key="NonP-AlveolarLateral"></td>
-            <td style="border-right: none;">ʛ</td>
-            <td style="border-left: none;" data-key="NonP-Uvular"></td>
-            <td style="border-right: none;">sʼ</td>
-            <td style="border-left: none;" data-key="NonP-AlveolarFricative"></td>
-        </tr>
-
-        <tr class="Compare">
-            <td colspan="2" id="Clicks-AlveolarLateral"></td>
-            <td colspan="2" id="VoicedImplosives-Uvular"></td>
-            <td colspan="2" id="Ejectives-AlveolarFricative"></td>
-        </tr>
-    </table>
-
-    <h2 onclick="toggleTable(this)" data-key="OtherSymbols"><span class="toggle-icon">+</span></h2>
-    <table data-type="OtherSymbols">
-        <tr>
-            <td style="border-right: none;">ʍ</td>
-            <td style="border-left: none;" data-key="OS-VoicelessLabialvelarFricative"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="VoicelessLabialvelarFricative"></td>
-        <tr>
-            <td style="border-right: none;">w</td>
-            <td style="border-left: none;" data-key="OS-VoicedLabialvelarApproximant"></td>
-        </tr>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="VoicedLabialvelarApproximant"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;">ɥ</td>
-            <td style="border-left: none;" data-key="OS-VoicedLabialpalatalApproximant"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="VoicedLabialpalatalApproximant"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;">ʜ</td>
-            <td style="border-left: none;" data-key="OS-VoicelessEpiglottalFricative"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="VoicelessEpiglottalFricative"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;">ʢ</td>
-            <td style="border-left: none;" data-key="OS-VoicedEpiglottalFricativeApproximant"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="VoicedEpiglottalFricativeApproximant"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;">ʡ</td>
-            <td style="border-left: none;" data-key="OS-EpiglottalPlosive"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="EpiglottalPlosive"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;">ɕ ʑ</td>
-            <td style="border-left: none;" data-key="OS-AlveolopalatalFricatives"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="1" id="VoicelessAlveolopalatalFricatives"></td>
-            <td colspan="1" id="VoicedAlveolopalatalFricatives"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;"> ɺ</td>
-            <td style="border-left: none;" data-key="OS-VoicedAlveolarLateralFlap"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="VoicedAlveolarLateralFlap"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;">ɧ</td>
-            <td style="border-left: none;" data-key="OS-SimultaneousSJ"></td>
-        </tr>
-        <tr class="Compare">
-            <td colspan="2" id="SimultaneousSJ"></td>
-        <tr>
-        <tr>
-            <td style="border-right: none;">◌͜◌ ◌͡◌ </td>
-            <td style="border-left: none;" data-key="OS-TieBar"></td>
-        </tr>
-        <tr>
-            <td colspan="2" data-key="OS-TieBarNote"></td>
-        </tr>
-    </table>
-
-    <h2 onclick="toggleTable(this)" data-key="Diacrtics"><span class="toggle-icon">+</span></h2>
-    <table data-type="Diacrtics">
-        <tr>
-            <td style="border-right: none;">◌̊ ◌̥</td>
-            <td style="border-left: none;" data-key="D-Voiceless"></td>
-            <td style="border-right: none;">◌̤</td>
-            <td style="border-left: none;" data-key="D-BreathyVoiced"></td>
-            <td style="border-right: none;">◌̪</td>
-            <td style="border-left: none;" data-key="D-Dental"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̬</td>
-            <td style="border-left: none;" data-key="D-Voiced"></td>
-            <td style="border-right: none;">◌̰</td>
-            <td style="border-left: none;" data-key="D-CreakyVoiced"></td>
-            <td style="border-right: none;">◌̺</td>
-            <td style="border-left: none;" data-key="D-Apical"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">ʰ</td>
-            <td style="border-left: none;" data-key="D-Aspirated"></td>
-            <td style="border-right: none;">◌̼</td>
-            <td style="border-left: none;" data-key="D-Linguolabial"></td>
-            <td style="border-right: none;">◌̻</td>
-            <td style="border-left: none;" data-key="D-Laminal"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̹</td>
-            <td style="border-left: none;" data-key="D-MoreRounded"></td>
-            <td style="border-right: none;">ʷ</td>
-            <td style="border-left: none;" data-key="D-Labialized"></td>
-            <td style="border-right: none;">◌̃</td>
-            <td style="border-left: none;" data-key="D-Nasalized"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̜</td>
-            <td style="border-left: none;" data-key="D-LessRounded"></td>
-            <td style="border-right: none;">ʲ</td>
-            <td style="border-left: none;" data-key="D-Palatalized"></td>
-            <td style="border-right: none;">ⁿ</td>
-            <td style="border-left: none;" data-key="D-NasalRelease"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̟</td>
-            <td style="border-left: none;" data-key="D-Advanced"></td>
-            <td style="border-right: none;">ˠ</td>
-            <td style="border-left: none;" data-key="D-Velarized"></td>
-            <td style="border-right: none;">ˡ</td>
-            <td style="border-left: none;" data-key="D-LateralRelease"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̠</td>
-            <td style="border-left: none;" data-key="D-Retracted"></td>
-            <td style="border-right: none;">ˤ</td>
-            <td style="border-left: none;" data-key="D-Pharyngealized"></td>
-            <td style="border-right: none;">◌̚</td>
-            <td style="border-left: none;" data-key="D-NoAudibleRelease"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̈</td>
-            <td style="border-left: none;" data-key="D-Centralized"></td>
-            <td style="border-right: none;">◌̴</td>
-            <td colspan="3" style="border-left: none;" data-key="D-VelarizedOrPharyngealized"></td>
-
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̽</td>
-            <td style="border-left: none;" data-key="D-MidCentralized"></td>
-            <td style="border-right: none;">◌̝</td>
-            <td colspan="3" style="border-left: none;" data-key="D-Raised"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌̩</td>
-            <td style="border-left: none;" data-key="D-Syllabic"></td>
-            <td style="border-right: none;">◌̞</td>
-            <td colspan="3" style="border-left: none;" data-key="D-Lowered"></td>
-        </tr>
-        <tr>
-            <td style="border-right: none;">˞</td>
-            <td style="border-left: none;" data-key="D-NonSyllabic"></td>
-            <td style="border-right: none;">◌̘</td>
-            <td colspan="3" style="border-left: none;" data-key="D-AdvancedTongueRoot"></td>
-
-        </tr>
-        <tr>
-            <td style="border-right: none;">◌˞</td>
-            <td style="border-left: none;" data-key="D-Rhoticity"></td>
-            <td style="border-right: none;">◌̙</td>
-            <td colspan="3" style="border-left: none;" data-key="D-RetractedTongueRoot"></td>
-        </tr>
-        <tr>
-            <td colspan="6" data-key="D-Note">D-Note</td>
-        </tr>
-    </table>
-
-    <h2 onclick="toggleTable(this)" data-key="Vowels"><span class="toggle-icon">+</span></h2>
-    <table data-type="Vowels">
-        <tr>
-            <th></th>
-            <th colspan="2" data-key="V-Foront"></th>
-            <th colspan="2"></th>
-            <th colspan="2" data-key="V-Central"></th>
-            <th colspan="2"></th>
-            <th colspan="2" data-key="V-Back"></th>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="V-Close"></td>
-            <td>i</td>
-            <td>y</td>
-            <td></td>
-            <td></td>
-            <td>ɨ</td>
-            <td>ʉ</td>
-            <td></td>
-            <td></td>
-            <td>ɯ</td>
-            <td>u</td>
-        </tr>
-        <tr class="Compare">
-            <td id="Close-Front-Unrounded"></td>
-            <td id="Close-Front-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Close-Central-Unrounded"></td>
-            <td id="Close-Central-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Close-Back-Unrounded"></td>
-            <td id="Close-Back-Rounded"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="V-NearClose"></td>
-            <td></td>
-            <td></td>
-            <td>ɪ</td>
-            <td>ʏ</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>ʊ</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr class="Compare">
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Nearclose-Nearfront-Unrounded"></td>
-            <td id="Nearclose-Nearfront-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Nearclose-Nearback-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="V-CloseMid"></td>
-            <td>e</td>
-            <td>ø</td>
-            <td></td>
-            <td></td>
-            <td>ɘ</td>
-            <td>ɵ</td>
-            <td></td>
-            <td></td>
-            <td>ɤ</td>
-            <td>o</td>
-        </tr>
-        <tr class="Compare">
-            <td id="Closemid-Front-Unrounded"></td>
-            <td id="losemid-Front-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Closemid-Central-Unrounded"></td>
-            <td id="Closemid-Central-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Closemid-Back-Unrounded"></td>
-            <td id="Closemid-Back-Rounded"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="V-Mid"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>ə</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr class="Compare">
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Mid-Central-Unrounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="V-OpenMid"></td>
-            <td>ɛ</td>
-            <td>œ</td>
-            <td></td>
-            <td></td>
-            <td>ɜ</td>
-            <td>ɞ</td>
-            <td></td>
-            <td></td>
-            <td>ʌ</td>
-            <td>ɔ</td>
-        </tr>
-        <tr class="Compare">
-            <td id="Openmid-Front-Unrounded"></td>
-            <td id="Openmid-Front-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Openmid-Central-Unrounded"></td>
-            <td id="Openmid-Central-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Openmid-Back-Unrounded"></td>
-            <td id="Openmid-Back-Rounded"></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="V-NearOpen"></td>
-            <td>æ</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td colspan="2">ɐ</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr class="Compare">
-            <td id="Nearopen-Front-Unrounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td colspan="2" id="Nearopen-Central-UnR&R"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-        </tr>
-        <tr>
-            <td class="first-cell" rowspan="1" data-key="V-Open"></td>
-            <td>a</td>
-            <td>ɶ</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>ɑ</td>
-            <td>ɒ</td>
-        </tr>
-        <tr class="Compare">
-            <td id="Open-Front-Unrounded"></td>
-            <td id="Open-Front-Rounded"></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id=""></td>
-            <td id="Open-Back-Unrounded"></td>
-            <td id="Open-Back-Rounded"></td>
-        </tr>
-        <tr>
-            <td colspan="11" data-key="VowelsNote"></td>
-        </tr>
-
-    </table>
+    <aside id="detail-pane"
+        class="fixed bottom-0 left-0 w-full max-h-[40vh] bg-white border-t border-slate-200 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] flex flex-col z-50 transform translate-y-full transition-transform duration-300 rounded-t-xl">
+        <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-xl">
+            <div class="flex items-center gap-2">
+                <span id="pane-symbol"
+                    class="text-2xl font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-lg">-</span>
+                <span id="pane-coord" class="text-sm font-medium text-slate-600"></span>
+            </div>
+            <button onclick="closePane()"
+                class="p-2 text-slate-400 hover:text-slate-600 bg-slate-200 hover:bg-slate-300 rounded-full transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+        <div id="pane-content" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+    </aside>
 
     <script>
-        function toggleTable(header) {
-            var table = header.nextElementSibling;
-            var icon = header.querySelector(".toggle-icon");
+        const languages = [
+            { id: 'english', name: 'English', flag: 'us' },
+            { id: 'german', name: 'Deutsch', flag: 'de' },
+            { id: 'spanish', name: 'Español', flag: 'es' },
+            { id: 'portuguese', name: 'Português', flag: 'pt' },
+            { id: 'french', name: 'Français', flag: 'fr' },
+            { id: 'italian', name: 'Italiano', flag: 'it' },
+            { id: 'russian', name: 'Русский', flag: 'ru' },
+            { id: 'bengali', name: 'বাংলা', flag: 'bd' },
+            { id: 'hindiurdu', name: 'हिंदी', flag: 'in' },
+            { id: 'persian', name: 'فارسی', flag: 'ir' },
+            { id: 'arabic', name: 'العربية', flag: 'sa' },
+            { id: 'tamil', name: 'தமிழ்', flag: 'in' },
+            { id: 'chinese', name: '中文', flag: 'tw' },
+            { id: 'turkish', name: 'Türkçe', flag: 'tr' },
+            { id: 'japanese', name: '日本語', flag: 'jp' },
+            { id: 'korean', name: '한국어', flag: 'kr' },
+            { id: 'vietnamese', name: 'Tiếng Việt', flag: 'vn' },
+            { id: 'indonesian', name: 'Bahasa Indonesia', flag: 'id' },
+            { id: 'thai', name: 'ภาษาไทย', flag: 'th' },
+            { id: 'swahili', name: 'Kiswahili', flag: 'ke' }
+        ];
 
-            if (table && table.tagName === "TABLE") {
-                if (table.style.display === "none" || table.style.display === "") {
-                    table.style.display = "table";
-                    icon.textContent = "−"; // 收起時顯示「-」
-                } else {
-                    table.style.display = "none";
-                    icon.textContent = "+"; // 展開時顯示「+」
-                }
-            }
-        }
+        const DATA_CONFIGS = {
+            ConsonantsPulmonic: { file: 'ConsonantsPulmonic.csv', getTdId: r => `${r[2]}-${r[1]}-${r[3]}`, ipa: 4, ex: 5 },
+            ConsonantsNonPulmonic: { file: 'ConsonantsNonPulmonic.csv', getTdId: r => `${r[1]}-${r[2]}`, ipa: 3, ex: 4 },
+            OtherSymbols: { file: 'OtherSymbols.csv', getTdId: r => `${r[1]}`, ipa: 2, ex: 3 },
+            Diacritics: { file: 'Diacrtics.csv', getTdId: r => `D-${r[1]}`, ipa: 2, ex: 3 },
+            Vowels: { file: 'Vowels.csv', getTdId: r => `${r[1]}-${r[2]}-${r[3]}`, ipa: 4, ex: 5 }
+        };
 
-        let translationsData = [];
-
-        async function loadTranslationsCSV() {
-            const response = await fetch('translations.csv');
-            const text = await response.text();
-            const rows = text.split('\n').map(row => row.trim()).filter(Boolean);
-            const headers = rows[0].split(',');
-
-            translationsData = rows.slice(1).map(row => {
-                const values = row.split(',');
-                const entry = {};
-                headers.forEach((header, index) => {
-                    entry[header] = values[index];
-                });
-                return entry;
-            });
-        }
-
-        function changeLanguage(lang) {
-            console.log("切換語言為：", lang);
-            document.querySelectorAll("[data-key]").forEach(element => {
-                const key = element.getAttribute("data-key");
-                const translation = translationsData.find(row => row["data-key"] === key);
-                if (!translation || !translation[lang]) {
-                    console.warn(`找不到 key: ${key} 的 ${lang} 翻譯`);
-                    return;
-                }
-
-                const labelSpan = element.querySelector(".label-text");
-                if (labelSpan) {
-                    labelSpan.textContent = translation[lang];
-                } else {
-                    element.textContent = translation[lang];
-                }
-            });
-        }
-
-
-
+        let activeLanguages = new Set();
         let csvDataMap = {};
-        const displayedFlags = new Map();
+        let currentActiveCell = null;
 
-        // 讀取並解析 CSV
-        async function loadCSVForTable(tableType, csvUrl, config) {
-            try {
-                const response = await fetch(csvUrl);
-                const text = await response.text();
-                csvDataMap[tableType] = parseCSV(text);
-                toggleRow();
-            } catch (error) {
-                console.error(`載入 ${tableType} CSV 錯誤:`, error);
+        function toggleLangPanel() {
+            const panel = document.getElementById('language-toggles');
+            const icon = document.getElementById('lang-btn-icon');
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden'); panel.classList.add('flex'); icon.classList.add('rotate-180');
+            } else {
+                panel.classList.add('hidden'); panel.classList.remove('flex'); icon.classList.remove('rotate-180');
             }
         }
 
-        // 通用 CSV 解析
+        function switchTab(tabId) {
+            document.querySelectorAll('.ipa-table').forEach(t => {
+                t.classList.add('hidden'); t.classList.remove('active');
+            });
+            const target = document.getElementById(`table-${tabId}`);
+            target.classList.remove('hidden'); target.classList.add('active');
+
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                b.classList.add('text-slate-400');
+                if (b.dataset.tab === tabId) {
+                    b.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                    b.classList.remove('text-slate-400');
+                }
+            });
+            filterTable();
+            closePane();
+        }
+
+        function renderTables() {
+            const theadP = document.querySelector('#table-pulmonic thead');
+            const tbodyP = document.querySelector('#table-pulmonic tbody');
+            const places = ["Bilabial", "Labiodental", "Dental", "Alveolar", "Postalveolar", "Retroflex", "Palatal", "Velar", "Uvular", "Pharyngeal", "Glottal"];
+            const manners = ["Plosive", "Nasal", "Trill", "TapOrFlap", "Fricative", "LateralFricative", "Approximant", "LateralApproximant"];
+            const pVoids = { "Plosive-Pharyngeal": [0, 1], "Plosive-Glottal": [0, 1], "Nasal-Pharyngeal": [1, 1], "Nasal-Glottal": [1, 1], "Trill-Velar": [1, 1], "Trill-Glottal": [1, 1], "TapOrFlap-Velar": [1, 1], "TapOrFlap-Glottal": [1, 1], "LateralFricative-Bilabial": [1, 1], "LateralFricative-Labiodental": [1, 1], "LateralFricative-Pharyngeal": [1, 1], "LateralFricative-Glottal": [1, 1], "Approximant-Glottal": [1, 1], "LateralApproximant-Bilabial": [1, 1], "LateralApproximant-Labiodental": [1, 1], "LateralApproximant-Pharyngeal": [1, 1], "LateralApproximant-Glottal": [1, 1] };
+            const pSymbols = { "Plosive-Bilabial": ["p", "b"], "Plosive-Alveolar": ["t", "d"], "Plosive-Retroflex": ["ʈ", "ɖ"], "Plosive-Palatal": ["c", "ɟ"], "Plosive-Velar": ["k", "ɡ"], "Plosive-Uvular": ["q", "ɢ"], "Plosive-Glottal": ["ʔ", ""], "Nasal-Bilabial": ["", "m"], "Nasal-Labiodental": ["", "ɱ"], "Nasal-Alveolar": ["", "n"], "Nasal-Retroflex": ["", "ɳ"], "Nasal-Palatal": ["", "ɲ"], "Nasal-Velar": ["", "ŋ"], "Nasal-Uvular": ["", "ɴ"], "Trill-Bilabial": ["", "ʙ"], "Trill-Alveolar": ["", "r"], "Trill-Uvular": ["", "ʀ"], "TapOrFlap-Labiodental": ["", "ⱱ"], "TapOrFlap-Alveolar": ["", "ɾ"], "TapOrFlap-Retroflex": ["", "ɽ"], "Fricative-Bilabial": ["ɸ", "β"], "Fricative-Labiodental": ["f", "v"], "Fricative-Dental": ["θ", "ð"], "Fricative-Alveolar": ["s", "z"], "Fricative-Postalveolar": ["ʃ", "ʒ"], "Fricative-Retroflex": ["ʂ", "ʐ"], "Fricative-Palatal": ["ç", "ʝ"], "Fricative-Velar": ["x", "ɣ"], "Fricative-Uvular": ["χ", "ʁ"], "Fricative-Pharyngeal": ["ħ", "ʕ"], "Fricative-Glottal": ["h", "ɦ"], "LateralFricative-Alveolar": ["ɬ", "ɮ"], "Approximant-Labiodental": ["", "ʋ"], "Approximant-Alveolar": ["", "ɹ"], "Approximant-Retroflex": ["", "ɻ"], "Approximant-Palatal": ["", "j"], "Approximant-Velar": ["", "ɰ"], "LateralApproximant-Alveolar": ["", "l"], "LateralApproximant-Retroflex": ["", "ɭ"], "LateralApproximant-Palatal": ["", "ʎ"], "LateralApproximant-Velar": ["", "ʟ"] };
+
+            let trHead = document.createElement('tr');
+            trHead.innerHTML = '<th class="sticky-corner"></th>';
+            places.forEach(place => trHead.innerHTML += `<th colspan="2" data-colspan="2">${place}</th>`);
+            theadP.appendChild(trHead);
+
+            manners.forEach(manner => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `<td class="sticky-col">${manner}</td>`;
+                places.forEach(place => {
+                    ['voiceless', 'voiced'].forEach((voicing, vIndex) => {
+                        const key = `${manner}-${place}`;
+                        const isVoid = pVoids[key] && pVoids[key][vIndex];
+                        const symbol = pSymbols[key] ? (pSymbols[key][vIndex] || '') : '';
+                        const tdId = `${manner}-${place}-${voicing}`;
+                        tr.innerHTML += isVoid ? `<td class="ipa-cell void"></td>` : `<td class="ipa-cell" id="${tdId}" onclick="selectCell(this, '${symbol}', '${tdId}', 'ConsonantsPulmonic')"><span class="symbol-text">${symbol}</span><div class="indicator-container"></div></td>`;
+                    });
+                });
+                tbodyP.appendChild(tr);
+            });
+
+            const vowelsData = [
+                { label: 'Close', prefix: 'Close', cells: [{ c: 'Front-Unrounded', s: 'i' }, { c: 'Front-Rounded', s: 'y' }, { c: 'Central-Unrounded', s: 'ɨ' }, { c: 'Central-Rounded', s: 'ʉ' }, { c: 'Back-Unrounded', s: 'ɯ' }, { c: 'Back-Rounded', s: 'u' }] },
+                { label: 'Near-close', prefix: 'Nearclose', cells: [{ c: 'Nearfront-Unrounded', s: 'ɪ' }, { c: 'Nearfront-Rounded', s: 'ʏ' }, null, null, null, { c: 'Nearback-Rounded', s: 'ʊ' }] },
+                { label: 'Close-mid', prefix: 'Closemid', cells: [{ c: 'Front-Unrounded', s: 'e' }, { c: 'Front-Rounded', s: 'ø' }, { c: 'Central-Unrounded', s: 'ɘ' }, { c: 'Central-Rounded', s: 'ɵ' }, { c: 'Back-Unrounded', s: 'ɤ' }, { c: 'Back-Rounded', s: 'o' }] },
+                { label: 'Mid', prefix: 'Mid', cells: [null, null, { c: 'Central-Unrounded', s: 'ə' }, null, null, null] },
+                { label: 'Open-mid', prefix: 'Openmid', cells: [{ c: 'Front-Unrounded', s: 'ɛ' }, { c: 'Front-Rounded', s: 'œ' }, { c: 'Central-Unrounded', s: 'ɜ' }, { c: 'Central-Rounded', s: 'ɞ' }, { c: 'Back-Unrounded', s: 'ʌ' }, { c: 'Back-Rounded', s: 'ɔ' }] },
+                { label: 'Near-open', prefix: 'Nearopen', cells: [{ c: 'Front-Unrounded', s: 'æ' }, null, { c: 'Central-UnR&R', s: 'ɐ' }, null, null, null] },
+                { label: 'Open', prefix: 'Open', cells: [{ c: 'Front-Unrounded', s: 'a' }, { c: 'Front-Rounded', s: 'ɶ' }, null, null, { c: 'Back-Unrounded', s: 'ɑ' }, { c: 'Back-Rounded', s: 'ɒ' }] }
+            ];
+            let vHtml = '<thead><tr><th class="sticky-corner"></th><th colspan="2" data-colspan="2">Front</th><th colspan="2" data-colspan="2">Central</th><th colspan="2" data-colspan="2">Back</th></tr></thead><tbody>';
+            vowelsData.forEach(row => {
+                vHtml += `<tr><td class="sticky-col">${row.label}</td>`;
+                row.cells.forEach(cell => {
+                    if (!cell) vHtml += `<td class="ipa-cell void"></td>`;
+                    else vHtml += `<td class="ipa-cell" id="${row.prefix}-${cell.c}" onclick="selectCell(this, '${cell.s}', '${row.prefix}-${cell.c}', 'Vowels')"><span class="symbol-text">${cell.s}</span><div class="indicator-container"></div></td>`;
+                });
+                vHtml += '</tr>';
+            });
+            document.getElementById('table-vowels').innerHTML = vHtml + '</tbody>';
+
+            const nonPData = [
+                { id: 'Clicks-Bilabial', s: 'ʘ' }, { id: 'VoicedImplosives-Bilabial', s: 'ɓ' }, { id: 'Ejectives-Bilabial', s: 'pʼ' },
+                { id: 'Clicks-Dental', s: 'ǀ' }, { id: 'VoicedImplosives-DentalAlveolar', s: 'ɗ' }, { id: 'Ejectives-DentalAlveolar', s: 'tʼ' },
+                { id: 'Clicks-Postalveolar', s: 'ǃ' }, { id: 'VoicedImplosives-Palatal', s: 'ʄ' },
+                { id: 'Clicks-Palatoalveolar', s: 'ǂ' }, { id: 'VoicedImplosives-Velar', s: 'ɠ' }, { id: 'Ejectives-Velar', s: 'kʼ' },
+                { id: 'Clicks-AlveolarLateral', s: 'ǁ' }, { id: 'VoicedImplosives-Uvular', s: 'ʛ' }, { id: 'Ejectives-AlveolarFricative', s: 'sʼ' }
+            ];
+            let npHtml = '';
+            nonPData.forEach(item => {
+                npHtml += `<div class="ipa-cell border border-slate-200 bg-white rounded-lg w-16 h-16 flex flex-col items-center justify-center relative flex-shrink-0" id="${item.id}" onclick="selectCell(this, '${item.s}', '${item.id}', 'ConsonantsNonPulmonic')">
+                    <span class="symbol-text text-xl font-bold translate-y-[-4px]">${item.s}</span>
+                    <div class="indicator-container absolute bottom-1 w-full flex flex-wrap justify-center gap-[2px]"></div>
+                </div>`;
+            });
+            document.getElementById('table-nonpulmonic').innerHTML = npHtml;
+        }
+
+        function renderDynamicFlex(containerId, dataKey) {
+            const data = csvDataMap[dataKey];
+            if (!data || data.length === 0) return;
+            const config = DATA_CONFIGS[dataKey];
+            const uniqueSymbols = new Map();
+            data.forEach(row => {
+                if (row.length < 2) return;
+                const id = config.getTdId(row);
+                if (!uniqueSymbols.has(id)) uniqueSymbols.set(id, row[config.ipa]);
+            });
+
+            let html = '';
+            uniqueSymbols.forEach((sym, id) => {
+                html += `<div class="ipa-cell border border-slate-200 bg-white rounded-lg w-16 h-16 flex flex-col items-center justify-center relative flex-shrink-0" id="${id}" onclick="selectCell(this, '${sym}', '${id}', '${dataKey}')">
+                    <span class="symbol-text text-xl font-bold translate-y-[-4px]">${sym}</span>
+                    <div class="indicator-container absolute bottom-1 w-full flex flex-wrap justify-center gap-[2px]"></div>
+                </div>`;
+            });
+            document.getElementById(containerId).innerHTML = html;
+        }
+
         function parseCSV(csvText) {
             return csvText.trim().split("\n").map(row => {
                 const match = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
@@ -1125,139 +412,216 @@
             });
         }
 
-        // 控制是否顯示 Compare 行 & 填入對應資料
-        function toggleRow() {
-            const isSimpleMode = document.getElementById("simpleModeCheckbox").checked;
-            let hasChecked = false;
+        function initLangToggles() {
+            const container = document.getElementById('language-toggles');
+            languages.forEach(lang => {
+                const btn = document.createElement('button');
+                btn.className = 'lang-toggle flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-full bg-white shadow-sm';
+                btn.innerHTML = `<img src="https://flagcdn.com/w20/${lang.flag}.png" class="w-4 h-3 object-cover rounded-sm"> <span class="text-sm font-medium text-slate-700">${lang.name}</span>`;
+                btn.onclick = () => {
+                    btn.classList.toggle('active');
+                    if (activeLanguages.has(lang.id)) activeLanguages.delete(lang.id);
+                    else activeLanguages.add(lang.id);
+                    document.getElementById('lang-btn-text').textContent = `選擇對比語言 (已選: ${activeLanguages.size})`;
+                    updateGridIndicators();
+                    closePane();
+                };
+                container.appendChild(btn);
+            });
+        }
 
-            // 檢查有無勾選語言
-            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                if (checkbox.checked && checkbox.id !== "simpleModeCheckbox") {
-                    hasChecked = true;
+        async function loadData() {
+            for (const [key, config] of Object.entries(DATA_CONFIGS)) {
+                try {
+                    const res = await fetch(`./${config.file}`);
+                    if (res.ok) csvDataMap[key] = parseCSV(await res.text());
+                    else csvDataMap[key] = [];
+                } catch (e) {
+                    csvDataMap[key] = [];
                 }
-            });
+            }
+            renderDynamicFlex('table-others', 'OtherSymbols');
+            renderDynamicFlex('table-diacritics', 'Diacritics');
+        }
 
-            // 顯示 Compare 行與調整 rowspan
-            document.querySelectorAll(".Compare").forEach(row => {
-                row.style.display = hasChecked ? "" : "none";
-                row.querySelectorAll("td").forEach(td => td.innerHTML = '');
-            });
-            document.querySelectorAll(".first-cell").forEach(cell => {
-                cell.setAttribute("rowspan", hasChecked ? "2" : "1");
-            });
+        function updateGridIndicators() {
+            document.querySelectorAll('.indicator-container').forEach(c => c.innerHTML = '');
+            if (activeLanguages.size === 0) { filterTable(); return; }
 
-            // 沒有選語言就跳出
-            if (!hasChecked) return;
+            for (const [key, config] of Object.entries(DATA_CONFIGS)) {
+                const data = csvDataMap[key];
+                if (!data) continue;
+                data.forEach(row => {
+                    if (row.length < 2) return;
+                    const lang = row[0].toLowerCase();
+                    if (!activeLanguages.has(lang)) return;
 
-            // 清空旗幟記錄
-            displayedFlags.clear();
-
-            // 處理所有表格類型
-            for (const [tableType, rows] of Object.entries(csvDataMap)) {
-                rows.forEach(row => {
-                    const language = row[0].trim().toLowerCase();
-                    if (!document.getElementById(`chk-${language}`)?.checked) return;
-
-                    const config = tableConfigs[tableType];
                     const tdId = config.getTdId(row);
-                    const tdElement = document.getElementById(tdId);
-                    if (!tdElement) return;
-
-                    const flag = getFlagUrl(language);
-                    if (!displayedFlags.has(tdId)) displayedFlags.set(tdId, new Set());
-
-                    const tdFlags = displayedFlags.get(tdId);
-                    if (!tdFlags.has(language)) {
-                        const flagImg = document.createElement('img');
-                        flagImg.src = flag;
-                        flagImg.alt = `${language} 國旗`;
-                        flagImg.width = 20;
-                        flagImg.style.marginRight = '5px';
-                        tdElement.appendChild(flagImg);
-                        tdFlags.add(language);
-                    }
-
-                    if (!isSimpleMode) {
-                        const ipa = row[config.ipaIndex];
-                        const example = row[config.exampleIndex];
-                        const div = document.createElement('div');
-                        div.innerHTML = `<strong>${ipa}: </strong>${example}`;
-                        tdElement.appendChild(div);
+                    const td = document.getElementById(tdId);
+                    if (td && !td.classList.contains('void')) {
+                        const container = td.querySelector('.indicator-container');
+                        const langObj = languages.find(l => l.id === lang);
+                        if (langObj && container && !container.innerHTML.includes(langObj.flag)) {
+                            const img = document.createElement('img');
+                            img.src = `https://flagcdn.com/w20/${langObj.flag}.png`;
+                            img.className = 'micro-flag';
+                            container.appendChild(img);
+                        }
                     }
                 });
             }
+            filterTable();
         }
 
-        // 語言對應國旗
-        function getFlagUrl(language) {
-            const flagMap = {
-                chinese: 'flags/tw.png',
-                english: 'flags/us.png',
-                german: 'flags/de.png',
-                spanish: 'flags/es.png',
-                portuguese: 'flags/pt.png',
-                french: 'flags/fr.png',
-                italian: 'flags/it.png',
-                russian: 'flags/ru.png',
-                hindiurdu: 'flags/in.png',
-                bengali: 'flags/bd.png',
-                persian: 'flags/ir.png',
-                tamil: 'flags/in.png',
-                arabic: 'flags/sa.png',
-                turkish: 'flags/tr.png',
-                japanese: 'flags/jp.png',
-                korean: 'flags/kr.png',
-                vietnamese: 'flags/vn.png',
-                indonesian: 'flags/id.png',
-                thai: 'flags/th.png',
-                swahili: 'flags/ke.png',
-            };
-            return flagMap[language.toLowerCase()] || 'flags/default.png';
+        function filterTable() {
+            const hideEmpty = document.getElementById('hide-empty-toggle').checked;
+            const activeTable = document.querySelector('.ipa-table.active');
+            if (!activeTable) return;
+
+            if (activeTable.tagName === 'DIV') {
+                Array.from(activeTable.children).forEach(cell => {
+                    if (!hideEmpty) {
+                        cell.style.display = '';
+                    } else {
+                        const container = cell.querySelector('.indicator-container');
+                        const hasFlag = container ? container.innerHTML.trim() !== '' : false;
+                        cell.style.display = hasFlag ? '' : 'none';
+                    }
+                });
+                return;
+            }
+
+            const tbodyRows = Array.from(activeTable.querySelectorAll('tbody tr'));
+            const theadRows = Array.from(activeTable.querySelectorAll('thead tr'));
+            const colCount = tbodyRows.length > 0 ? tbodyRows[0].children.length : 0;
+
+            if (!hideEmpty) {
+                tbodyRows.forEach(row => {
+                    row.style.display = '';
+                    Array.from(row.children).forEach(td => {
+                        td.style.display = '';
+                        td.classList.remove('empty-placeholder');
+                    });
+                });
+                theadRows.forEach(row => {
+                    Array.from(row.children).forEach(th => {
+                        th.style.display = '';
+                        if (th.hasAttribute('data-colspan')) th.colSpan = th.getAttribute('data-colspan');
+                    });
+                });
+                return;
+            }
+
+            const colHasData = new Array(colCount).fill(false);
+            colHasData[0] = true;
+
+            tbodyRows.forEach(row => {
+                Array.from(row.children).forEach((td, index) => {
+                    if (index > 0) {
+                        const container = td.querySelector('.indicator-container');
+                        const hasFlag = container ? container.innerHTML.trim() !== '' : false;
+                        if (hasFlag) colHasData[index] = true;
+                    }
+                });
+            });
+
+            tbodyRows.forEach(row => {
+                let rowHasData = false;
+                Array.from(row.children).forEach((td, index) => {
+                    const container = td.querySelector('.indicator-container');
+                    const hasFlag = container ? container.innerHTML.trim() !== '' : false;
+
+                    td.style.display = colHasData[index] ? '' : 'none';
+
+                    if (index > 0 && colHasData[index]) {
+                        if (hasFlag) {
+                            rowHasData = true;
+                            td.classList.remove('empty-placeholder');
+                        } else {
+                            td.classList.add('empty-placeholder');
+                        }
+                    }
+                });
+                row.style.display = rowHasData ? '' : 'none';
+            });
+
+            if (theadRows.length > 0) {
+                const tr = theadRows[0];
+                for (let i = 1; i < tr.children.length; i++) {
+                    const th = tr.children[i];
+                    const leftData = colHasData[i * 2 - 1];
+                    const rightData = (i * 2) < colCount ? colHasData[i * 2] : false;
+
+                    if (!leftData && !rightData) {
+                        th.style.display = 'none';
+                    } else {
+                        th.style.display = '';
+                        th.colSpan = (leftData ? 1 : 0) + (rightData ? 1 : 0);
+                    }
+                }
+            }
         }
 
-        // 不同表格對應的資料格式與邏輯
-        const tableConfigs = {
-            ConsonantsPulmonic: {
-                getTdId: row => `${row[2]}-${row[1]}-${row[3]}`, // manner-place-voicing
-                ipaIndex: 4,
-                exampleIndex: 5,
-            },
-            ConsonantsNonPulmonic: {
-                getTdId: row => `${row[1]}-${row[2]}`, // manner-place
-                ipaIndex: 3,
-                exampleIndex: 4,
-            },
-            OtherSymbols: {
-                getTdId: row => `${row[1]}`,
-                ipaIndex: 2,
-                exampleIndex: 3,
-            },
-            Vowels: {
-                getTdId: row => `${row[1]}-${row[2]}-${row[3]}`,
-                ipaIndex: 4,
-                exampleIndex: 5,
-            },
-        };
+        function selectCell(cellElement, symbol, tdId, tableType) {
+            if (cellElement.classList.contains('void') || cellElement.classList.contains('empty-placeholder')) return;
+            if (currentActiveCell) currentActiveCell.classList.remove('active');
+            currentActiveCell = cellElement;
+            currentActiveCell.classList.add('active');
 
-        // 綁定 checkbox 切換事件
-        document.getElementById("simpleModeCheckbox").addEventListener("change", toggleRow);
+            const coords = tdId.split('-');
+            document.getElementById('pane-symbol').textContent = symbol || '無';
+            document.getElementById('pane-coord').textContent = coords.join(' ');
+            const paneContent = document.getElementById('pane-content');
+            paneContent.innerHTML = '';
+            document.getElementById('detail-pane').classList.remove('translate-y-full');
 
-        // 初始載入
-        document.addEventListener("DOMContentLoaded", async () => {
-            await loadTranslationsCSV();
-            await loadCSVForTable("ConsonantsPulmonic", "ConsonantsPulmonic.csv", tableConfigs.ConsonantsPulmonic);
-            await loadCSVForTable("ConsonantsNonPulmonic", "ConsonantsNonPulmonic.csv", tableConfigs.ConsonantsNonPulmonic);
-            await loadCSVForTable("OtherSymbols", "OtherSymbols.csv", tableConfigs.OtherSymbols);
-            await loadCSVForTable("Vowels", "Vowels.csv", tableConfigs.Vowels);
+            if (activeLanguages.size === 0) {
+                paneContent.innerHTML = '<div class="text-center text-slate-400 mt-4 text-sm">請先在上方選擇比對語言</div>';
+                return;
+            }
 
+            const config = DATA_CONFIGS[tableType];
+            let hasData = false;
 
-            // 確保 DOM 已準備好才切換語言
-            changeLanguage('zh');
+            if (csvDataMap[tableType]) {
+                csvDataMap[tableType].forEach(row => {
+                    if (row.length < 2) return;
+                    const lang = row[0].toLowerCase();
+                    if (activeLanguages.has(lang) && config.getTdId(row) === tdId) {
+                        hasData = true;
+                        const langObj = languages.find(l => l.id === lang);
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center gap-3 p-2 bg-slate-50 rounded-lg border border-slate-100';
+                        div.innerHTML = `
+                            <img src="https://flagcdn.com/w40/${langObj.flag}.png" class="w-8 h-6 object-cover rounded shadow-sm">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="font-bold text-slate-800 text-lg">${row[config.ex] || ''}</span>
+                                    <span class="text-xs font-medium text-slate-500">${langObj.name}</span>
+                                </div>
+                                <span class="text-sm font-mono text-blue-600 bg-blue-50 px-1 rounded">${row[config.ipa] || ''}</span>
+                            </div>
+                        `;
+                        paneContent.appendChild(div);
+                    }
+                });
+            }
+
+            if (!hasData) paneContent.innerHTML = '<div class="text-center text-slate-400 mt-4 text-sm">所選語言無此發音資料</div>';
+        }
+
+        function closePane() {
+            document.getElementById('detail-pane').classList.add('translate-y-full');
+            if (currentActiveCell) currentActiveCell.classList.remove('active');
+            currentActiveCell = null;
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderTables();
+            initLangToggles();
+            await loadData();
         });
-
     </script>
-
-
 </body>
 
 </html>
