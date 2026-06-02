@@ -191,12 +191,105 @@
             { id: 'thai', name: 'ภาษาไทย', flag: 'th' }, { id: 'swahili', name: 'Kiswahili', flag: 'ke' }
         ];
 
+        // 全局對照基礎符號設定
+        const pSymbols = { "Plosive-Bilabial": ["p", "b"], "Plosive-Alveolar": ["t", "d"], "Plosive-Retroflex": ["ʈ", "ɖ"], "Plosive-Palatal": ["c", "ɟ"], "Plosive-Velar": ["k", "ɡ"], "Plosive-Uvular": ["q", "ɢ"], "Plosive-Glottal": ["ʔ", ""], "Nasal-Bilabial": ["", "m"], "Nasal-Labiodental": ["", "ɱ"], "Nasal-Alveolar": ["", "n"], "Nasal-Retroflex": ["", "ɳ"], "Nasal-Palatal": ["", "ɲ"], "Nasal-Velar": ["", "ŋ"], "Nasal-Uvular": ["", "ɴ"], "Trill-Bilabial": ["", "ʙ"], "Trill-Alveolar": ["", "r"], "Trill-Uvular": ["", "ʀ"], "TapOrFlap-Labiodental": ["", "ⱱ"], "TapOrFlap-Alveolar": ["", "ɾ"], "TapOrFlap-Retroflex": ["", "ɽ"], "Fricative-Bilabial": ["ɸ", "β"], "Fricative-Labiodental": ["f", "v"], "Fricative-Dental": ["θ", "ð"], "Fricative-Alveolar": ["s", "z"], "Fricative-Postalveolar": ["ʃ", "ʒ"], "Fricative-Retroflex": ["ʂ", "ʐ"], "Fricative-Palatal": ["ç", "ʝ"], "Fricative-Velar": ["x", "ɣ"], "Fricative-Uvular": ["χ", "ʁ"], "Fricative-Pharyngeal": ["ħ", "ʕ"], "Fricative-Glottal": ["h", "ɦ"], "LateralFricative-Alveolar": ["ɬ", "ɮ"], "Approximant-Labiodental": ["", "ʋ"], "Approximant-Alveolar": ["", "ɹ"], "Approximant-Retroflex": ["", "ɻ"], "Approximant-Palatal": ["", "j"], "Approximant-Velar": ["", "ɰ"], "LateralApproximant-Alveolar": ["", "l"], "LateralApproximant-Retroflex": ["", "ɭ"], "LateralApproximant-Palatal": ["", "ʎ"], "LateralApproximant-Velar": ["", "ʟ"] };
+        const pVoids = { "Plosive-Pharyngeal": [0,1], "Plosive-Glottal": [0,1], "Nasal-Pharyngeal": [1,1], "Nasal-Glottal": [1,1], "Trill-Velar": [1,1], "Trill-Glottal": [1,1], "TapOrFlap-Velar": [1,1], "TapOrFlap-Glottal": [1,1], "LateralFricative-Bilabial": [1,1], "LateralFricative-Labiodental": [1,1], "LateralFricative-Pharyngeal": [1,1], "LateralFricative-Glottal": [1,1], "Approximant-Glottal": [1,1], "LateralApproximant-Bilabial": [1,1], "LateralApproximant-Labiodental": [1,1], "LateralApproximant-Pharyngeal": [1,1], "LateralApproximant-Glottal": [1,1] };
+
+        // 字符對應自動初始化對照字典
+        const pulmonicSymbolMap = {};
+        const nonPulmonicSymbols = {
+            "ɓ": "VoicedImplosives-Bilabial", "ɗ": "VoicedImplosives-DentalAlveolar", "ᶑ": "VoicedImplosives-Retroflex", "ʄ": "VoicedImplosives-Palatal", "ɠ": "VoicedImplosives-Velar", "ʛ": "VoicedImplosives-Uvular",
+            "ɓ̥": "VoicelessImplosives-Bilabial", "ɗ̥": "VoicelessImplosives-DentalAlveolar", "ᶑ̥": "VoicelessImplosives-Retroflex", "ʄ̊": "VoicelessImplosives-Palatal", "ɠ̊": "VoicelessImplosives-Velar", "ʛ̥": "VoicelessImplosives-Uvular",
+            "pʼ": "Ejectives-Bilabial", "tʼ": "Ejectives-DentalAlveolar", "ʈʼ": "Ejectives-Retroflex", "cʼ": "Ejectives-Palatal", "kʼ": "Ejectives-Velar", "qʼ": "Ejectives-Uvular",
+            "ɸʼ": "EjectiveFricatives-Bilabial", "fʼ": "EjectiveFricatives-Labiodental", "θʼ": "EjectiveFricatives-Dental", "sʼ": "EjectiveFricatives-AlveolarFricative", "ʃʼ": "EjectiveFricatives-Postalveolar", "ʂʼ": "EjectiveFricatives-Retroflex", "ɕʼ": "EjectiveFricatives-Alveolopalatal", "xʼ": "EjectiveFricatives-Velar", "χʼ": "EjectiveFricatives-Uvular",
+            "ɬʼ": "EjectiveLateralFricatives-Alveolar",
+            "kʘ": "Clicks-Bilabial-TenuisVelar", "qʘ": "Clicks-Bilabial-TenuisVelar", "kǀ": "Clicks-Dental-TenuisVelar", "qǀ": "Clicks-Dental-TenuisVelar", "kǃ": "Clicks-Postalveolar-TenuisVelar", "qǃ": "Clicks-Postalveolar-TenuisVelar", "kǂ": "Clicks-Palatoalveolar-TenuisVelar", "qǂ": "Clicks-Palatoalveolar-TenuisVelar",
+            "ɡʘ": "Clicks-Bilabial-VoicedVelar", "ɢʘ": "Clicks-Bilabial-VoicedVelar", "ɡǀ": "Clicks-Dental-VoicedVelar", "ɢǀ": "Clicks-Dental-VoicedVelar", "ɡǃ": "Clicks-Postalveolar-VoicedVelar", "ɢǃ": "Clicks-Postalveolar-VoicedVelar", "ɡǂ": "Clicks-Palatoalveolar-VoicedVelar", "ɢǂ": "Clicks-Palatoalveolar-VoicedVelar",
+            "ŋʘ": "Clicks-Bilabial-NasalVelar", "ɴʘ": "Clicks-Bilabial-NasalVelar", "ŋǀ": "Clicks-Dental-NasalVelar", "ɴǀ": "Clicks-Dental-NasalVelar", "ŋǃ": "Clicks-Postalveolar-NasalVelar", "ɴǃ": "Clicks-Postalveolar-NasalVelar", "ŋǂ": "Clicks-Palatoalveolar-NasalVelar", "ɴǂ": "Clicks-Palatoalveolar-NasalVelar",
+            "kǁ": "Clicks-AlveolarLateral-TenuisVelar", "qǁ": "Clicks-AlveolarLateral-TenuisVelar", "ɡǁ": "Clicks-AlveolarLateral-VoicedVelar", "ɢǁ": "Clicks-AlveolarLateral-VoicedVelar", "ŋǁ": "Clicks-AlveolarLateral-NasalVelar", "ɴǁ": "Clicks-AlveolarLateral-NasalVelar"
+        };
+        const vowelsSymbols = {
+            'i': { height: 'Close', backRound: 'Front-Unrounded' }, 'y': { height: 'Close', backRound: 'Front-Rounded' }, 'ɨ': { height: 'Close', backRound: 'Central-Unrounded' }, 'ʉ': { height: 'Close', backRound: 'Central-Rounded' }, 'ɯ': { height: 'Close', backRound: 'Back-Unrounded' }, 'u': { height: 'Close', backRound: 'Back-Rounded' },
+            'ɪ': { height: 'Nearclose', backRound: 'Nearfront-Unrounded' }, '`ʏ`': { height: 'Nearclose', backRound: 'Nearfront-Rounded' }, 'ʊ': { height: 'Nearclose', backRound: 'Nearback-Rounded' },
+            'e': { height: 'Closemid', backRound: 'Front-Unrounded' }, 'ø': { height: 'Closemid', backRound: 'Front-Rounded' }, 'ɘ': { height: 'Closemid', backRound: 'Central-Unrounded' }, 'ɵ': { height: 'Closemid', backRound: 'Central-Rounded' }, 'ɤ': { height: 'Closemid', backRound: 'Back-Unrounded' }, 'o': { height: 'Closemid', backRound: 'Back-Rounded' },
+            'ə': { height: 'Mid', backRound: 'Central-Unrounded' },
+            'ɛ': { height: 'Openmid', backRound: 'Front-Unrounded' }, 'œ': { height: 'Openmid', backRound: 'Front-Rounded' }, 'ɜ': { height: 'Openmid', backRound: 'Central-Unrounded' }, 'ɞ': { height: 'Openmid', backRound: 'Central-Rounded' }, 'ʌ': { height: 'Openmid', backRound: 'Back-Unrounded' }, 'ɔ': { height: 'Openmid', backRound: 'Back-Rounded' },
+            'æ': { height: 'Nearopen', backRound: 'Front-Unrounded' }, 'ɐ': { height: 'Nearopen', backRound: 'Central-UnR&R' },
+            'a': { height: 'Open', backRound: 'Front-Unrounded' }, 'ɶ': { height: 'Open', backRound: 'Front-Rounded' }, 'ɑ': { height: 'Open', backRound: 'Back-Unrounded' }, 'ɒ': { height: 'Open', backRound: 'Back-Rounded' }
+        };
+
+        // 解析 IPA 雙斜線內的第一個有效字符
+        function getBaseIpaChar(ipaStr) {
+            if (!ipaStr) return '';
+            const match = ipaStr.match(/\/([^\/])/);
+            if (match) return match[1];
+            const clean = ipaStr.replace(/[\/\s]/g, '');
+            return Array.from(clean)[0] || '';
+        }
+
+        // 自動生成音標映射查找資訊
+        function initSymbolMaps() {
+            for (const [key, symbols] of Object.entries(pSymbols)) {
+                const [manner, place] = key.split('-');
+                if (symbols[0]) pulmonicSymbolMap[symbols[0]] = { manner, place, voicing: 'voiceless' };
+                if (symbols[1]) pulmonicSymbolMap[symbols[1]] = { manner, place, voicing: 'voiced' };
+            }
+            pulmonicSymbolMap['g'] = { manner: 'Plosive', place: 'Velar', voicing: 'voiced' };
+            pulmonicSymbolMap['ɡ'] = { manner: 'Plosive', place: 'Velar', voicing: 'voiced' };
+            pulmonicSymbolMap['ɫ'] = { manner: 'LateralApproximant', place: 'Alveolar', voicing: 'voiced' };
+        }
+
         const DATA_CONFIGS = {
-            ConsonantsPulmonic: { file: 'ConsonantsPulmonic.csv', getTdId: r => `${r[2]}-${r[1]}-${r[3]}`, ipa: 4, ex: 5 },
-            ConsonantsNonPulmonic: { file: 'ConsonantsNonPulmonic.csv', getTdId: r => `${r[1]}-${r[2]}`, ipa: 3, ex: 4 },
-            OtherSymbols: { file: 'OtherSymbols.csv', getTdId: r => `${r[1]}`, ipa: 2, ex: 3 },
-            Diacritics: { file: 'Diacrtics.csv', getTdId: r => `D-${r[1]}`, ipa: 2, ex: 3 },
-            Vowels: { file: 'Vowels.csv', getTdId: r => `${r[1]}-${r[2]}-${r[3]}`, ipa: 4, ex: 5 }
+            ConsonantsPulmonic: { 
+                file: 'ConsonantsPulmonic.csv', 
+                getTdId: r => {
+                    if (r.length < 6) {
+                        const firstChar = getBaseIpaChar(r[1]);
+                        const mapping = pulmonicSymbolMap[firstChar];
+                        return mapping ? `${mapping.manner}-${mapping.place}-${mapping.voicing}` : '';
+                    }
+                    return `${r[2]}-${r[1]}-${r[3]}`;
+                },
+                getIpa: r => r.length < 6 ? r[1] : r[4],
+                getEx: r => r.length < 6 ? r[2] : r[5]
+            },
+            ConsonantsNonPulmonic: { 
+                file: 'ConsonantsNonPulmonic.csv', 
+                getTdId: r => {
+                    if (r.length < 5) {
+                        const firstChar = getBaseIpaChar(r[1]);
+                        return nonPulmonicSymbols[firstChar] || '';
+                    }
+                    return `${r[1]}-${r[2]}`;
+                },
+                getIpa: r => r.length < 5 ? r[1] : r[3],
+                getEx: r => r.length < 5 ? r[2] : r[4]
+            },
+            OtherSymbols: { 
+                file: 'OtherSymbols.csv', 
+                getTdId: r => r.length < 4 ? getBaseIpaChar(r[1]) : r[1],
+                getIpa: r => r.length < 4 ? r[1] : r[2],
+                getEx: r => r.length < 4 ? r[2] : r[3]
+            },
+            Diacritics: { 
+                file: 'Diacrtics.csv', 
+                getTdId: r => r.length < 4 ? `D-${getBaseIpaChar(r[1])}` : `D-${r[1]}`,
+                getIpa: r => r.length < 4 ? r[1] : r[2],
+                getEx: r => r.length < 4 ? r[2] : r[3]
+            },
+            Vowels: { 
+                file: 'Vowels.csv', 
+                getTdId: r => {
+                    if (r.length < 6) {
+                        const firstChar = getBaseIpaChar(r[1]);
+                        const mapping = vowelsSymbols[firstChar];
+                        return mapping ? `${mapping.height}-${mapping.backRound}` : '';
+                    }
+                    return `${r[1]}-${r[2]}-${r[3]}`;
+                },
+                getIpa: r => r.length < 6 ? r[1] : r[4],
+                getEx: r => r.length < 6 ? r[2] : r[5]
+            }
         };
 
         let activeLanguages = new Set();
@@ -238,8 +331,6 @@
             const tbodyP = document.querySelector('#table-pulmonic tbody');
             const placesP = ["Bilabial", "Labiodental", "Dental", "Alveolar", "Postalveolar", "Retroflex", "Palatal", "Velar", "Uvular", "Pharyngeal", "Glottal"];
             const mannersP = ["Plosive", "Nasal", "Trill", "TapOrFlap", "Fricative", "LateralFricative", "Approximant", "LateralApproximant"];
-            const pVoids = { "Plosive-Pharyngeal": [0,1], "Plosive-Glottal": [0,1], "Nasal-Pharyngeal": [1,1], "Nasal-Glottal": [1,1], "Trill-Velar": [1,1], "Trill-Glottal": [1,1], "TapOrFlap-Velar": [1,1], "TapOrFlap-Glottal": [1,1], "LateralFricative-Bilabial": [1,1], "LateralFricative-Labiodental": [1,1], "LateralFricative-Pharyngeal": [1,1], "LateralFricative-Glottal": [1,1], "Approximant-Glottal": [1,1], "LateralApproximant-Bilabial": [1,1], "LateralApproximant-Labiodental": [1,1], "LateralApproximant-Pharyngeal": [1,1], "LateralApproximant-Glottal": [1,1] };
-            const pSymbols = { "Plosive-Bilabial": ["p", "b"], "Plosive-Alveolar": ["t", "d"], "Plosive-Retroflex": ["ʈ", "ɖ"], "Plosive-Palatal": ["c", "ɟ"], "Plosive-Velar": ["k", "ɡ"], "Plosive-Uvular": ["q", "ɢ"], "Plosive-Glottal": ["ʔ", ""], "Nasal-Bilabial": ["", "m"], "Nasal-Labiodental": ["", "ɱ"], "Nasal-Alveolar": ["", "n"], "Nasal-Retroflex": ["", "ɳ"], "Nasal-Palatal": ["", "ɲ"], "Nasal-Velar": ["", "ŋ"], "Nasal-Uvular": ["", "ɴ"], "Trill-Bilabial": ["", "ʙ"], "Trill-Alveolar": ["", "r"], "Trill-Uvular": ["", "ʀ"], "TapOrFlap-Labiodental": ["", "ⱱ"], "TapOrFlap-Alveolar": ["", "ɾ"], "TapOrFlap-Retroflex": ["", "ɽ"], "Fricative-Bilabial": ["ɸ", "β"], "Fricative-Labiodental": ["f", "v"], "Fricative-Dental": ["θ", "ð"], "Fricative-Alveolar": ["s", "z"], "Fricative-Postalveolar": ["ʃ", "ʒ"], "Fricative-Retroflex": ["ʂ", "ʐ"], "Fricative-Palatal": ["ç", "ʝ"], "Fricative-Velar": ["x", "ɣ"], "Fricative-Uvular": ["χ", "ʁ"], "Fricative-Pharyngeal": ["ħ", "ʕ"], "Fricative-Glottal": ["h", "ɦ"], "LateralFricative-Alveolar": ["ɬ", "ɮ"], "Approximant-Labiodental": ["", "ʋ"], "Approximant-Alveolar": ["", "ɹ"], "Approximant-Retroflex": ["", "ɻ"], "Approximant-Palatal": ["", "j"], "Approximant-Velar": ["", "ɰ"], "LateralApproximant-Alveolar": ["", "l"], "LateralApproximant-Retroflex": ["", "ɭ"], "LateralApproximant-Palatal": ["", "ʎ"], "LateralApproximant-Velar": ["", "ʟ"] };
             
             let trHeadP = document.createElement('tr');
             trHeadP.innerHTML = '<th class="sticky-corner"></th>';
@@ -284,7 +375,6 @@
 
             const theadNP = document.querySelector('#table-nonpulmonic');
             const placesNP = ["BL", "LD", "D", "A", "PA", "RF", "P", "V", "U"];
-            const fullPlacesNP = ["Bilabial", "Labiodental", "Dental", "Alveolar", "Postalveolar", "Retroflex", "Palatal", "Velar", "Uvular"];
             
             let npHtmlStr = `<thead><tr><th class="sticky-corner" colspan="2"></th>`;
             placesNP.forEach(p => npHtmlStr += `<th data-colspan="1">${p}</th>`);
@@ -410,7 +500,10 @@
             data.forEach(row => {
                 if(row.length < 2) return;
                 const id = config.getTdId(row);
-                if(!uniqueSymbols.has(id)) uniqueSymbols.set(id, row[config.ipa]);
+                if (id) {
+                    const rowIpa = config.getIpa ? config.getIpa(row) : row[config.ipa];
+                    if(!uniqueSymbols.has(id)) uniqueSymbols.set(id, rowIpa);
+                }
             });
 
             let html = '';
@@ -475,10 +568,9 @@
                     if (!activeLanguages.has(lang)) return;
                     
                     const tdId = config.getTdId(row);
-                    // Match id loosely for NonPulmonic because CSV keys might not perfectly align with new detailed table ids
-                    let targetId = tdId;
+                    if (!tdId) return;
+                    
                     if(key === 'ConsonantsNonPulmonic') {
-                        // Attempt to find elements that START with the tdId if it's a compound id in the UI
                         const matchingEls = document.querySelectorAll(`[id^="${tdId}"]`);
                         matchingEls.forEach(td => {
                            addFlagToCell(td, lang);
@@ -529,7 +621,6 @@
             if (tbodyRows.length === 0) return;
             const colCount = tbodyRows[0].children.length;
             
-            // Handle Pulmonic & Vowels (standard colspan structure)
             const isStandardGrid = activeTable.id === 'table-pulmonic' || activeTable.id === 'table-vowels';
             
             if (!hideEmpty) {
@@ -599,13 +690,9 @@
                     }
                 }
             } else {
-                // For Non-Pulmonic (complex rowspan structure), keep it simple: 
-                // Just hide cells visually if empty, but keep structure intact to prevent breaking rowspan.
-                // A perfect reflow of rowspans on the fly is extremely complex and error-prone in pure DOM manipulation.
                 tbodyRows.forEach(row => {
                     let rowHasData = false;
                     Array.from(row.children).forEach((td, index) => {
-                        // Skip headers
                         if(td.tagName === 'TH' || td.classList.contains('sticky-col')) return;
                         
                         const container = td.querySelector('.indicator-container');
@@ -618,8 +705,6 @@
                             td.classList.add('visually-hidden-cell');
                         }
                     });
-                    // Only hide row if it's completely empty AND it doesn't contain a rowspan header that spans other visible rows.
-                    // To be safe and prevent layout breakage with complex rowspans, we only visually hide cells in NP table.
                 });
             }
         }
@@ -649,22 +734,22 @@
                 csvDataMap[tableType].forEach(row => {
                     if (row.length < 2) return;
                     const lang = row[0].toLowerCase();
-                    // For Non-Pulmonic, the CSV ids might be broader (e.g., Clicks-Bilabial) 
-                    // while UI ids might be specific (Clicks-Bilabial-TenuisVelar).
-                    // We check if the UI id starts with the CSV id.
-                    if (activeLanguages.has(lang) && tdId.startsWith(config.getTdId(row))) {
+                    const rowTdId = config.getTdId(row);
+                    if (rowTdId && activeLanguages.has(lang) && tdId.startsWith(rowTdId)) {
                         hasData = true;
                         const langObj = languages.find(l => l.id === lang);
+                        const rowIpa = config.getIpa ? config.getIpa(row) : row[config.ipa];
+                        const rowEx = config.getEx ? config.getEx(row) : row[config.ex];
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 p-2 bg-slate-50 rounded-lg border border-slate-100';
                         div.innerHTML = `
                             <img src="https://flagcdn.com/w40/${langObj.flag}.png" class="w-8 h-6 object-cover rounded shadow-sm">
                             <div class="flex-1 min-w-0">
                                 <div class="flex justify-between items-baseline">
-                                    <span class="font-bold text-slate-800 text-lg">${row[config.ex] || ''}</span>
+                                    <span class="font-bold text-slate-800 text-lg">${rowEx || ''}</span>
                                     <span class="text-xs font-medium text-slate-500">${langObj.name}</span>
                                 </div>
-                                <span class="text-sm font-mono text-blue-600 bg-blue-50 px-1 rounded">${row[config.ipa] || ''}</span>
+                                <span class="text-sm font-mono text-blue-600 bg-blue-50 px-1 rounded">${rowIpa || ''}</span>
                             </div>
                         `;
                         paneContent.appendChild(div);
@@ -682,10 +767,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+            initSymbolMaps();
             renderTables();
             initLangToggles();
             await loadData();
         });
     </script>
 </body>
+
 </html>

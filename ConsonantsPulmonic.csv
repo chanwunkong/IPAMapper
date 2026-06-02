@@ -64,8 +64,10 @@ bengali,Bilabial,Fricative,voiced,/β/,ভ
 chinese,Labiodental,Fricative,voiceless,/f/,ㄈ
 chinese,Glottal,Fricative,voiceless,/h/,ㄏ
 chinese,Palatal,Approximant,voiced,/j/,ㄧ
+English,Velar,Fricative,voiceless,/x/,ㄏ
 chinese,Velar,Plosive,voiceless,/k/,ㄍ
 chinese,Velar,Plosive,voiceless,/kʰ/,ㄎ
+chinese,Velar,Nasal,voiced,/ŋ/,"ㄫ"
 chinese,Alveolar,LateralApproximant,voiced,/l/,ㄌ
 chinese,Bilabial,Nasal,voiced,/m/,ㄇ
 chinese,Alveolar,Nasal,voiced,/n/,ㄋ
@@ -73,7 +75,6 @@ chinese,Bilabial,Plosive,voiceless,/p/,ㄅ
 chinese,Bilabial,Plosive,voiceless,/pʰ/,ㄆ
 chinese,Alveolar,Fricative,voiceless,/s/,ㄙ
 chinese,Retroflex,Fricative,voiceless,/ʂ/,ㄕ
-chinese,Alveolar,Fricative,voiceless,/sɨ/,ㄙ
 chinese,Alveolar,Plosive,voiceless,/t/,ㄉ
 chinese,Alveolar,Plosive,voiceless,/tɕ/,ㄐ
 chinese,Alveolar,Plosive,voiceless,/tɕʰ/,ㄑ
@@ -82,8 +83,6 @@ chinese,Alveolar,Plosive,voiceless,/ts/,ㄗ
 chinese,Retroflex,Plosive,voiceless,/ʈʂ/,ㄓ
 chinese,Alveolar,Plosive,voiceless,/tsʰ/,ㄘ
 chinese,Retroflex,Plosive,voiceless,/ʈʂʰ/,ㄔ
-chinese,Alveolar,Plosive,voiceless,/tsʰɨ/,ㄘ
-chinese,Alveolar,Plosive,voiceless,/tsɨ/,ㄗ
 chinese,Retroflex,Fricative,voiced,/ʐ/,ㄖ
 English,Bilabial,Plosive,voiced,/b/,b
 English,Alveolar,Plosive,voiced,/d/,th
