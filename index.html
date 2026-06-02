@@ -14,14 +14,8 @@
             overscroll-behavior-y: none;
         }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .table-wrapper {
             position: relative;
@@ -31,26 +25,12 @@
             height: 100%;
         }
 
-        table.ipa-table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: max-content;
-        }
-
-        div.ipa-table.active {
-            display: flex;
-        }
-
-        table.ipa-table.active {
-            display: table;
-        }
-
-        .ipa-table.hidden {
-            display: none !important;
-        }
-
-        th,
-        td {
+        table.ipa-table { border-collapse: separate; border-spacing: 0; width: max-content; }
+        div.ipa-table.active { display: flex; }
+        table.ipa-table.active { display: table; }
+        .ipa-table.hidden { display: none !important; }
+        
+        th, td {
             border-right: 1px solid #e2e8f0;
             border-bottom: 1px solid #e2e8f0;
             padding: 8px 2px;
@@ -60,37 +40,9 @@
             height: 56px;
         }
 
-        th {
-            background-color: #f1f5f9;
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            font-size: 12px;
-            font-weight: 700;
-            color: #475569;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .sticky-col {
-            position: sticky;
-            left: 0;
-            background-color: #f1f5f9;
-            z-index: 20;
-            font-size: 12px;
-            font-weight: 700;
-            color: #475569;
-            border-left: 1px solid #e2e8f0;
-        }
-
-        .sticky-corner {
-            position: sticky;
-            top: 0;
-            left: 0;
-            z-index: 30;
-            background-color: #e2e8f0;
-            border-left: 1px solid #e2e8f0;
-            border-top: 1px solid #e2e8f0;
-        }
+        th { background-color: #f1f5f9; position: sticky; top: 0; z-index: 20; font-size: 12px; font-weight: 700; color: #475569; border-top: 1px solid #e2e8f0; }
+        .sticky-col { position: sticky; left: 0; background-color: #f1f5f9; z-index: 20; font-size: 12px; font-weight: 700; color: #475569; border-left: 1px solid #e2e8f0; }
+        .sticky-corner { position: sticky; top: 0; left: 0; z-index: 30; background-color: #e2e8f0; border-left: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; }
 
         .ipa-cell {
             position: relative;
@@ -98,26 +50,15 @@
             background-color: white;
             transition: background-color 0.2s;
         }
+        .ipa-cell:active, .ipa-cell.active { background-color: #e0f2fe; }
+        .ipa-cell.void { background-color: #cbd5e1; pointer-events: none; }
 
-        .ipa-cell:active,
-        .ipa-cell.active {
-            background-color: #e0f2fe;
-        }
-
-        .ipa-cell.void {
-            background-color: #cbd5e1;
+        .visually-hidden-cell {
+            background-color: transparent !important;
+            border-color: transparent !important;
             pointer-events: none;
         }
-
-        /* 保留邊框與背景，僅隱藏內部內容以維持表格完整性 */
-        .empty-placeholder {
-            pointer-events: none;
-            background-color: #f8fafc;
-        }
-
-        .empty-placeholder * {
-            display: none !important;
-        }
+        .visually-hidden-cell * { display: none !important; }
 
         .symbol-text {
             display: block;
@@ -125,6 +66,16 @@
             font-weight: bold;
             color: #0f172a;
             transform: translateY(-4px);
+        }
+        .symbol-pair {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .symbol-pair span {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f172a;
         }
 
         .indicator-container {
@@ -139,13 +90,12 @@
             padding: 0 2px;
             pointer-events: none;
         }
-
         .micro-flag {
             width: 12px;
             height: 8px;
             object-fit: cover;
             border-radius: 1px;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.3);
         }
 
         .lang-toggle {
@@ -153,22 +103,18 @@
             opacity: 0.5;
             filter: grayscale(100%);
         }
-
         .lang-toggle.active {
             opacity: 1;
             filter: grayscale(0%);
             border-color: #3b82f6;
             background-color: #eff6ff;
         }
+        
+        .toggle-checkbox:checked { right: 0; border-color: #3b82f6; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #3b82f6; }
 
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #3b82f6;
-        }
-
-        .toggle-checkbox:checked+.toggle-label {
-            background-color: #3b82f6;
-        }
+        /* Support for multi-row headers in Non-Pulmonic */
+        .rowspan-header { vertical-align: middle; }
     </style>
 </head>
 
@@ -177,30 +123,24 @@
     <header class="flex-shrink-0 bg-white border-b border-slate-200 z-10 shadow-sm relative">
         <div class="px-4 py-3 flex justify-between items-center">
             <h1 class="text-lg font-bold text-slate-800">IPA Mapper</h1>
-
+            
             <div class="flex items-center gap-3">
                 <label class="flex items-center cursor-pointer">
                     <div class="relative">
                         <input type="checkbox" id="hide-empty-toggle" class="sr-only" onchange="filterTable()">
                         <div class="block bg-slate-200 w-10 h-6 rounded-full transition-colors toggle-label"></div>
-                        <div
-                            class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform transform">
-                        </div>
+                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform transform"></div>
                     </div>
                     <div class="ml-2 text-sm font-medium text-slate-700">隱藏空欄位</div>
                 </label>
                 <a href="test.html" class="text-sm bg-slate-800 text-white px-3 py-1.5 rounded-md font-medium">手寫</a>
             </div>
         </div>
-
+        
         <div class="px-4 pb-3">
-            <button onclick="toggleLangPanel()"
-                class="w-full flex justify-between items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 focus:outline-none shadow-sm">
+            <button onclick="toggleLangPanel()" class="w-full flex justify-between items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 focus:outline-none shadow-sm">
                 <span id="lang-btn-text">選擇對比語言 (已選: 0)</span>
-                <svg id="lang-btn-icon" class="w-4 h-4 transition-transform duration-200" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                <svg id="lang-btn-icon" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             <div id="language-toggles" class="hidden flex-wrap gap-2 pt-3"></div>
         </div>
@@ -208,47 +148,30 @@
 
     <main class="flex-1 relative bg-slate-50 flex flex-col min-h-0 z-0">
         <div class="flex-shrink-0 px-4 py-2 border-b border-slate-200 bg-white flex gap-4 overflow-x-auto no-scrollbar">
-            <button class="tab-btn font-bold text-blue-600 border-b-2 border-blue-600 pb-1 whitespace-nowrap"
-                data-tab="pulmonic" onclick="switchTab('pulmonic')">Pulmonic</button>
-            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="nonpulmonic"
-                onclick="switchTab('nonpulmonic')">Non-Pulmonic</button>
-            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="vowels"
-                onclick="switchTab('vowels')">Vowels</button>
-            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="others"
-                onclick="switchTab('others')">Other Symbols</button>
-            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="diacritics"
-                onclick="switchTab('diacritics')">Diacritics</button>
+            <button class="tab-btn font-bold text-blue-600 border-b-2 border-blue-600 pb-1 whitespace-nowrap" data-tab="pulmonic" onclick="switchTab('pulmonic')">Pulmonic</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="nonpulmonic" onclick="switchTab('nonpulmonic')">Non-Pulmonic</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="vowels" onclick="switchTab('vowels')">Vowels</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="others" onclick="switchTab('others')">Other Symbols</button>
+            <button class="tab-btn font-bold text-slate-400 pb-1 whitespace-nowrap" data-tab="diacritics" onclick="switchTab('diacritics')">Diacritics</button>
         </div>
 
         <div class="flex-1 table-wrapper pb-24">
-            <table id="table-pulmonic" class="ipa-table active">
-                <thead></thead>
-                <tbody></tbody>
-            </table>
+            <table id="table-pulmonic" class="ipa-table active"><thead></thead><tbody></tbody></table>
+            <table id="table-nonpulmonic" class="ipa-table hidden"></table>
             <table id="table-vowels" class="ipa-table hidden"></table>
-            <div id="table-nonpulmonic"
-                class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
-            <div id="table-others"
-                class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
-            <div id="table-diacritics"
-                class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
+            <div id="table-others" class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
+            <div id="table-diacritics" class="ipa-table hidden flex-wrap gap-3 p-4 justify-center items-start content-start"></div>
         </div>
     </main>
 
-    <aside id="detail-pane"
-        class="fixed bottom-0 left-0 w-full max-h-[40vh] bg-white border-t border-slate-200 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] flex flex-col z-50 transform translate-y-full transition-transform duration-300 rounded-t-xl">
+    <aside id="detail-pane" class="fixed bottom-0 left-0 w-full max-h-[40vh] bg-white border-t border-slate-200 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] flex flex-col z-50 transform translate-y-full transition-transform duration-300 rounded-t-xl">
         <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-xl">
             <div class="flex items-center gap-2">
-                <span id="pane-symbol"
-                    class="text-2xl font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-lg">-</span>
+                <span id="pane-symbol" class="text-2xl font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-lg">-</span>
                 <span id="pane-coord" class="text-sm font-medium text-slate-600"></span>
             </div>
-            <button onclick="closePane()"
-                class="p-2 text-slate-400 hover:text-slate-600 bg-slate-200 hover:bg-slate-300 rounded-full transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
+            <button onclick="closePane()" class="p-2 text-slate-400 hover:text-slate-600 bg-slate-200 hover:bg-slate-300 rounded-full transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
         <div id="pane-content" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
@@ -256,26 +179,16 @@
 
     <script>
         const languages = [
-            { id: 'english', name: 'English', flag: 'us' },
-            { id: 'german', name: 'Deutsch', flag: 'de' },
-            { id: 'spanish', name: 'Español', flag: 'es' },
-            { id: 'portuguese', name: 'Português', flag: 'pt' },
-            { id: 'french', name: 'Français', flag: 'fr' },
-            { id: 'italian', name: 'Italiano', flag: 'it' },
-            { id: 'russian', name: 'Русский', flag: 'ru' },
-            { id: 'bengali', name: 'বাংলা', flag: 'bd' },
-            { id: 'hindiurdu', name: 'हिंदी', flag: 'in' },
-            { id: 'persian', name: 'فارسی', flag: 'ir' },
-            { id: 'arabic', name: 'العربية', flag: 'sa' },
-            { id: 'tamil', name: 'தமிழ்', flag: 'in' },
-            { id: 'chinese', name: '中文', flag: 'tw' },
-            { id: 'turkish', name: 'Türkçe', flag: 'tr' },
-            { id: 'japanese', name: '日本語', flag: 'jp' },
-            { id: 'korean', name: '한국어', flag: 'kr' },
-            { id: 'vietnamese', name: 'Tiếng Việt', flag: 'vn' },
-            { id: 'indonesian', name: 'Bahasa Indonesia', flag: 'id' },
-            { id: 'thai', name: 'ภาษาไทย', flag: 'th' },
-            { id: 'swahili', name: 'Kiswahili', flag: 'ke' }
+            { id: 'english', name: 'English', flag: 'us' }, { id: 'german', name: 'Deutsch', flag: 'de' },
+            { id: 'spanish', name: 'Español', flag: 'es' }, { id: 'portuguese', name: 'Português', flag: 'pt' },
+            { id: 'french', name: 'Français', flag: 'fr' }, { id: 'italian', name: 'Italiano', flag: 'it' },
+            { id: 'russian', name: 'Русский', flag: 'ru' }, { id: 'bengali', name: 'বাংলা', flag: 'bd' },
+            { id: 'hindiurdu', name: 'हिंदी', flag: 'in' }, { id: 'persian', name: 'فارسی', flag: 'ir' },
+            { id: 'arabic', name: 'العربية', flag: 'sa' }, { id: 'tamil', name: 'தமிழ்', flag: 'in' },
+            { id: 'chinese', name: '中文', flag: 'tw' }, { id: 'turkish', name: 'Türkçe', flag: 'tr' },
+            { id: 'japanese', name: '日本語', flag: 'jp' }, { id: 'korean', name: '한국어', flag: 'kr' },
+            { id: 'vietnamese', name: 'Tiếng Việt', flag: 'vn' }, { id: 'indonesian', name: 'Bahasa Indonesia', flag: 'id' },
+            { id: 'thai', name: 'ภาษาไทย', flag: 'th' }, { id: 'swahili', name: 'Kiswahili', flag: 'ke' }
         ];
 
         const DATA_CONFIGS = {
@@ -287,7 +200,7 @@
         };
 
         let activeLanguages = new Set();
-        let csvDataMap = {};
+        let csvDataMap = {}; 
         let currentActiveCell = null;
 
         function toggleLangPanel() {
@@ -306,7 +219,7 @@
             });
             const target = document.getElementById(`table-${tabId}`);
             target.classList.remove('hidden'); target.classList.add('active');
-
+            
             document.querySelectorAll('.tab-btn').forEach(b => {
                 b.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
                 b.classList.add('text-slate-400');
@@ -315,27 +228,28 @@
                     b.classList.remove('text-slate-400');
                 }
             });
-            filterTable();
+            filterTable(); 
             closePane();
         }
 
         function renderTables() {
+            // --- Pulmonic ---
             const theadP = document.querySelector('#table-pulmonic thead');
             const tbodyP = document.querySelector('#table-pulmonic tbody');
-            const places = ["Bilabial", "Labiodental", "Dental", "Alveolar", "Postalveolar", "Retroflex", "Palatal", "Velar", "Uvular", "Pharyngeal", "Glottal"];
-            const manners = ["Plosive", "Nasal", "Trill", "TapOrFlap", "Fricative", "LateralFricative", "Approximant", "LateralApproximant"];
-            const pVoids = { "Plosive-Pharyngeal": [0, 1], "Plosive-Glottal": [0, 1], "Nasal-Pharyngeal": [1, 1], "Nasal-Glottal": [1, 1], "Trill-Velar": [1, 1], "Trill-Glottal": [1, 1], "TapOrFlap-Velar": [1, 1], "TapOrFlap-Glottal": [1, 1], "LateralFricative-Bilabial": [1, 1], "LateralFricative-Labiodental": [1, 1], "LateralFricative-Pharyngeal": [1, 1], "LateralFricative-Glottal": [1, 1], "Approximant-Glottal": [1, 1], "LateralApproximant-Bilabial": [1, 1], "LateralApproximant-Labiodental": [1, 1], "LateralApproximant-Pharyngeal": [1, 1], "LateralApproximant-Glottal": [1, 1] };
+            const placesP = ["Bilabial", "Labiodental", "Dental", "Alveolar", "Postalveolar", "Retroflex", "Palatal", "Velar", "Uvular", "Pharyngeal", "Glottal"];
+            const mannersP = ["Plosive", "Nasal", "Trill", "TapOrFlap", "Fricative", "LateralFricative", "Approximant", "LateralApproximant"];
+            const pVoids = { "Plosive-Pharyngeal": [0,1], "Plosive-Glottal": [0,1], "Nasal-Pharyngeal": [1,1], "Nasal-Glottal": [1,1], "Trill-Velar": [1,1], "Trill-Glottal": [1,1], "TapOrFlap-Velar": [1,1], "TapOrFlap-Glottal": [1,1], "LateralFricative-Bilabial": [1,1], "LateralFricative-Labiodental": [1,1], "LateralFricative-Pharyngeal": [1,1], "LateralFricative-Glottal": [1,1], "Approximant-Glottal": [1,1], "LateralApproximant-Bilabial": [1,1], "LateralApproximant-Labiodental": [1,1], "LateralApproximant-Pharyngeal": [1,1], "LateralApproximant-Glottal": [1,1] };
             const pSymbols = { "Plosive-Bilabial": ["p", "b"], "Plosive-Alveolar": ["t", "d"], "Plosive-Retroflex": ["ʈ", "ɖ"], "Plosive-Palatal": ["c", "ɟ"], "Plosive-Velar": ["k", "ɡ"], "Plosive-Uvular": ["q", "ɢ"], "Plosive-Glottal": ["ʔ", ""], "Nasal-Bilabial": ["", "m"], "Nasal-Labiodental": ["", "ɱ"], "Nasal-Alveolar": ["", "n"], "Nasal-Retroflex": ["", "ɳ"], "Nasal-Palatal": ["", "ɲ"], "Nasal-Velar": ["", "ŋ"], "Nasal-Uvular": ["", "ɴ"], "Trill-Bilabial": ["", "ʙ"], "Trill-Alveolar": ["", "r"], "Trill-Uvular": ["", "ʀ"], "TapOrFlap-Labiodental": ["", "ⱱ"], "TapOrFlap-Alveolar": ["", "ɾ"], "TapOrFlap-Retroflex": ["", "ɽ"], "Fricative-Bilabial": ["ɸ", "β"], "Fricative-Labiodental": ["f", "v"], "Fricative-Dental": ["θ", "ð"], "Fricative-Alveolar": ["s", "z"], "Fricative-Postalveolar": ["ʃ", "ʒ"], "Fricative-Retroflex": ["ʂ", "ʐ"], "Fricative-Palatal": ["ç", "ʝ"], "Fricative-Velar": ["x", "ɣ"], "Fricative-Uvular": ["χ", "ʁ"], "Fricative-Pharyngeal": ["ħ", "ʕ"], "Fricative-Glottal": ["h", "ɦ"], "LateralFricative-Alveolar": ["ɬ", "ɮ"], "Approximant-Labiodental": ["", "ʋ"], "Approximant-Alveolar": ["", "ɹ"], "Approximant-Retroflex": ["", "ɻ"], "Approximant-Palatal": ["", "j"], "Approximant-Velar": ["", "ɰ"], "LateralApproximant-Alveolar": ["", "l"], "LateralApproximant-Retroflex": ["", "ɭ"], "LateralApproximant-Palatal": ["", "ʎ"], "LateralApproximant-Velar": ["", "ʟ"] };
+            
+            let trHeadP = document.createElement('tr');
+            trHeadP.innerHTML = '<th class="sticky-corner"></th>';
+            placesP.forEach(place => trHeadP.innerHTML += `<th colspan="2" data-colspan="2">${place}</th>`);
+            theadP.appendChild(trHeadP);
 
-            let trHead = document.createElement('tr');
-            trHead.innerHTML = '<th class="sticky-corner"></th>';
-            places.forEach(place => trHead.innerHTML += `<th colspan="2" data-colspan="2">${place}</th>`);
-            theadP.appendChild(trHead);
-
-            manners.forEach(manner => {
+            mannersP.forEach(manner => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `<td class="sticky-col">${manner}</td>`;
-                places.forEach(place => {
+                placesP.forEach(place => {
                     ['voiceless', 'voiced'].forEach((voicing, vIndex) => {
                         const key = `${manner}-${place}`;
                         const isVoid = pVoids[key] && pVoids[key][vIndex];
@@ -347,14 +261,15 @@
                 tbodyP.appendChild(tr);
             });
 
+            // --- Vowels ---
             const vowelsData = [
-                { label: 'Close', prefix: 'Close', cells: [{ c: 'Front-Unrounded', s: 'i' }, { c: 'Front-Rounded', s: 'y' }, { c: 'Central-Unrounded', s: 'ɨ' }, { c: 'Central-Rounded', s: 'ʉ' }, { c: 'Back-Unrounded', s: 'ɯ' }, { c: 'Back-Rounded', s: 'u' }] },
-                { label: 'Near-close', prefix: 'Nearclose', cells: [{ c: 'Nearfront-Unrounded', s: 'ɪ' }, { c: 'Nearfront-Rounded', s: 'ʏ' }, null, null, null, { c: 'Nearback-Rounded', s: 'ʊ' }] },
-                { label: 'Close-mid', prefix: 'Closemid', cells: [{ c: 'Front-Unrounded', s: 'e' }, { c: 'Front-Rounded', s: 'ø' }, { c: 'Central-Unrounded', s: 'ɘ' }, { c: 'Central-Rounded', s: 'ɵ' }, { c: 'Back-Unrounded', s: 'ɤ' }, { c: 'Back-Rounded', s: 'o' }] },
-                { label: 'Mid', prefix: 'Mid', cells: [null, null, { c: 'Central-Unrounded', s: 'ə' }, null, null, null] },
-                { label: 'Open-mid', prefix: 'Openmid', cells: [{ c: 'Front-Unrounded', s: 'ɛ' }, { c: 'Front-Rounded', s: 'œ' }, { c: 'Central-Unrounded', s: 'ɜ' }, { c: 'Central-Rounded', s: 'ɞ' }, { c: 'Back-Unrounded', s: 'ʌ' }, { c: 'Back-Rounded', s: 'ɔ' }] },
-                { label: 'Near-open', prefix: 'Nearopen', cells: [{ c: 'Front-Unrounded', s: 'æ' }, null, { c: 'Central-UnR&R', s: 'ɐ' }, null, null, null] },
-                { label: 'Open', prefix: 'Open', cells: [{ c: 'Front-Unrounded', s: 'a' }, { c: 'Front-Rounded', s: 'ɶ' }, null, null, { c: 'Back-Unrounded', s: 'ɑ' }, { c: 'Back-Rounded', s: 'ɒ' }] }
+                { label: 'Close', prefix: 'Close', cells: [{c:'Front-Unrounded', s:'i'}, {c:'Front-Rounded', s:'y'}, {c:'Central-Unrounded', s:'ɨ'}, {c:'Central-Rounded', s:'ʉ'}, {c:'Back-Unrounded', s:'ɯ'}, {c:'Back-Rounded', s:'u'}] },
+                { label: 'Near-close', prefix: 'Nearclose', cells: [{c:'Nearfront-Unrounded', s:'ɪ'}, {c:'Nearfront-Rounded', s:'ʏ'}, null, null, null, {c:'Nearback-Rounded', s:'ʊ'}] },
+                { label: 'Close-mid', prefix: 'Closemid', cells: [{c:'Front-Unrounded', s:'e'}, {c:'Front-Rounded', s:'ø'}, {c:'Central-Unrounded', s:'ɘ'}, {c:'Central-Rounded', s:'ɵ'}, {c:'Back-Unrounded', s:'ɤ'}, {c:'Back-Rounded', s:'o'}] },
+                { label: 'Mid', prefix: 'Mid', cells: [null, null, {c:'Central-Unrounded', s:'ə'}, null, null, null] },
+                { label: 'Open-mid', prefix: 'Openmid', cells: [{c:'Front-Unrounded', s:'ɛ'}, {c:'Front-Rounded', s:'œ'}, {c:'Central-Unrounded', s:'ɜ'}, {c:'Central-Rounded', s:'ɞ'}, {c:'Back-Unrounded', s:'ʌ'}, {c:'Back-Rounded', s:'ɔ'}] },
+                { label: 'Near-open', prefix: 'Nearopen', cells: [{c:'Front-Unrounded', s:'æ'}, null, {c:'Central-UnR&R', s:'ɐ'}, null, null, null] },
+                { label: 'Open', prefix: 'Open', cells: [{c:'Front-Unrounded', s:'a'}, {c:'Front-Rounded', s:'ɶ'}, null, null, {c:'Back-Unrounded', s:'ɑ'}, {c:'Back-Rounded', s:'ɒ'}] }
             ];
             let vHtml = '<thead><tr><th class="sticky-corner"></th><th colspan="2" data-colspan="2">Front</th><th colspan="2" data-colspan="2">Central</th><th colspan="2" data-colspan="2">Back</th></tr></thead><tbody>';
             vowelsData.forEach(row => {
@@ -367,21 +282,124 @@
             });
             document.getElementById('table-vowels').innerHTML = vHtml + '</tbody>';
 
-            const nonPData = [
-                { id: 'Clicks-Bilabial', s: 'ʘ' }, { id: 'VoicedImplosives-Bilabial', s: 'ɓ' }, { id: 'Ejectives-Bilabial', s: 'pʼ' },
-                { id: 'Clicks-Dental', s: 'ǀ' }, { id: 'VoicedImplosives-DentalAlveolar', s: 'ɗ' }, { id: 'Ejectives-DentalAlveolar', s: 'tʼ' },
-                { id: 'Clicks-Postalveolar', s: 'ǃ' }, { id: 'VoicedImplosives-Palatal', s: 'ʄ' },
-                { id: 'Clicks-Palatoalveolar', s: 'ǂ' }, { id: 'VoicedImplosives-Velar', s: 'ɠ' }, { id: 'Ejectives-Velar', s: 'kʼ' },
-                { id: 'Clicks-AlveolarLateral', s: 'ǁ' }, { id: 'VoicedImplosives-Uvular', s: 'ʛ' }, { id: 'Ejectives-AlveolarFricative', s: 'sʼ' }
-            ];
-            let npHtml = '';
-            nonPData.forEach(item => {
-                npHtml += `<div class="ipa-cell border border-slate-200 bg-white rounded-lg w-16 h-16 flex flex-col items-center justify-center relative flex-shrink-0" id="${item.id}" onclick="selectCell(this, '${item.s}', '${item.id}', 'ConsonantsNonPulmonic')">
-                    <span class="symbol-text text-xl font-bold translate-y-[-4px]">${item.s}</span>
-                    <div class="indicator-container absolute bottom-1 w-full flex flex-wrap justify-center gap-[2px]"></div>
-                </div>`;
+            const theadNP = document.querySelector('#table-nonpulmonic');
+            const placesNP = ["BL", "LD", "D", "A", "PA", "RF", "P", "V", "U"];
+            const fullPlacesNP = ["Bilabial", "Labiodental", "Dental", "Alveolar", "Postalveolar", "Retroflex", "Palatal", "Velar", "Uvular"];
+            
+            let npHtmlStr = `<thead><tr><th class="sticky-corner" colspan="2"></th>`;
+            placesNP.forEach(p => npHtmlStr += `<th data-colspan="1">${p}</th>`);
+            npHtmlStr += `</tr></thead><tbody>`;
+
+            // Implosive
+            npHtmlStr += `<tr><td class="sticky-col rowspan-header" rowspan="2">Implosive</td><td class="sticky-col">Voiced</td>`;
+            const implosiveVoiced = ["ɓ", null, null, "ɗ", null, "ᶑ", "ʄ", "ɠ", "ʛ"];
+            const implosiveVoicedIds = ["VoicedImplosives-Bilabial", null, null, "VoicedImplosives-DentalAlveolar", null, "VoicedImplosives-Retroflex", "VoicedImplosives-Palatal", "VoicedImplosives-Velar", "VoicedImplosives-Uvular"];
+            implosiveVoiced.forEach((sym, i) => {
+                if(!sym) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${implosiveVoicedIds[i]}" onclick="selectCell(this, '${sym}', '${implosiveVoicedIds[i]}', 'ConsonantsNonPulmonic')"><span class="symbol-text">${sym}</span><div class="indicator-container"></div></td>`;
             });
-            document.getElementById('table-nonpulmonic').innerHTML = npHtml;
+            npHtmlStr += `</tr><tr><td class="sticky-col">Voiceless</td>`;
+            const implosiveVoiceless = ["ɓ̥", null, null, "ɗ̥", null, "ᶑ̥", "ʄ̊", "ɠ̊", "ʛ̥"];
+            const implosiveVoicelessIds = ["VoicelessImplosives-Bilabial", null, null, "VoicelessImplosives-DentalAlveolar", null, "VoicelessImplosives-Retroflex", "VoicelessImplosives-Palatal", "VoicelessImplosives-Velar", "VoicelessImplosives-Uvular"];
+            implosiveVoiceless.forEach((sym, i) => {
+                if(!sym) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${implosiveVoicelessIds[i]}" onclick="selectCell(this, '${sym}', '${implosiveVoicelessIds[i]}', 'ConsonantsNonPulmonic')"><span class="symbol-text">${sym}</span><div class="indicator-container"></div></td>`;
+            });
+            npHtmlStr += `</tr>`;
+
+            // Ejective
+            npHtmlStr += `<tr><td class="sticky-col rowspan-header" rowspan="3">Ejective</td><td class="sticky-col">Stop</td>`;
+            const ejectiveStop = ["pʼ", null, null, "tʼ", null, "ʈʼ", "cʼ", "kʼ", "qʼ"];
+            const ejectiveStopIds = ["Ejectives-Bilabial", null, null, "Ejectives-DentalAlveolar", null, "Ejectives-Retroflex", "Ejectives-Palatal", "Ejectives-Velar", "Ejectives-Uvular"];
+            ejectiveStop.forEach((sym, i) => {
+                if(!sym) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${ejectiveStopIds[i]}" onclick="selectCell(this, '${sym}', '${ejectiveStopIds[i]}', 'ConsonantsNonPulmonic')"><span class="symbol-text">${sym}</span><div class="indicator-container"></div></td>`;
+            });
+            npHtmlStr += `</tr><tr><td class="sticky-col">Fricative</td>`;
+            const ejectiveFricative = ["ɸʼ", "fʼ", "θʼ", "sʼ", "ʃʼ", "ʂʼ", "ɕʼ", "xʼ", "χʼ"];
+            const ejectiveFricativeIds = ["EjectiveFricatives-Bilabial", "EjectiveFricatives-Labiodental", "EjectiveFricatives-Dental", "EjectiveFricatives-AlveolarFricative", "EjectiveFricatives-Postalveolar", "EjectiveFricatives-Retroflex", "EjectiveFricatives-Alveolopalatal", "EjectiveFricatives-Velar", "EjectiveFricatives-Uvular"];
+            ejectiveFricative.forEach((sym, i) => {
+                if(!sym) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${ejectiveFricativeIds[i]}" onclick="selectCell(this, '${sym}', '${ejectiveFricativeIds[i]}', 'ConsonantsNonPulmonic')"><span class="symbol-text">${sym}</span><div class="indicator-container"></div></td>`;
+            });
+            npHtmlStr += `</tr><tr><td class="sticky-col">Lateral fricative</td>`;
+            const ejectiveLatFricative = [null, null, null, "ɬʼ", null, null, null, null, null];
+            const ejectiveLatFricativeIds = [null, null, null, "EjectiveLateralFricatives-Alveolar", null, null, null, null, null];
+            ejectiveLatFricative.forEach((sym, i) => {
+                if(!sym) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${ejectiveLatFricativeIds[i]}" onclick="selectCell(this, '${sym}', '${ejectiveLatFricativeIds[i]}', 'ConsonantsNonPulmonic')"><span class="symbol-text">${sym}</span><div class="indicator-container"></div></td>`;
+            });
+            npHtmlStr += `</tr>`;
+
+            // Click
+            npHtmlStr += `<tr><td class="sticky-col rowspan-header" rowspan="6">Click<br><span style="font-size:10px; font-weight:normal;">(top: velar;<br>bottom: uvular)</span></td><td class="sticky-col">Tenuis</td>`;
+            const clickTenuis = [
+                {t:"kʘ", b:"qʘ", idT:"Clicks-Bilabial-TenuisVelar", idB:"Clicks-Bilabial-TenuisUvular"}, 
+                {t:"kǀ", b:"qǀ", idT:"Clicks-Dental-TenuisVelar", idB:"Clicks-Dental-TenuisUvular"}, 
+                null, 
+                {t:"kǃ", b:"qǃ", idT:"Clicks-Postalveolar-TenuisVelar", idB:"Clicks-Postalveolar-TenuisUvular"}, 
+                null, null, 
+                {t:"kǂ", b:"qǂ", idT:"Clicks-Palatoalveolar-TenuisVelar", idB:"Clicks-Palatoalveolar-TenuisUvular"}, 
+                null, null
+            ];
+            clickTenuis.forEach((item) => {
+                if(!item) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${item.idT}" onclick="selectCell(this, '${item.t} / ${item.b}', '${item.idT}', 'ConsonantsNonPulmonic')"><div class="symbol-pair"><span>${item.t}</span><span>${item.b}</span></div><div class="indicator-container"></div></td>`;
+            });
+            
+            npHtmlStr += `</tr><tr><td class="sticky-col">Voiced</td>`;
+            const clickVoiced = [
+                {t:"ɡʘ", b:"ɢʘ", idT:"Clicks-Bilabial-VoicedVelar", idB:"Clicks-Bilabial-VoicedUvular"}, 
+                {t:"ɡǀ", b:"ɢǀ", idT:"Clicks-Dental-VoicedVelar", idB:"Clicks-Dental-VoicedUvular"}, 
+                null, 
+                {t:"ɡǃ", b:"ɢǃ", idT:"Clicks-Postalveolar-VoicedVelar", idB:"Clicks-Postalveolar-VoicedUvular"}, 
+                null, null, 
+                {t:"ɡǂ", b:"ɢǂ", idT:"Clicks-Palatoalveolar-VoicedVelar", idB:"Clicks-Palatoalveolar-VoicedUvular"}, 
+                null, null
+            ];
+            clickVoiced.forEach((item) => {
+                if(!item) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${item.idT}" onclick="selectCell(this, '${item.t} / ${item.b}', '${item.idT}', 'ConsonantsNonPulmonic')"><div class="symbol-pair"><span>${item.t}</span><span>${item.b}</span></div><div class="indicator-container"></div></td>`;
+            });
+
+            npHtmlStr += `</tr><tr><td class="sticky-col">Nasal</td>`;
+            const clickNasal = [
+                {t:"ŋʘ", b:"ɴʘ", idT:"Clicks-Bilabial-NasalVelar", idB:"Clicks-Bilabial-NasalUvular"}, 
+                {t:"ŋǀ", b:"ɴǀ", idT:"Clicks-Dental-NasalVelar", idB:"Clicks-Dental-NasalUvular"}, 
+                null, 
+                {t:"ŋǃ", b:"ɴǃ", idT:"Clicks-Postalveolar-NasalVelar", idB:"Clicks-Postalveolar-NasalUvular"}, 
+                null, null, 
+                {t:"ŋǂ", b:"ɴǂ", idT:"Clicks-Palatoalveolar-NasalVelar", idB:"Clicks-Palatoalveolar-NasalUvular"}, 
+                null, null
+            ];
+            clickNasal.forEach((item) => {
+                if(!item) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${item.idT}" onclick="selectCell(this, '${item.t} / ${item.b}', '${item.idT}', 'ConsonantsNonPulmonic')"><div class="symbol-pair"><span>${item.t}</span><span>${item.b}</span></div><div class="indicator-container"></div></td>`;
+            });
+
+            npHtmlStr += `</tr><tr><td class="sticky-col">Tenuis lateral</td>`;
+            const clickLatTenuis = [null, null, null, {t:"kǁ", b:"qǁ", idT:"Clicks-AlveolarLateral-TenuisVelar", idB:"Clicks-AlveolarLateral-TenuisUvular"}, null, null, null, null, null];
+            clickLatTenuis.forEach((item) => {
+                if(!item) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${item.idT}" onclick="selectCell(this, '${item.t} / ${item.b}', '${item.idT}', 'ConsonantsNonPulmonic')"><div class="symbol-pair"><span>${item.t}</span><span>${item.b}</span></div><div class="indicator-container"></div></td>`;
+            });
+
+            npHtmlStr += `</tr><tr><td class="sticky-col">Voiced lateral</td>`;
+            const clickLatVoiced = [null, null, null, {t:"ɡǁ", b:"ɢǁ", idT:"Clicks-AlveolarLateral-VoicedVelar", idB:"Clicks-AlveolarLateral-VoicedUvular"}, null, null, null, null, null];
+            clickLatVoiced.forEach((item) => {
+                if(!item) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${item.idT}" onclick="selectCell(this, '${item.t} / ${item.b}', '${item.idT}', 'ConsonantsNonPulmonic')"><div class="symbol-pair"><span>${item.t}</span><span>${item.b}</span></div><div class="indicator-container"></div></td>`;
+            });
+
+            npHtmlStr += `</tr><tr><td class="sticky-col">Nasal lateral</td>`;
+            const clickLatNasal = [null, null, null, {t:"ŋǁ", b:"ɴǁ", idT:"Clicks-AlveolarLateral-NasalVelar", idB:"Clicks-AlveolarLateral-NasalUvular"}, null, null, null, null, null];
+            clickLatNasal.forEach((item) => {
+                if(!item) npHtmlStr += `<td class="ipa-cell void"></td>`;
+                else npHtmlStr += `<td class="ipa-cell" id="${item.idT}" onclick="selectCell(this, '${item.t} / ${item.b}', '${item.idT}', 'ConsonantsNonPulmonic')"><div class="symbol-pair"><span>${item.t}</span><span>${item.b}</span></div><div class="indicator-container"></div></td>`;
+            });
+
+            npHtmlStr += `</tr></tbody>`;
+            theadNP.innerHTML = npHtmlStr;
         }
 
         function renderDynamicFlex(containerId, dataKey) {
@@ -390,9 +408,9 @@
             const config = DATA_CONFIGS[dataKey];
             const uniqueSymbols = new Map();
             data.forEach(row => {
-                if (row.length < 2) return;
+                if(row.length < 2) return;
                 const id = config.getTdId(row);
-                if (!uniqueSymbols.has(id)) uniqueSymbols.set(id, row[config.ipa]);
+                if(!uniqueSymbols.has(id)) uniqueSymbols.set(id, row[config.ipa]);
             });
 
             let html = '';
@@ -436,7 +454,7 @@
                     const res = await fetch(`./${config.file}`);
                     if (res.ok) csvDataMap[key] = parseCSV(await res.text());
                     else csvDataMap[key] = [];
-                } catch (e) {
+                } catch(e) {
                     csvDataMap[key] = [];
                 }
             }
@@ -455,22 +473,36 @@
                     if (row.length < 2) return;
                     const lang = row[0].toLowerCase();
                     if (!activeLanguages.has(lang)) return;
-
+                    
                     const tdId = config.getTdId(row);
-                    const td = document.getElementById(tdId);
-                    if (td && !td.classList.contains('void')) {
-                        const container = td.querySelector('.indicator-container');
-                        const langObj = languages.find(l => l.id === lang);
-                        if (langObj && container && !container.innerHTML.includes(langObj.flag)) {
-                            const img = document.createElement('img');
-                            img.src = `https://flagcdn.com/w20/${langObj.flag}.png`;
-                            img.className = 'micro-flag';
-                            container.appendChild(img);
-                        }
+                    // Match id loosely for NonPulmonic because CSV keys might not perfectly align with new detailed table ids
+                    let targetId = tdId;
+                    if(key === 'ConsonantsNonPulmonic') {
+                        // Attempt to find elements that START with the tdId if it's a compound id in the UI
+                        const matchingEls = document.querySelectorAll(`[id^="${tdId}"]`);
+                        matchingEls.forEach(td => {
+                           addFlagToCell(td, lang);
+                        });
+                    } else {
+                        const td = document.getElementById(tdId);
+                        addFlagToCell(td, lang);
                     }
                 });
             }
             filterTable();
+        }
+
+        function addFlagToCell(td, lang) {
+            if (td && !td.classList.contains('void')) {
+                const container = td.querySelector('.indicator-container');
+                const langObj = languages.find(l => l.id === lang);
+                if (langObj && container && !container.innerHTML.includes(langObj.flag)) {
+                    const img = document.createElement('img');
+                    img.src = `https://flagcdn.com/w20/${langObj.flag}.png`;
+                    img.className = 'micro-flag';
+                    container.appendChild(img);
+                }
+            }
         }
 
         function filterTable() {
@@ -493,14 +525,19 @@
 
             const tbodyRows = Array.from(activeTable.querySelectorAll('tbody tr'));
             const theadRows = Array.from(activeTable.querySelectorAll('thead tr'));
-            const colCount = tbodyRows.length > 0 ? tbodyRows[0].children.length : 0;
-
+            
+            if (tbodyRows.length === 0) return;
+            const colCount = tbodyRows[0].children.length;
+            
+            // Handle Pulmonic & Vowels (standard colspan structure)
+            const isStandardGrid = activeTable.id === 'table-pulmonic' || activeTable.id === 'table-vowels';
+            
             if (!hideEmpty) {
                 tbodyRows.forEach(row => {
                     row.style.display = '';
                     Array.from(row.children).forEach(td => {
                         td.style.display = '';
-                        td.classList.remove('empty-placeholder');
+                        td.classList.remove('visually-hidden-cell');
                     });
                 });
                 theadRows.forEach(row => {
@@ -512,58 +549,83 @@
                 return;
             }
 
-            const colHasData = new Array(colCount).fill(false);
-            colHasData[0] = true;
+            if (isStandardGrid) {
+                const colHasData = new Array(colCount).fill(false);
+                colHasData[0] = true; 
 
-            tbodyRows.forEach(row => {
-                Array.from(row.children).forEach((td, index) => {
-                    if (index > 0) {
+                tbodyRows.forEach(row => {
+                    Array.from(row.children).forEach((td, index) => {
+                        if (index > 0) {
+                            const container = td.querySelector('.indicator-container');
+                            const hasFlag = container ? container.innerHTML.trim() !== '' : false;
+                            if (hasFlag) colHasData[index] = true;
+                        }
+                    });
+                });
+
+                tbodyRows.forEach(row => {
+                    let rowHasData = false;
+                    Array.from(row.children).forEach((td, index) => {
                         const container = td.querySelector('.indicator-container');
                         const hasFlag = container ? container.innerHTML.trim() !== '' : false;
-                        if (hasFlag) colHasData[index] = true;
-                    }
+                        
+                        td.style.display = colHasData[index] ? '' : 'none';
+                        
+                        if (index > 0 && colHasData[index]) {
+                            if (hasFlag) {
+                                rowHasData = true;
+                                td.classList.remove('visually-hidden-cell');
+                            } else {
+                                td.classList.add('visually-hidden-cell');
+                            }
+                        }
+                    });
+                    row.style.display = rowHasData ? '' : 'none';
                 });
-            });
 
-            tbodyRows.forEach(row => {
-                let rowHasData = false;
-                Array.from(row.children).forEach((td, index) => {
-                    const container = td.querySelector('.indicator-container');
-                    const hasFlag = container ? container.innerHTML.trim() !== '' : false;
-
-                    td.style.display = colHasData[index] ? '' : 'none';
-
-                    if (index > 0 && colHasData[index]) {
-                        if (hasFlag) {
-                            rowHasData = true;
-                            td.classList.remove('empty-placeholder');
+                if (theadRows.length > 0) {
+                    const tr = theadRows[0];
+                    for (let i = 1; i < tr.children.length; i++) {
+                        const th = tr.children[i];
+                        const leftData = colHasData[i * 2 - 1];
+                        const rightData = (i * 2) < colCount ? colHasData[i * 2] : false;
+                        
+                        if (!leftData && !rightData) {
+                            th.style.display = 'none';
                         } else {
-                            td.classList.add('empty-placeholder');
+                            th.style.display = '';
+                            th.colSpan = (leftData ? 1 : 0) + (rightData ? 1 : 0);
                         }
                     }
-                });
-                row.style.display = rowHasData ? '' : 'none';
-            });
-
-            if (theadRows.length > 0) {
-                const tr = theadRows[0];
-                for (let i = 1; i < tr.children.length; i++) {
-                    const th = tr.children[i];
-                    const leftData = colHasData[i * 2 - 1];
-                    const rightData = (i * 2) < colCount ? colHasData[i * 2] : false;
-
-                    if (!leftData && !rightData) {
-                        th.style.display = 'none';
-                    } else {
-                        th.style.display = '';
-                        th.colSpan = (leftData ? 1 : 0) + (rightData ? 1 : 0);
-                    }
                 }
+            } else {
+                // For Non-Pulmonic (complex rowspan structure), keep it simple: 
+                // Just hide cells visually if empty, but keep structure intact to prevent breaking rowspan.
+                // A perfect reflow of rowspans on the fly is extremely complex and error-prone in pure DOM manipulation.
+                tbodyRows.forEach(row => {
+                    let rowHasData = false;
+                    Array.from(row.children).forEach((td, index) => {
+                        // Skip headers
+                        if(td.tagName === 'TH' || td.classList.contains('sticky-col')) return;
+                        
+                        const container = td.querySelector('.indicator-container');
+                        const hasFlag = container ? container.innerHTML.trim() !== '' : false;
+                        
+                        if (hasFlag) {
+                            rowHasData = true;
+                            td.classList.remove('visually-hidden-cell');
+                        } else if (!td.classList.contains('void')) {
+                            td.classList.add('visually-hidden-cell');
+                        }
+                    });
+                    // Only hide row if it's completely empty AND it doesn't contain a rowspan header that spans other visible rows.
+                    // To be safe and prevent layout breakage with complex rowspans, we only visually hide cells in NP table.
+                });
             }
         }
 
         function selectCell(cellElement, symbol, tdId, tableType) {
-            if (cellElement.classList.contains('void') || cellElement.classList.contains('empty-placeholder')) return;
+            if (cellElement.classList.contains('void') || cellElement.classList.contains('visually-hidden-cell')) return;
             if (currentActiveCell) currentActiveCell.classList.remove('active');
             currentActiveCell = cellElement;
             currentActiveCell.classList.add('active');
@@ -587,7 +649,10 @@
                 csvDataMap[tableType].forEach(row => {
                     if (row.length < 2) return;
                     const lang = row[0].toLowerCase();
-                    if (activeLanguages.has(lang) && config.getTdId(row) === tdId) {
+                    // For Non-Pulmonic, the CSV ids might be broader (e.g., Clicks-Bilabial) 
+                    // while UI ids might be specific (Clicks-Bilabial-TenuisVelar).
+                    // We check if the UI id starts with the CSV id.
+                    if (activeLanguages.has(lang) && tdId.startsWith(config.getTdId(row))) {
                         hasData = true;
                         const langObj = languages.find(l => l.id === lang);
                         const div = document.createElement('div');
@@ -623,5 +688,4 @@
         });
     </script>
 </body>
-
 </html>
