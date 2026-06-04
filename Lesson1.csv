@@ -1,17 +1,17 @@
-Word,Phonetic,A1 Example Sentence,Etymology (Simple English)
-hello,/həˈloʊ/,"Hello, how are you?",From 'holla' (shout or call). It means 'listen to me' or 'hi'.
-goodbye,/ˌɡʊdˈbaɪ/,"Goodbye, see you tomorrow.",Short for 'God be with ye' (God be with you). A wish for a safe trip.
-hi,/haɪ/,"Hi, I am Tom.",From 'hy' or 'hey'. A sound to get someone's attention.
-bye,/baɪ/,"Bye, have a good day.",A short form of 'goodbye'.
-good morning,/ɡʊd ˈmɔːrnɪŋ/,"Good morning, mom.",From 'good' and 'morning' (early day). A wish for a good start to the day.
-good afternoon,/ɡʊd ˌæftərˈnuːn/,"Good afternoon, teacher.","From 'good', 'after' (later), and 'noon' (middle of the day). A greeting for the middle of the day."
-good evening,/ɡʊd ˈiːvnɪŋ/,"Good evening, everyone.",From 'good' and 'evening' (end of the day). A greeting for the late part of the day.
-good night,/ɡʊd ˈnaɪt/,"Good night, go to sleep.",From 'good' and 'night' (dark time). Said before going to sleep.
-thank you,/θæŋk juː/,Thank you for the apple.,From old word 'thanc' (good thought). It means 'I have good thoughts for you'.
-thanks,/θæŋks/,Thanks for your help.,"A short, everyday way to say 'thank you'."
-please,/pliːz/,Please sit down.,Short for 'if it please you' (if it makes you happy). Used to be polite.
-OK,/oʊˈkeɪ/,"OK, I understand.","From 'oll korrect', a funny spelling of 'all correct' (everything is right)."
-yes,/jɛs/,"Yes, it is a dog.",From old words meaning 'so be it' (let it be this way). Used to agree.
-no,/noʊ/,"No, I am not tired.",From old words meaning 'not ever'. Used to disagree.
-sorry,/ˈsɔːri/,"I am sorry, I am late.",From old word 'sarig' (sad or sore). It means 'I feel sad about this'.
-welcome,/ˈwɛlkəm/,Welcome to our school.,From 'wil' (wish or happy) and 'cuma' (guest). A happy greeting for a guest.
+Word,Phonetic,Lexical Category,Primary POS,Internal Components,WALS Trigger,Morphological Variations,A1 Example Sentence,Etymology (Simple English)
+hello,/həˈloʊ/,Formulaic,Interjection,[Int] hello,None,None,"Hello, how are you?","From 'holla' (shout or call). It means 'listen to me' or 'hi'."
+goodbye,/ˌɡʊdˈbaɪ/,Formulaic,Interjection,[Int] goodbye,None,None,"Goodbye, see you tomorrow.","Short for 'God be with ye' (God be with you). A wish for a safe trip."
+hi,/haɪ/,Formulaic,Interjection,[Int] hi,None,None,"Hi, I am Tom.","From 'hy' or 'hey'. A sound to get someone's attention."
+bye,/baɪ/,Formulaic,Interjection,[Int] bye,None,None,"Bye, have a good day.","A short form of 'goodbye'."
+good morning,/ɡʊd ˈmɔːrnɪŋ/,Formulaic,Phrase,[Adj] good + [Noun] morning,None,None,"Good morning, mom.","From 'good' and 'morning' (early day). A wish for a good start to the day."
+good afternoon,/ɡʊd ˌæftərˈnuːn/,Formulaic,Phrase,[Adj] good + [Prep] after + [Noun] noon,None,None,"Good afternoon, teacher.","From 'good', 'after' (later), and 'noon' (middle of the day)."
+good evening,/ɡʊd ˈiːvnɪŋ/,Formulaic,Phrase,[Adj] good + [Noun] evening,None,None,"Good evening, everyone.","From 'good' and 'evening' (end of the day)."
+good night,/ɡʊd ˈnaɪt/,Formulaic,Phrase,[Adj] good + [Noun] night,None,None,"Good night, go to sleep.","From 'good' and 'night' (dark time). Said before going to sleep."
+thank you,/θæŋk juː/,Formulaic,Phrase,[Verb] thank + [Pron] you,None,None,Thank you for the apple.,From old word 'thanc' (good thought).
+thanks,/θæŋks/,Formulaic,Interjection/Noun,[Noun] thank + [Suffix] s,None,None,Thanks for your help.,"A short, everyday way to say 'thank you'."
+please,/pliːz/,Formulaic,Adverb/Interjection,[Adv] please,None,None,Please sit down.,"Short for 'if it please you' (if it makes you happy)."
+OK,/oʊˈkeɪ/,Formulaic,Interjection,[Int] OK,None,None,"OK, I understand.","From 'oll korrect', a funny spelling of 'all correct'."
+yes,/jɛs/,Formulaic,Particle,[Part] yes,None,None,"Yes, it is a dog.","From old words meaning 'so be it'. Used to agree."
+no,/noʊ/,Lexical,Negator/Determiner,[Part/Det] no,Triggers WALS 112,None,"No, I am not tired.","From old words meaning 'not ever'. Used to disagree."
+sorry,/ˈsɔːri/,Lexical,Adjective,[Adj] sorry,None,"sorrier, sorriest","I am sorry, I am late.",From old word 'sarig' (sad or sore).
+welcome,/ˈwɛlkəm/,Lexical,Adjective/Verb,[Adj/Verb] welcome,None,"welcomed, welcoming",Welcome to our school.,"From 'wil' (wish or happy) and 'cuma' (guest)."
