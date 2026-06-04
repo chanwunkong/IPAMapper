@@ -469,10 +469,10 @@
                     ctx.strokeStyle = contourColors[l].stroke;
                     ctx.lineWidth = 2; // 維持優美細緻的線條
                     
+                    ctx.beginPath();
                     for (let loop of loops) {
                         if (loop.length < 3) continue;
                         
-                        ctx.beginPath();
                         const getMid = (p1, p2) => ({ x: (p1.x + p2.x)/2, y: (p1.y + p2.y)/2 });
                         let prevMid = getMid(loop[loop.length - 1], loop[0]);
                         
@@ -485,9 +485,9 @@
                             ctx.quadraticCurveTo(pt.x, pt.y, mid.x, mid.y);
                         }
                         ctx.closePath();
-                        ctx.fill();
-                        ctx.stroke();
                     }
+                    ctx.fill('evenodd');
+                    ctx.stroke();
                 }
             }
 
