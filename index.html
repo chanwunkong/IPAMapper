@@ -42,7 +42,6 @@
             position: relative;
         }
 
-        /* --- 全域共用 UI (代幣顯示) --- */
         #global-token-display {
             position: absolute;
             top: 12px;
@@ -82,7 +81,7 @@
             display: flex;
         }
 
-        /* --- 單字頁面樣式 --- */
+        /* --- 單字頁面 --- */
         #storage-area {
             height: 60px;
             background: rgba(255, 255, 255, 0.9);
@@ -101,14 +100,14 @@
         }
 
         .storage-item {
-            width: 40px;
+            padding: 0 12px;
             height: 40px;
             border-radius: 8px;
             background: #e5e5ea;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: var(--text-main);
             flex-shrink: 0;
@@ -145,7 +144,181 @@
             transform: scale(0.95);
         }
 
-        /* --- 文法頁面樣式 --- */
+        /* --- 練習面板 (Practice Modal) --- */
+        #practice-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 200;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #practice-modal.active {
+            display: flex;
+        }
+
+        .practice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .practice-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+
+        .speed-btn {
+            padding: 6px 12px;
+            border-radius: 15px;
+            background: #e5e5ea;
+            border: none;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .word-display {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .word-text {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .word-phonetic {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .info-section {
+            text-align: left;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e5ea;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .info-content {
+            font-size: 14px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .tts-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tts-btn {
+            background: #f2f2f7;
+            color: var(--text-main);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .action-area {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        #mic-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #mic-btn.listening {
+            background-color: #ff3b30;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(0.95);
+            }
+        }
+
+        #recognition-feedback {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            height: 24px;
+        }
+
+        .feedback-correct {
+            color: #34c759;
+        }
+
+        .feedback-wrong {
+            color: #ff3b30;
+        }
+
+        #next-word-btn {
+            background-color: #333333;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* --- 文法頁面與共用 --- */
         .page-header {
             height: 60px;
             background: rgba(255, 255, 255, 0.9);
@@ -171,7 +344,6 @@
             font-size: 14px;
             color: var(--text-secondary);
             margin-bottom: 15px;
-            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
@@ -190,11 +362,6 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            transition: transform 0.1s;
-        }
-
-        .rule-card:active {
-            transform: scale(0.98);
         }
 
         .rule-info {
@@ -225,7 +392,6 @@
             font-size: 14px;
             font-weight: bold;
             border: none;
-            cursor: pointer;
         }
 
         .btn-unlock {
@@ -241,10 +407,8 @@
         .btn-disabled {
             background-color: var(--locked-color);
             color: white;
-            cursor: not-allowed;
         }
 
-        /* --- 底部導覽列 --- */
         #bottom-nav {
             height: 80px;
             background: var(--nav-bg);
@@ -264,8 +428,6 @@
             height: 100%;
             font-size: 16px;
             color: #8e8e93;
-            cursor: pointer;
-            transition: color 0.2s;
         }
 
         .nav-tab.active {
@@ -292,7 +454,7 @@
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
-            z-index: 200;
+            z-index: 300;
         }
     </style>
 </head>
@@ -305,6 +467,7 @@
         </div>
 
         <div id="main-content">
+            <!-- 單字視圖 -->
             <div id="view-vocabulary" class="view active">
                 <div id="storage-area"></div>
                 <canvas id="hex-canvas"></canvas>
@@ -313,12 +476,46 @@
                 </div>
             </div>
 
+            <!-- 練習面板 -->
+            <div id="practice-modal">
+                <div class="practice-header">
+                    <div class="practice-title" id="practice-progress">進度: 0/0</div>
+                    <button class="speed-btn" id="speed-toggle" onclick="toggleSpeed()">語速: 正常</button>
+                </div>
+
+                <div class="word-display">
+                    <div class="word-text" id="p-word"></div>
+                    <div class="word-phonetic" id="p-phonetic"></div>
+
+                    <div class="tts-group">
+                        <button class="tts-btn" onclick="speakText(currentWordData.word)">聽單字</button>
+                        <button class="tts-btn" onclick="speakText(currentWordData.sentence)">聽例句</button>
+                        <button class="tts-btn" onclick="speakText(currentWordData.etymology)">聽字源</button>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-label">詞形變化</div>
+                        <div class="info-content" id="p-morph"></div>
+                        <div class="info-label">A1 例句</div>
+                        <div class="info-content" id="p-sentence"></div>
+                        <div class="info-label">字源 (Etymology)</div>
+                        <div class="info-content" id="p-etymology"></div>
+                    </div>
+                </div>
+
+                <div class="action-area">
+                    <div id="recognition-feedback">請點擊麥克風發音</div>
+                    <button id="mic-btn" onclick="toggleMic()">收音</button>
+                    <button id="next-word-btn" onclick="moveToNextWord()">下一題</button>
+                </div>
+            </div>
+
+            <!-- 文法視圖 -->
             <div id="view-grammar" class="view">
                 <div class="page-header">文法 (WALS)</div>
                 <div id="grammar-content">
                     <div class="section-title">A1 基礎規則</div>
-                    <div class="rule-list" id="rule-list">
-                    </div>
+                    <div class="rule-list" id="rule-list"></div>
                 </div>
             </div>
 
@@ -338,6 +535,23 @@
 
     <script>
         // ==========================================
+        // 0. 內建 CSV 單字庫模擬
+        // ==========================================
+        const csvDatabase = [
+            { word: "hello", phonetic: "/həˈloʊ/", morphological: "hellos", sentence: "Hello, how are you?", etymology: "From Old High German 'halâ'." },
+            { word: "goodbye", phonetic: "/ɡʊdˈbaɪ/", morphological: "goodbyes", sentence: "Goodbye, see you tomorrow.", etymology: "Contraction of 'God be with ye'." },
+            { word: "morning", phonetic: "/ˈmɔːrnɪŋ/", morphological: "mornings", sentence: "Good morning!", etymology: "From Middle English 'morwening'." },
+            { word: "afternoon", phonetic: "/ˌæftərˈnuːn/", morphological: "afternoons", sentence: "We will meet in the afternoon.", etymology: "From 'after' + 'noon'." },
+            { word: "evening", phonetic: "/ˈiːvnɪŋ/", morphological: "evenings", sentence: "It is a beautiful evening.", etymology: "From Old English 'ǣfnung'." },
+            { word: "night", phonetic: "/naɪt/", morphological: "nights", sentence: "Good night, sleep tight.", etymology: "From Old English 'neaht'." },
+            { word: "please", phonetic: "/pliːz/", morphological: "pleased, pleasing", sentence: "Please sit down.", etymology: "From Old French 'plaisir'." },
+            { word: "thank", phonetic: "/θæŋk/", morphological: "thanks, thanked", sentence: "Thank you for your help.", etymology: "From Old English 'þancian'." },
+            { word: "sorry", phonetic: "/ˈsɑːri/", morphological: "sorrier, sorriest", sentence: "I am sorry for the delay.", etymology: "From Old English 'sārig'." },
+            { word: "welcome", phonetic: "/ˈwelkəm/", morphological: "welcomed, welcoming", sentence: "You are welcome here.", etymology: "From Old English 'wilcuma'." }
+        ];
+        let usedCsvIndex = 0; // 模擬資料庫提取進度
+
+        // ==========================================
         // 1. 全域狀態與代幣系統
         // ==========================================
         let currentTokens = parseInt(localStorage.getItem('appTokens')) || 100;
@@ -348,9 +562,7 @@
             currentTokens += amount;
             localStorage.setItem('appTokens', currentTokens);
             globalTokenCount.textContent = currentTokens;
-
             renderGrammarRules();
-
             const display = document.getElementById('global-token-display');
             display.style.transform = 'scale(1.1)';
             setTimeout(() => display.style.transform = 'scale(1)', 150);
@@ -361,87 +573,14 @@
             toast.style.opacity = '1';
             setTimeout(() => { toast.style.opacity = '0'; }, 1500);
         }
-
         globalTokenCount.textContent = currentTokens;
 
         // ==========================================
-        // 2. 文法頁面邏輯
+        // 2. 六角形 Canvas 與地圖邏輯 (字體自適應)
         // ==========================================
-        const UNLOCK_COST = 10;
-        const rulesA1 = [
-            { id: 81, name: '核心語序' }, { id: 87, name: '形容詞與名詞' },
-            { id: 88, name: '指示詞與名詞' }, { id: 89, name: '數詞與名詞' },
-            { id: 26, name: '綴詞傾向' }, { id: 33, name: '複數標記' },
-            { id: 37, name: '定冠詞' }, { id: 38, name: '不定冠詞' },
-            { id: 66, name: '過去式' }, { id: 67, name: '未來式' },
-            { id: 112, name: '否定詞' }, { id: 116, name: '是非問句' }
-        ];
-
-        const ruleListContainer = document.getElementById('rule-list');
-
-        function isRuleUnlocked(ruleId) {
-            return localStorage.getItem(`wals_unlocked_${ruleId}`) === 'true';
-        }
-
-        function unlockRule(ruleId, ruleName) {
-            if (isRuleUnlocked(ruleId)) return; // 防呆，避免重複解鎖
-
-            if (currentTokens >= UNLOCK_COST) {
-                // 修正順序：先儲存解鎖狀態，再扣代幣並觸發重新渲染
-                localStorage.setItem(`wals_unlocked_${ruleId}`, 'true');
-                updateTokens(-UNLOCK_COST);
-                showToast(`解鎖成功：${ruleName}`);
-            } else {
-                showToast('代幣不足');
-            }
-        }
-
-        function renderGrammarRules() {
-            ruleListContainer.innerHTML = '';
-            rulesA1.forEach(rule => {
-                const unlocked = isRuleUnlocked(rule.id);
-                const canAfford = currentTokens >= UNLOCK_COST;
-
-                const card = document.createElement('div');
-                card.className = `rule-card ${unlocked ? '' : 'locked'}`;
-
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'rule-info';
-                infoDiv.innerHTML = `
-                    <div class="rule-id">WALS ${rule.id}</div>
-                    <div class="rule-name">${rule.name}</div>
-                `;
-
-                const btnDiv = document.createElement('button');
-                if (unlocked) {
-                    btnDiv.className = 'action-btn btn-view';
-                    btnDiv.textContent = '查看';
-                    btnDiv.onclick = () => showToast(`查看規則：${rule.name}`);
-                } else {
-                    if (canAfford) {
-                        btnDiv.className = 'action-btn btn-unlock';
-                        btnDiv.textContent = `解鎖 (${UNLOCK_COST})`;
-                        btnDiv.onclick = () => unlockRule(rule.id, rule.name);
-                    } else {
-                        btnDiv.className = 'action-btn btn-disabled';
-                        btnDiv.textContent = `解鎖 (${UNLOCK_COST})`;
-                        btnDiv.onclick = () => showToast('需要 10 枚代幣解鎖');
-                    }
-                }
-
-                card.appendChild(infoDiv);
-                card.appendChild(btnDiv);
-                ruleListContainer.appendChild(card);
-            });
-        }
-        renderGrammarRules();
-
-        // ==========================================
-        // 3. 單字頁面 (六角形 Canvas 邏輯)
-        // ==========================================
-        const storageData = Array.from({ length: 10 }, (_, i) => ({ code: i, level: 1 }));
+        const storageData = [];
         const grid = new Map();
-        const HEX_SIZE = 45;
+        const HEX_SIZE = 65; // 尺寸放大
 
         let camera = { x: 0, y: 0, zoom: 1 };
         const sqrt3 = Math.sqrt(3);
@@ -460,12 +599,8 @@
 
         function axialRound(q, r) {
             const s = -q - r;
-            let rq = Math.round(q);
-            let rr = Math.round(r);
-            let rs = Math.round(s);
-            const qDiff = Math.abs(rq - q);
-            const rDiff = Math.abs(rr - r);
-            const sDiff = Math.abs(rs - s);
+            let rq = Math.round(q); let rr = Math.round(r); let rs = Math.round(s);
+            const qDiff = Math.abs(rq - q); const rDiff = Math.abs(rr - r); const sDiff = Math.abs(rs - s);
             if (qDiff > rDiff && qDiff > sDiff) rq = -rr - rs;
             else if (rDiff > sDiff) rr = -rq - rs;
             return { q: rq, r: rr };
@@ -492,11 +627,8 @@
             if (grid.size <= 1) return true;
             const targetKey = `${q},${r}`;
             let startNode = null;
-
             for (let key of grid.keys()) {
-                if (key !== targetKey) {
-                    startNode = key; break;
-                }
+                if (key !== targetKey) { startNode = key; break; }
             }
             if (!startNode) return true;
 
@@ -507,12 +639,10 @@
             while (queue.length > 0) {
                 const current = queue.shift();
                 const [cq, cr] = current.split(',').map(Number);
-
                 for (let dir of neighborDirs) {
                     const nKey = `${cq + dir.q},${cr + dir.r}`;
                     if (nKey !== targetKey && grid.has(nKey) && !visited.has(nKey)) {
-                        visited.add(nKey);
-                        queue.push(nKey);
+                        visited.add(nKey); queue.push(nKey);
                     }
                 }
             }
@@ -520,13 +650,12 @@
         }
 
         const storageArea = document.getElementById('storage-area');
-
         function updateStorageUI() {
             storageArea.innerHTML = '';
             storageData.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'storage-item';
-                div.textContent = item.code;
+                div.textContent = item.word; // 顯示單字
                 storageArea.appendChild(div);
             });
         }
@@ -537,17 +666,14 @@
 
         function resizeCanvas() {
             if (!document.getElementById('view-vocabulary').classList.contains('active')) return;
-
             width = canvas.parentElement.clientWidth;
             height = canvas.parentElement.clientHeight;
             const dpr = window.devicePixelRatio || 1;
             canvas.width = width * dpr;
             canvas.height = height * dpr;
             ctx.scale(dpr, dpr);
-
             if (camera.x === 0 && camera.y === 0) {
-                camera.x = width / 2;
-                camera.y = height / 2;
+                camera.x = width / 2; camera.y = height / 2;
             }
             drawCanvas();
         }
@@ -556,23 +682,16 @@
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const angle = (i * 60 - 30) * Math.PI / 180;
-                const px = x + radius * Math.cos(angle);
-                const py = y + radius * Math.sin(angle);
-                if (i === 0) ctx.moveTo(px, py);
-                else ctx.lineTo(px, py);
+                ctx[i === 0 ? 'moveTo' : 'lineTo'](x + radius * Math.cos(angle), y + radius * Math.sin(angle));
             }
             ctx.closePath();
-            ctx.strokeStyle = '#ebebeb';
-            ctx.lineWidth = 1;
-            ctx.stroke();
+            ctx.strokeStyle = '#ebebeb'; ctx.lineWidth = 1; ctx.stroke();
         }
 
         const contourColors = [
             { fill: 'transparent', stroke: 'transparent' },
-            { fill: '#f0f0f0', stroke: '#c0c0c0' },
-            { fill: '#e0e0e0', stroke: '#a0a0a0' },
-            { fill: '#d0d0d0', stroke: '#808080' },
-            { fill: '#c0c0c0', stroke: '#606060' },
+            { fill: '#f0f0f0', stroke: '#c0c0c0' }, { fill: '#e0e0e0', stroke: '#a0a0a0' },
+            { fill: '#d0d0d0', stroke: '#808080' }, { fill: '#c0c0c0', stroke: '#606060' },
             { fill: '#b0b0b0', stroke: '#404040' }
         ];
 
@@ -588,8 +707,7 @@
 
             for (let q = centerAxial.q - range; q <= centerAxial.q + range; q++) {
                 for (let r = centerAxial.r - range; r <= centerAxial.r + range; r++) {
-                    const pos = axialToPixel(q, r);
-                    drawHexBackground(pos.x, pos.y, HEX_SIZE);
+                    drawHexBackground(axialToPixel(q, r).x, axialToPixel(q, r).y, HEX_SIZE);
                 }
             }
 
@@ -599,16 +717,10 @@
 
                 for (let [key, item] of grid.entries()) {
                     if (item.level < l) continue;
-
                     const [q, r] = key.split(',').map(Number);
                     const center = axialToPixel(q, r);
-
                     const N = [];
-                    for (let i = 0; i < 6; i++) {
-                        const nq = q + neighborDirs[i].q;
-                        const nr = r + neighborDirs[i].r;
-                        N[i] = getLevel(nq, nr) >= l;
-                    }
+                    for (let i = 0; i < 6; i++) N[i] = getLevel(q + neighborDirs[i].q, r + neighborDirs[i].r) >= l;
 
                     const P = [];
                     for (let i = 0; i < 6; i++) {
@@ -618,38 +730,22 @@
 
                     const V = [];
                     for (let i = 0; i < 6; i++) {
-                        const prev = (i + 5) % 6;
-                        const curr = i;
-
-                        if (N[prev] && N[curr]) {
-                            V[i] = { x: P[i].x, y: P[i].y };
-                        } else if (!N[prev] && !N[curr]) {
-                            V[i] = { x: P[i].x + (center.x - P[i].x) * shift_mag, y: P[i].y + (center.y - P[i].y) * shift_mag };
-                        } else if (N[prev] && !N[curr]) {
-                            const n_center = axialToPixel(q + neighborDirs[curr].q, r + neighborDirs[curr].r);
-                            V[i] = { x: P[i].x + (P[i].x - n_center.x) * shift_mag, y: P[i].y + (P[i].y - n_center.y) * shift_mag };
-                        } else if (!N[prev] && N[curr]) {
-                            const n_center = axialToPixel(q + neighborDirs[prev].q, r + neighborDirs[prev].r);
+                        const prev = (i + 5) % 6, curr = i;
+                        if (N[prev] && N[curr]) V[i] = { x: P[i].x, y: P[i].y };
+                        else if (!N[prev] && !N[curr]) V[i] = { x: P[i].x + (center.x - P[i].x) * shift_mag, y: P[i].y + (center.y - P[i].y) * shift_mag };
+                        else {
+                            const nDir = N[prev] ? curr : prev;
+                            const n_center = axialToPixel(q + neighborDirs[nDir].q, r + neighborDirs[nDir].r);
                             V[i] = { x: P[i].x + (P[i].x - n_center.x) * shift_mag, y: P[i].y + (P[i].y - n_center.y) * shift_mag };
                         }
                     }
-
-                    for (let i = 0; i < 6; i++) {
-                        if (!N[i]) {
-                            segments.push({ start: V[i], end: V[(i + 1) % 6] });
-                        }
-                    }
+                    for (let i = 0; i < 6; i++) if (!N[i]) segments.push({ start: V[i], end: V[(i + 1) % 6] });
                 }
 
                 const ptKey = (p) => Math.round(p.x * 10) + ',' + Math.round(p.y * 10);
-                let unvisited = [...segments];
-                let loops = [];
-
+                let unvisited = [...segments], loops = [];
                 while (unvisited.length > 0) {
-                    let seg = unvisited.pop();
-                    let currentLoop = [seg.start];
-                    let targetKey = ptKey(seg.end);
-
+                    let seg = unvisited.pop(), currentLoop = [seg.start], targetKey = ptKey(seg.end);
                     while (true) {
                         let nextIdx = unvisited.findIndex(s => ptKey(s.start) === targetKey);
                         if (nextIdx === -1) break;
@@ -662,78 +758,46 @@
                 }
 
                 if (loops.length > 0) {
-                    ctx.fillStyle = contourColors[l].fill;
-                    ctx.strokeStyle = contourColors[l].stroke;
-                    ctx.lineWidth = 2;
-
+                    ctx.fillStyle = contourColors[l].fill; ctx.strokeStyle = contourColors[l].stroke; ctx.lineWidth = 2;
                     ctx.beginPath();
                     for (let loop of loops) {
                         if (loop.length < 3) continue;
                         const getMid = (p1, p2) => ({ x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 });
                         let prevMid = getMid(loop[loop.length - 1], loop[0]);
-
                         ctx.moveTo(prevMid.x, prevMid.y);
                         for (let i = 0; i < loop.length; i++) {
-                            let pt = loop[i];
-                            let nextPt = loop[(i + 1) % loop.length];
-                            let mid = getMid(pt, nextPt);
+                            let pt = loop[i], nextPt = loop[(i + 1) % loop.length], mid = getMid(pt, nextPt);
                             ctx.quadraticCurveTo(pt.x, pt.y, mid.x, mid.y);
                         }
                         ctx.closePath();
                     }
-                    ctx.fill('evenodd');
-                    ctx.stroke();
+                    ctx.fill('evenodd'); ctx.stroke();
                 }
             }
 
+            // 自適應字體渲染
             for (let [key, item] of grid.entries()) {
                 const [q, r] = key.split(',').map(Number);
                 const pos = axialToPixel(q, r);
                 ctx.fillStyle = '#111111';
-                ctx.font = 'bold 24px sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(item.code.toString(), pos.x, pos.y);
+
+                let fontSize = 22;
+                ctx.font = `bold ${fontSize}px sans-serif`;
+                // 限制最大寬度為六角形寬度減去一點 padding
+                const maxWidth = (HEX_SIZE * sqrt3) - 20;
+                while (ctx.measureText(item.word).width > maxWidth && fontSize > 10) {
+                    fontSize -= 1;
+                    ctx.font = `bold ${fontSize}px sans-serif`;
+                }
+                ctx.fillText(item.word, pos.x, pos.y);
             }
             ctx.restore();
         }
 
-        // --- 互動控制 ---
-        let isDragging = false, dragMoved = false;
-        let lastPos = { x: 0, y: 0 }, initialPinchDist = null, initialZoom = 1;
-
-        function getPinchDist(e) {
-            return Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
-        }
-
-        canvas.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) {
-                isDragging = true; dragMoved = false;
-                lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            } else if (e.touches.length === 2) {
-                isDragging = false; initialPinchDist = getPinchDist(e); initialZoom = camera.zoom;
-            }
-        }, { passive: false });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (isDragging && e.touches.length === 1) {
-                const dx = e.touches[0].clientX - lastPos.x, dy = e.touches[0].clientY - lastPos.y;
-                if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
-                camera.x += dx; camera.y += dy;
-                lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                drawCanvas();
-            } else if (e.touches.length === 2 && initialPinchDist) {
-                camera.zoom = Math.min(Math.max(initialZoom * (getPinchDist(e) / initialPinchDist), 0.5), 3);
-                drawCanvas();
-            }
-        }, { passive: false });
-
-        canvas.addEventListener('touchend', (e) => {
-            if (isDragging && !dragMoved && e.changedTouches.length === 1) handleCanvasClick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-            isDragging = false; initialPinchDist = null;
-        });
-
+        // 畫布互動控制
+        let isDragging = false, dragMoved = false, lastPos = { x: 0, y: 0 };
         canvas.addEventListener('mousedown', (e) => { isDragging = true; dragMoved = false; lastPos = { x: e.clientX, y: e.clientY }; });
         canvas.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
@@ -741,8 +805,26 @@
             if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
             camera.x += dx; camera.y += dy; lastPos = { x: e.clientX, y: e.clientY }; drawCanvas();
         });
-        canvas.addEventListener('mouseup', (e) => { if (isDragging && !dragMoved) handleCanvasClick(e.clientX, e.clientY); isDragging = false; });
-        canvas.addEventListener('wheel', (e) => { e.preventDefault(); camera.zoom = Math.min(Math.max(camera.zoom * (e.deltaY > 0 ? 0.9 : 1.1), 0.5), 3); drawCanvas(); }, { passive: false });
+        canvas.addEventListener('mouseup', (e) => {
+            if (isDragging && !dragMoved) handleCanvasClick(e.clientX, e.clientY);
+            isDragging = false;
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) { isDragging = true; dragMoved = false; lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }
+        }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (isDragging && e.touches.length === 1) {
+                const dx = e.touches[0].clientX - lastPos.x, dy = e.touches[0].clientY - lastPos.y;
+                if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
+                camera.x += dx; camera.y += dy; lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; drawCanvas();
+            }
+        }, { passive: false });
+        canvas.addEventListener('touchend', (e) => {
+            if (isDragging && !dragMoved && e.changedTouches.length === 1) handleCanvasClick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+            isDragging = false;
+        });
 
         function handleCanvasClick(clientX, clientY) {
             const rect = canvas.getBoundingClientRect();
@@ -751,48 +833,273 @@
 
             if (grid.has(key)) {
                 if (!isConnectedAfterRemoval(axial.q, axial.r)) return showToast('移除此方塊會造成斷裂');
+                if (storageData.length >= 5) return showToast('存放區已滿');
                 storageData.push(grid.get(key)); grid.delete(key);
             } else {
-                if (storageData.length === 0) return showToast('無可用代號');
+                if (storageData.length === 0) return showToast('無可用單字');
                 if (grid.size > 0 && !hasAdjacent(axial.q, axial.r)) return showToast('必須放置於相鄰位置');
                 grid.set(key, storageData.shift());
             }
             updateStorageUI(); drawCanvas();
         }
 
-        // Play 賺取代幣邏輯
+        // ==========================================
+        // 3. Play 練習系統
+        // ==========================================
+        let practiceQueue = [];
+        let currentPracticeIndex = 0;
+        let isSlowSpeed = false;
+        let recognition = null;
+        let isListening = false;
+        let currentWordData = null;
+
+        function toggleSpeed() {
+            isSlowSpeed = !isSlowSpeed;
+            document.getElementById('speed-toggle').textContent = `語速: ${isSlowSpeed ? '慢速' : '正常'}`;
+        }
+
+        function speakText(text) {
+            if (!text) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = isSlowSpeed ? 0.6 : 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+
         document.getElementById('play-btn').addEventListener('click', () => {
-            const keys = Array.from(grid.entries()).filter(([_, item]) => item.level < 5).map(([k, _]) => k);
-            if (keys.length === 0) return showToast('已無可升級之代號');
+            if (storageData.length >= 5) {
+                showToast('存放區已滿，請先將單字放入地圖');
+                return;
+            }
 
-            const key = keys[Math.floor(Math.random() * keys.length)];
-            const item = grid.get(key);
-            item.level += 1;
-            grid.set(key, item);
+            practiceQueue = [];
 
-            updateTokens(5);
-            showToast(`代號 ${item.code} 升級！獲得 5 代幣`);
-            drawCanvas();
+            // 優先選取地圖上的字 (Lv1~Lv4)
+            const mapKeys = Array.from(grid.entries()).filter(([_, item]) => item.level < 5).map(([k, _]) => k);
+            for (let i = 0; i < Math.min(5, mapKeys.length); i++) {
+                const key = mapKeys[i];
+                practiceQueue.push({ ...grid.get(key), source: 'map', key: key, attempts: 0, successes: 0 });
+            }
+
+            // 若不足 5 題，從 CSV 補足，且受限於存放區空位
+            const availableSlots = 5 - storageData.length;
+            const neededNewWords = Math.min(5 - practiceQueue.length, availableSlots);
+
+            for (let i = 0; i < neededNewWords; i++) {
+                if (usedCsvIndex < csvDatabase.length) {
+                    practiceQueue.push({ ...csvDatabase[usedCsvIndex], level: 1, source: 'csv', attempts: 0, successes: 0 });
+                    usedCsvIndex++;
+                }
+            }
+
+            if (practiceQueue.length === 0) {
+                showToast('沒有可練習的單字');
+                return;
+            }
+
+            currentPracticeIndex = 0;
+            document.getElementById('practice-modal').classList.add('active');
+            renderPracticeWord();
         });
 
+        function renderPracticeWord() {
+            if (practiceQueue.length === 0) {
+                endPractice();
+                return;
+            }
+
+            // 循環尋找未完成的單字
+            let found = false;
+            for (let i = 0; i < practiceQueue.length; i++) {
+                let idx = (currentPracticeIndex + i) % practiceQueue.length;
+                if (practiceQueue[idx].successes < 3 && practiceQueue[idx].attempts < 5) {
+                    currentPracticeIndex = idx;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                endPractice();
+                return;
+            }
+
+            currentWordData = practiceQueue[currentPracticeIndex];
+
+            // UI 更新
+            document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+            document.getElementById('p-word').textContent = currentWordData.word;
+            document.getElementById('p-phonetic').textContent = currentWordData.phonetic;
+            document.getElementById('p-morph').textContent = currentWordData.morphological;
+            document.getElementById('p-sentence').textContent = currentWordData.sentence;
+            document.getElementById('p-etymology').textContent = currentWordData.etymology;
+
+            document.getElementById('recognition-feedback').textContent = "請點擊麥克風發音";
+            document.getElementById('recognition-feedback').className = "";
+            document.getElementById('next-word-btn').style.display = 'none';
+
+            // 進入單字自動朗讀
+            speakText(currentWordData.word);
+        }
+
+        // 語音辨識
+        function toggleMic() {
+            if (isListening) return;
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("抱歉，您的瀏覽器不支援語音辨識。");
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('mic-btn').classList.add('listening');
+                document.getElementById('recognition-feedback').textContent = "聆聽中...";
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                judgeSpeech(transcript);
+            };
+
+            recognition.onerror = () => {
+                document.getElementById('recognition-feedback').textContent = "未接收到語音，請重試";
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                document.getElementById('mic-btn').classList.remove('listening');
+            };
+
+            recognition.start();
+        }
+
+        function judgeSpeech(transcript) {
+            currentWordData.attempts++;
+            const spokenText = transcript.toLowerCase().replace(/[^\w\s]|_/g, "");
+            const targetWord = currentWordData.word.toLowerCase();
+
+            const feedbackEl = document.getElementById('recognition-feedback');
+
+            if (spokenText.includes(targetWord)) {
+                currentWordData.successes++;
+                feedbackEl.textContent = `辨識結果: ${transcript} (正確!)`;
+                feedbackEl.className = "feedback-correct";
+            } else {
+                feedbackEl.textContent = `辨識結果: ${transcript} (錯誤)`;
+                feedbackEl.className = "feedback-wrong";
+            }
+
+            document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+            document.getElementById('next-word-btn').style.display = 'block';
+        }
+
+        function moveToNextWord() {
+            currentPracticeIndex = (currentPracticeIndex + 1) % practiceQueue.length;
+            renderPracticeWord();
+        }
+
+        function endPractice() {
+            let tokensEarned = 0;
+            let passedCount = 0;
+
+            practiceQueue.forEach(item => {
+                if (item.successes >= 3) {
+                    passedCount++;
+                    tokensEarned += 5;
+
+                    if (item.source === 'map') {
+                        // 地圖原位升級
+                        const mapItem = grid.get(item.key);
+                        mapItem.level += 1;
+                        grid.set(item.key, mapItem);
+                    } else if (item.source === 'csv') {
+                        // 新字進入存放區
+                        storageData.push({ word: item.word, level: item.level });
+                    }
+                }
+            });
+
+            if (tokensEarned > 0) updateTokens(tokensEarned);
+
+            document.getElementById('practice-modal').classList.remove('active');
+            updateStorageUI();
+            drawCanvas();
+            showToast(`練習結束！共 ${passedCount} 題過關，獲得 ${tokensEarned} 代幣`);
+        }
+
         // ==========================================
-        // 4. SPA 分頁導航邏輯
+        // 4. 文法頁面與導航邏輯
         // ==========================================
+        const UNLOCK_COST = 10;
+        const rulesA1 = [
+            { id: 81, name: '核心語序' }, { id: 87, name: '形容詞與名詞' },
+            { id: 88, name: '指示詞與名詞' }, { id: 89, name: '數詞與名詞' },
+            { id: 26, name: '綴詞傾向' }, { id: 33, name: '複數標記' },
+            { id: 37, name: '定冠詞' }, { id: 38, name: '不定冠詞' },
+            { id: 66, name: '過去式' }, { id: 67, name: '未來式' },
+            { id: 112, name: '否定詞' }, { id: 116, name: '是非問句' }
+        ];
+
+        function isRuleUnlocked(ruleId) { return localStorage.getItem(`wals_unlocked_${ruleId}`) === 'true'; }
+
+        function unlockRule(ruleId, ruleName) {
+            if (isRuleUnlocked(ruleId)) return;
+            if (currentTokens >= UNLOCK_COST) {
+                localStorage.setItem(`wals_unlocked_${ruleId}`, 'true');
+                updateTokens(-UNLOCK_COST);
+                showToast(`解鎖成功：${ruleName}`);
+            } else { showToast('代幣不足'); }
+        }
+
+        function renderGrammarRules() {
+            const container = document.getElementById('rule-list');
+            container.innerHTML = '';
+            rulesA1.forEach(rule => {
+                const unlocked = isRuleUnlocked(rule.id);
+                const canAfford = currentTokens >= UNLOCK_COST;
+                const card = document.createElement('div');
+                card.className = `rule-card ${unlocked ? '' : 'locked'}`;
+
+                card.innerHTML = `
+                    <div class="rule-info">
+                        <div class="rule-id">WALS ${rule.id}</div>
+                        <div class="rule-name">${rule.name}</div>
+                    </div>
+                `;
+
+                const btnDiv = document.createElement('button');
+                if (unlocked) {
+                    btnDiv.className = 'action-btn btn-view';
+                    btnDiv.textContent = '查看';
+                    btnDiv.onclick = () => showToast(`查看規則：${rule.name}`);
+                } else {
+                    btnDiv.className = canAfford ? 'action-btn btn-unlock' : 'action-btn btn-disabled';
+                    btnDiv.textContent = `解鎖 (${UNLOCK_COST})`;
+                    btnDiv.onclick = () => canAfford ? unlockRule(rule.id, rule.name) : showToast('代幣不足');
+                }
+                card.appendChild(btnDiv);
+                container.appendChild(card);
+            });
+        }
+        renderGrammarRules();
+
         document.querySelectorAll('.nav-tab[data-target]').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-
                 tab.classList.add('active');
                 document.getElementById(tab.dataset.target).classList.add('active');
-
-                if (tab.dataset.target === 'view-vocabulary') {
-                    resizeCanvas();
-                }
+                if (tab.dataset.target === 'view-vocabulary') resizeCanvas();
             });
         });
 
-        // 初始化
         window.addEventListener('resize', resizeCanvas);
         updateStorageUI();
         resizeCanvas();
