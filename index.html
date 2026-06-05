@@ -239,16 +239,26 @@
             line-height: 1.4;
         }
 
+        /* --- 底部操作區與語音按鈕 --- */
+        .action-area {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
         .tts-group {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 15px;
+            margin-bottom: 5px;
         }
 
         .tts-btn {
-            background: #f2f2f7;
+            background: #e5e5ea;
             color: var(--text-main);
             border: none;
             padding: 8px 16px;
@@ -258,13 +268,10 @@
             cursor: pointer;
         }
 
-        .action-area {
-            margin-top: auto;
+        .mic-skip-group {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 15px;
-            padding-bottom: env(safe-area-inset-bottom);
+            gap: 20px;
         }
 
         #mic-btn {
@@ -288,6 +295,18 @@
             background-color: #ff3b30;
             box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
             animation: pulse 1.5s infinite;
+        }
+
+        #skip-btn {
+            background-color: #f2f2f7;
+            color: #ff3b30;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
         @keyframes pulse {
@@ -572,12 +591,6 @@
                     <div class="word-text" id="p-word"></div>
                     <div class="word-phonetic" id="p-phonetic"></div>
 
-                    <div class="tts-group">
-                        <button class="tts-btn" onclick="speakText(currentWordData.word)">聽單字</button>
-                        <button class="tts-btn" onclick="speakText(currentWordData.sentence)">聽例句</button>
-                        <button class="tts-btn" onclick="speakText(currentWordData.etymology)">聽字源</button>
-                    </div>
-
                     <div class="info-section">
                         <div class="info-label">詞形變化</div>
                         <div class="info-content" id="p-morph"></div>
@@ -589,8 +602,19 @@
                 </div>
 
                 <div class="action-area">
+                    <div class="tts-group">
+                        <button class="tts-btn" onclick="speakText(currentWordData.word)">聽單字</button>
+                        <button class="tts-btn" onclick="speakText(currentWordData.sentence)">聽例句</button>
+                        <button class="tts-btn" onclick="speakText(currentWordData.etymology)">聽字源</button>
+                    </div>
+
                     <div id="recognition-feedback">請點擊麥克風發音</div>
-                    <button id="mic-btn" onclick="toggleMic()">收音</button>
+
+                    <div class="mic-skip-group">
+                        <button id="mic-btn" onclick="toggleMic()">收音</button>
+                        <button id="skip-btn" onclick="skipWord()">跳過</button>
+                    </div>
+
                     <button id="next-word-btn" onclick="moveToNextWord()">下一題</button>
                 </div>
             </div>
@@ -710,12 +734,12 @@
             { word: "please", phonetic: "/pliːz/", morphological: "None", sentence: "Please sit down.", etymology: "Short for 'if it please you'." }
         ];
 
-        let datasets = [];             // 儲存所有匯入的單字庫
-        let activeDatasetId = '';      // 目前選擇要抽題的單字庫 ID
-        let usedIndices = {};          // 紀錄各單字庫抽到第幾個字了 { 'datasetId': index }
+        let datasets = [];
+        let activeDatasetId = '';
+        let usedIndices = {};
 
-        const storageData = [];        // 存放區 (遊戲狀態)
-        const grid = new Map();        // 地圖 (遊戲狀態)
+        const storageData = [];
+        const grid = new Map();
 
         function initDatasets() {
             if (datasets.length === 0) {
@@ -724,10 +748,8 @@
                 activeDatasetId = 'default';
                 usedIndices['default'] = 0;
 
-                // 遊戲一開始給 5 個字到存放區
                 for (let i = 0; i < 5; i++) {
                     if (usedIndices['default'] < defaultDs.words.length) {
-                        // 完整複製單字屬性，脫離題庫獨立存活
                         storageData.push({ ...defaultDs.words[usedIndices['default']], level: 1 });
                         usedIndices['default']++;
                     }
@@ -779,7 +801,6 @@
             }
         }
 
-        // CSV 逐行解析器
         function parseCSVLine(text) {
             let ret = [], inQuote = false, value = '';
             for (let i = 0; i < text.length; i++) {
@@ -849,14 +870,12 @@
                     words: newWords
                 });
 
-                // 自動切換到新上傳的單字庫
                 activeDatasetId = dsId;
                 usedIndices[dsId] = 0;
 
                 saveToCloud();
                 renderDatasets();
 
-                // 清空上傳區塊
                 pendingCSVText = '';
                 csvUpload.value = '';
                 document.getElementById('csv-filename').textContent = '尚未選擇檔案';
@@ -893,7 +912,6 @@
         function importGameData(data) {
             if (data.tokens !== undefined) currentTokens = data.tokens;
 
-            // 載入單字庫架構
             if (data.datasets && data.datasets.length > 0) {
                 datasets = data.datasets;
             } else {
@@ -911,7 +929,7 @@
                 data.grid.forEach(item => { grid.set(`${item.q},${item.r}`, item); });
             }
 
-            initDatasets(); // 如果沒載入到會初始化預設的
+            initDatasets();
             globalTokenCount.textContent = currentTokens;
             renderGrammarRules();
             updateStorageUI();
@@ -967,13 +985,12 @@
 
         globalTokenCount.textContent = currentTokens;
 
-        // 如果未登入，本機預設初始化
         if (!auth.currentUser) {
             initDatasets();
         }
 
         // ==========================================
-        // 3. 六角形 Canvas 與地圖邏輯 (沒有更動)
+        // 3. 六角形 Canvas 與地圖邏輯 
         // ==========================================
         const HEX_SIZE = 65;
         let camera = { x: 0, y: 0, zoom: 1 };
@@ -1269,7 +1286,7 @@
         }
 
         // ==========================================
-        // 4. Play 練習系統 (從目前選擇的題庫抽字)
+        // 4. Play 練習系統 (防重複抽字 + 跳過功能)
         // ==========================================
         let practiceQueue = [];
         let currentPracticeIndex = 0;
@@ -1299,36 +1316,59 @@
             }
 
             practiceQueue = [];
+            const existingWords = new Set(); // 用來記錄所有已經在地圖或存放區的單字 (黑名單)
 
-            // 1. 抓取地圖上需要升級的舊字
-            const mapKeys = Array.from(grid.entries()).filter(([_, item]) => item.level < 5).map(([k, _]) => k);
-            for (let i = 0; i < mapKeys.length; i++) {
-                const key = mapKeys[i];
-                practiceQueue.push({ ...grid.get(key), source: 'map', key: key, attempts: 0, successes: 0 });
+            // 1. 將地圖上【所有】單字加入去重黑名單
+            for (let [key, item] of grid.entries()) {
+                existingWords.add(item.word.toLowerCase().trim());
+                // 如果該字尚未滿級，則加入本次練習佇列
+                if (item.level < 5) {
+                    practiceQueue.push({ ...item, source: 'map', key: key, attempts: 0, successes: 0 });
+                }
             }
 
-            // 2. 從「目前選擇的題庫」抓新字
+            // 2. 將存放區的單字也加入黑名單
+            storageData.forEach(item => {
+                existingWords.add(item.word.toLowerCase().trim());
+            });
+
+            // 3. 從「目前選擇的題庫」抓新字 (避開黑名單)
             const activeDs = getActiveDataset();
             let currentIndex = usedIndices[activeDatasetId] || 0;
             const availableSlots = 5 - storageData.length;
             const neededNewWords = Math.min(5, availableSlots);
 
             let newWordsAdded = 0;
-            for (let i = 0; i < neededNewWords; i++) {
-                if (currentIndex < activeDs.words.length) {
-                    // 複製題庫屬性，賦予 level 進入遊戲系統
-                    practiceQueue.push({ ...activeDs.words[currentIndex], level: 1, source: 'csv', attempts: 0, successes: 0 });
-                    currentIndex++;
+            let isDepleted = false;
+
+            while (newWordsAdded < neededNewWords) {
+                // 如果目前題庫已經被掃完
+                if (currentIndex >= activeDs.words.length) {
+                    isDepleted = true;
+                    break;
+                }
+
+                const newWordObj = activeDs.words[currentIndex];
+                const normalizedWord = newWordObj.word.toLowerCase().trim();
+
+                // 檢查是否重複，若沒有重複才加入練習佇列
+                if (!existingWords.has(normalizedWord)) {
+                    practiceQueue.push({ ...newWordObj, level: 1, source: 'csv', attempts: 0, successes: 0 });
+                    existingWords.add(normalizedWord); // 加入黑名單防止抽到雙胞胎
                     newWordsAdded++;
                 }
+                currentIndex++;
             }
 
             if (practiceQueue.length === 0) {
-                showToast('地圖皆已滿級，且目前題庫已抽完！請切換或匯入新題庫。');
+                showToast('地圖皆已滿級，且目前題庫已無新字！請切換或匯入新題庫。');
                 return;
             }
+            if (isDepleted && newWordsAdded < neededNewWords) {
+                showToast('目前題庫的新單字已全數抽出或存在於地圖中！');
+            }
 
-            // 更新進度
+            // 更新這份題庫的抽取進度
             usedIndices[activeDatasetId] = currentIndex;
 
             currentPracticeIndex = 0;
@@ -1371,6 +1411,14 @@
             document.getElementById('next-word-btn').style.display = 'none';
 
             speakText(currentWordData.word);
+        }
+
+        // 跳過按鈕：將目前單字達嘗試上限，強制放棄本次練習
+        function skipWord() {
+            if (!currentWordData) return;
+            currentWordData.attempts = 5;
+            showToast(`已跳過：${currentWordData.word}`);
+            moveToNextWord();
         }
 
         function toggleMic() {
@@ -1537,4 +1585,3 @@
 </body>
 
 </html>
-}
