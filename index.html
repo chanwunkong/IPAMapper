@@ -425,6 +425,13 @@
             cursor: not-allowed;
         }
 
+        .btn-delete {
+            background-color: #ff3b30;
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
         /* --- 設定頁面 (Settings) --- */
         .settings-container {
             padding: 20px;
@@ -456,6 +463,27 @@
             flex-direction: column;
             gap: 10px;
             margin-bottom: 15px;
+        }
+
+        .dataset-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f2f2f7;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .dataset-item label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-main);
+            cursor: pointer;
+            flex: 1;
         }
 
         .file-input-wrapper {
@@ -592,11 +620,17 @@
                     </div>
 
                     <div class="settings-card">
-                        <div class="settings-title">自訂單字庫 (CSV)</div>
+                        <div class="settings-title">我的單字庫 (Datasets)</div>
+                        <div class="settings-row" id="dataset-list">
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="settings-title">新增單字庫 (匯入 CSV)</div>
                         <div class="settings-row">
                             <div style="font-size:14px; color:var(--text-secondary); line-height:1.4;">
-                                新增支援 <strong>Level</strong>、<strong>q</strong> 與 <strong>r</strong>
-                                欄位。含有座標的單字匯入後將直接顯示在地圖上！
+                                CSV 格式需包含：Word, Phonetic, Morphological, Sentence,
+                                Etymology。匯入後將成為獨立單字庫供抽取練習，不影響目前地圖上的字。
                             </div>
                             <div class="file-input-wrapper">
                                 <button class="action-btn btn-view" style="width:100%;">選擇 CSV 檔案</button>
@@ -604,7 +638,7 @@
                             </div>
                             <div id="csv-filename" style="font-size:14px; color:var(--text-main);">尚未選擇檔案</div>
                             <button id="importCsvBtn" class="action-btn btn-unlock"
-                                style="margin-top:10px;">匯入單字庫</button>
+                                style="margin-top:10px;">上傳並匯入</button>
                         </div>
                     </div>
 
@@ -623,7 +657,7 @@
 
     <script>
         // ==========================================
-        // 0. Firebase 初始化與登入系統 (使用最新的 Config)
+        // 0. Firebase 初始化與登入系統 
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyAI5lx2XT3ysBhTREBW637s_AlWC49LYJQ",
@@ -665,32 +699,87 @@
         });
 
         // ==========================================
-        // 1. 內建與自訂單字庫系統
+        // 1. 單字庫架構分離 (Datasets vs Game State)
         // ==========================================
-        let csvDatabase = [
+        const defaultWords = [
             { word: "hello", phonetic: "/həˈloʊ/", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call)." },
             { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye'." },
             { word: "hi", phonetic: "/haɪ/", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'." },
             { word: "bye", phonetic: "/baɪ/", morphological: "None", sentence: "Bye, have a good day.", etymology: "A short form of 'goodbye'." },
-            { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning'." }
+            { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning'." },
+            { word: "please", phonetic: "/pliːz/", morphological: "None", sentence: "Please sit down.", etymology: "Short for 'if it please you'." }
         ];
-        let usedCsvIndex = 0;
-        const storageData = [];
-        const grid = new Map();
 
-        function initDefaultWords() {
-            storageData.length = 0;
-            usedCsvIndex = 0;
-            for (let i = 0; i < 5; i++) {
-                if (usedCsvIndex < csvDatabase.length) {
-                    storageData.push({ ...csvDatabase[usedCsvIndex], level: 1 });
-                    usedCsvIndex++;
+        let datasets = [];             // 儲存所有匯入的單字庫
+        let activeDatasetId = '';      // 目前選擇要抽題的單字庫 ID
+        let usedIndices = {};          // 紀錄各單字庫抽到第幾個字了 { 'datasetId': index }
+
+        const storageData = [];        // 存放區 (遊戲狀態)
+        const grid = new Map();        // 地圖 (遊戲狀態)
+
+        function initDatasets() {
+            if (datasets.length === 0) {
+                const defaultDs = { id: 'default', name: '預設單字庫 Lesson 1', words: defaultWords };
+                datasets.push(defaultDs);
+                activeDatasetId = 'default';
+                usedIndices['default'] = 0;
+
+                // 遊戲一開始給 5 個字到存放區
+                for (let i = 0; i < 5; i++) {
+                    if (usedIndices['default'] < defaultDs.words.length) {
+                        // 完整複製單字屬性，脫離題庫獨立存活
+                        storageData.push({ ...defaultDs.words[usedIndices['default']], level: 1 });
+                        usedIndices['default']++;
+                    }
                 }
             }
+            renderDatasets();
         }
-        initDefaultWords();
 
-        // CSV 逐行解析器 (相容雙引號)
+        function getActiveDataset() {
+            return datasets.find(d => d.id === activeDatasetId) || datasets[0];
+        }
+
+        function renderDatasets() {
+            const container = document.getElementById('dataset-list');
+            container.innerHTML = '';
+            datasets.forEach(ds => {
+                const div = document.createElement('div');
+                div.className = 'dataset-item';
+                const isChecked = ds.id === activeDatasetId ? 'checked' : '';
+                div.innerHTML = `
+                    <label>
+                        <input type="radio" name="activeDsRadio" value="${ds.id}" ${isChecked}>
+                        ${ds.name} <span style="color:#8e8e93; font-weight:normal; font-size:12px;">(${ds.words.length} 字)</span>
+                    </label>
+                    ${ds.id !== 'default' ? `<button class="action-btn btn-delete" onclick="deleteDataset('${ds.id}')">刪除</button>` : ''}
+                `;
+                div.querySelector('input').addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        activeDatasetId = ds.id;
+                        if (usedIndices[ds.id] === undefined) usedIndices[ds.id] = 0;
+                        saveToCloud();
+                        showToast(`已切換至單字庫: ${ds.name}`);
+                    }
+                });
+                container.appendChild(div);
+            });
+        }
+
+        window.deleteDataset = function (id) {
+            if (confirm('確定要刪除此單字庫嗎？地圖上現有的單字不會受影響。')) {
+                datasets = datasets.filter(d => d.id !== id);
+                delete usedIndices[id];
+                if (activeDatasetId === id) {
+                    activeDatasetId = 'default';
+                }
+                saveToCloud();
+                renderDatasets();
+                showToast('單字庫已刪除');
+            }
+        }
+
+        // CSV 逐行解析器
         function parseCSVLine(text) {
             let ret = [], inQuote = false, value = '';
             for (let i = 0; i < text.length; i++) {
@@ -711,9 +800,11 @@
 
         const csvUpload = document.getElementById('csvUpload');
         let pendingCSVText = '';
+        let pendingFileName = '';
         csvUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
+                pendingFileName = file.name;
                 document.getElementById('csv-filename').textContent = `已選取: ${file.name}`;
                 const reader = new FileReader();
                 reader.onload = (evt) => { pendingCSVText = evt.target.result; };
@@ -727,7 +818,6 @@
             const lines = pendingCSVText.split(/\r?\n/).filter(l => l.trim() !== '');
             if (lines.length < 2) return showToast('CSV 格式錯誤或無資料');
 
-            // 解析標題列
             const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
             const wordIdx = headers.findIndex(h => h === 'word');
             const phoneticIdx = headers.findIndex(h => h === 'phonetic');
@@ -735,50 +825,43 @@
             const sentIdx = headers.findIndex(h => h.includes('sentence'));
             const etymIdx = headers.findIndex(h => h.includes('etymology'));
 
-            // 尋找擴充欄位 Level, q, r
-            const levelIdx = headers.findIndex(h => h === 'level');
-            const qIdx = headers.findIndex(h => h === 'q');
-            const rIdx = headers.findIndex(h => h === 'r');
-
             if (wordIdx === -1) return showToast('CSV 標題列必須包含 Word 欄位');
 
-            const newCsvData = [];
-            const newGrid = new Map();
-
+            const newWords = [];
             for (let i = 1; i < lines.length; i++) {
                 const cols = parseCSVLine(lines[i]);
                 if (cols.length > wordIdx && cols[wordIdx]) {
-                    const wordData = {
+                    newWords.push({
                         word: cols[wordIdx],
                         phonetic: phoneticIdx !== -1 ? cols[phoneticIdx] : '',
                         morphological: morphIdx !== -1 ? cols[morphIdx] : '',
                         sentence: sentIdx !== -1 ? cols[sentIdx] : '',
-                        etymology: etymIdx !== -1 ? cols[etymIdx] : '',
-                        level: (levelIdx !== -1 && cols[levelIdx]) ? parseInt(cols[levelIdx]) : 1
-                    };
-
-                    // 如果有 q, r 座標，直接放入地圖中
-                    if (qIdx !== -1 && rIdx !== -1 && cols[qIdx] !== '' && cols[rIdx] !== '') {
-                        const q = parseInt(cols[qIdx]);
-                        const r = parseInt(cols[rIdx]);
-                        if (!isNaN(q) && !isNaN(r)) {
-                            newGrid.set(`${q},${r}`, wordData);
-                            continue; // 已放入地圖，跳過加入未練習池
-                        }
-                    }
-                    newCsvData.push(wordData);
+                        etymology: etymIdx !== -1 ? cols[etymIdx] : ''
+                    });
                 }
             }
 
-            if (newCsvData.length > 0 || newGrid.size > 0) {
-                csvDatabase = newCsvData;
-                grid.clear();
-                newGrid.forEach((val, key) => grid.set(key, val));
-                initDefaultWords();
+            if (newWords.length > 0) {
+                const dsId = 'ds_' + Date.now();
+                datasets.push({
+                    id: dsId,
+                    name: pendingFileName,
+                    words: newWords
+                });
+
+                // 自動切換到新上傳的單字庫
+                activeDatasetId = dsId;
+                usedIndices[dsId] = 0;
+
                 saveToCloud();
-                updateStorageUI();
-                drawCanvas();
-                showToast('單字庫匯入成功！已更新地圖與進度。');
+                renderDatasets();
+
+                // 清空上傳區塊
+                pendingCSVText = '';
+                csvUpload.value = '';
+                document.getElementById('csv-filename').textContent = '尚未選擇檔案';
+
+                showToast(`成功匯入 ${newWords.length} 個單字！已切換為目前題庫。`);
             } else {
                 showToast('無法解析有效單字');
             }
@@ -801,15 +884,24 @@
                 tokens: currentTokens,
                 grid: gridArray,
                 storage: storageData,
-                csvDatabase: csvDatabase,
-                usedCsvIndex: usedCsvIndex
+                datasets: datasets,
+                activeDatasetId: activeDatasetId,
+                usedIndices: usedIndices
             };
         }
 
         function importGameData(data) {
             if (data.tokens !== undefined) currentTokens = data.tokens;
-            if (data.csvDatabase) csvDatabase = data.csvDatabase;
-            if (data.usedCsvIndex !== undefined) usedCsvIndex = data.usedCsvIndex;
+
+            // 載入單字庫架構
+            if (data.datasets && data.datasets.length > 0) {
+                datasets = data.datasets;
+            } else {
+                datasets = [];
+            }
+
+            if (data.activeDatasetId) activeDatasetId = data.activeDatasetId;
+            if (data.usedIndices) usedIndices = data.usedIndices;
 
             storageData.length = 0;
             if (data.storage) data.storage.forEach(item => storageData.push(item));
@@ -819,6 +911,7 @@
                 data.grid.forEach(item => { grid.set(`${item.q},${item.r}`, item); });
             }
 
+            initDatasets(); // 如果沒載入到會初始化預設的
             globalTokenCount.textContent = currentTokens;
             renderGrammarRules();
             updateStorageUI();
@@ -845,10 +938,12 @@
                     showToast("✅ 已從雲端載入進度");
                     syncStatus.textContent = `最後同步時間: ${new Date().toLocaleTimeString()}`;
                 } else {
+                    initDatasets();
                     saveToCloud();
                 }
             } catch (e) {
                 console.error("Load error:", e);
+                initDatasets();
             }
         }
 
@@ -869,10 +964,16 @@
             toast.style.opacity = '1';
             setTimeout(() => { toast.style.opacity = '0'; }, 1500);
         }
+
         globalTokenCount.textContent = currentTokens;
 
+        // 如果未登入，本機預設初始化
+        if (!auth.currentUser) {
+            initDatasets();
+        }
+
         // ==========================================
-        // 3. 六角形 Canvas 與地圖邏輯
+        // 3. 六角形 Canvas 與地圖邏輯 (沒有更動)
         // ==========================================
         const HEX_SIZE = 65;
         let camera = { x: 0, y: 0, zoom: 1 };
@@ -1168,7 +1269,7 @@
         }
 
         // ==========================================
-        // 4. Play 練習系統
+        // 4. Play 練習系統 (從目前選擇的題庫抽字)
         // ==========================================
         let practiceQueue = [];
         let currentPracticeIndex = 0;
@@ -1199,26 +1300,36 @@
 
             practiceQueue = [];
 
+            // 1. 抓取地圖上需要升級的舊字
             const mapKeys = Array.from(grid.entries()).filter(([_, item]) => item.level < 5).map(([k, _]) => k);
             for (let i = 0; i < mapKeys.length; i++) {
                 const key = mapKeys[i];
                 practiceQueue.push({ ...grid.get(key), source: 'map', key: key, attempts: 0, successes: 0 });
             }
 
+            // 2. 從「目前選擇的題庫」抓新字
+            const activeDs = getActiveDataset();
+            let currentIndex = usedIndices[activeDatasetId] || 0;
             const availableSlots = 5 - storageData.length;
             const neededNewWords = Math.min(5, availableSlots);
 
+            let newWordsAdded = 0;
             for (let i = 0; i < neededNewWords; i++) {
-                if (usedCsvIndex < csvDatabase.length) {
-                    practiceQueue.push({ ...csvDatabase[usedCsvIndex], level: 1, source: 'csv', attempts: 0, successes: 0 });
-                    usedCsvIndex++;
+                if (currentIndex < activeDs.words.length) {
+                    // 複製題庫屬性，賦予 level 進入遊戲系統
+                    practiceQueue.push({ ...activeDs.words[currentIndex], level: 1, source: 'csv', attempts: 0, successes: 0 });
+                    currentIndex++;
+                    newWordsAdded++;
                 }
             }
 
             if (practiceQueue.length === 0) {
-                showToast('目前沒有可練習的單字');
+                showToast('地圖皆已滿級，且目前題庫已抽完！請切換或匯入新題庫。');
                 return;
             }
+
+            // 更新進度
+            usedIndices[activeDatasetId] = currentIndex;
 
             currentPracticeIndex = 0;
             document.getElementById('practice-modal').classList.add('active');
@@ -1426,3 +1537,4 @@
 </body>
 
 </html>
+}
