@@ -585,7 +585,7 @@
                             <button id="loginBtn" class="action-btn btn-unlock">使用 Google 登入</button>
                             <button id="logoutBtn" class="action-btn btn-disabled" style="display:none;">登出</button>
                             <div id="user-info" style="font-size:14px; color:var(--text-secondary); margin-top:8px;">未登入
-                            </div>
+                                (進度僅儲存於本機)</div>
                             <div id="sync-status" style="font-size:12px; color:var(--accent-color); margin-top:4px;">
                             </div>
                         </div>
@@ -595,8 +595,8 @@
                         <div class="settings-title">自訂單字庫 (CSV)</div>
                         <div class="settings-row">
                             <div style="font-size:14px; color:var(--text-secondary); line-height:1.4;">
-                                格式需包含：Word, Phonetic, Lexical Category, Primary POS, Internal Components, WALS Trigger,
-                                Morphological Variations, A1 Example Sentence, Etymology
+                                新增支援 <strong>Level</strong>、<strong>q</strong> 與 <strong>r</strong>
+                                欄位。含有座標的單字匯入後將直接顯示在地圖上！
                             </div>
                             <div class="file-input-wrapper">
                                 <button class="action-btn btn-view" style="width:100%;">選擇 CSV 檔案</button>
@@ -604,7 +604,7 @@
                             </div>
                             <div id="csv-filename" style="font-size:14px; color:var(--text-main);">尚未選擇檔案</div>
                             <button id="importCsvBtn" class="action-btn btn-unlock"
-                                style="margin-top:10px;">匯入並重置進度</button>
+                                style="margin-top:10px;">匯入單字庫</button>
                         </div>
                     </div>
 
@@ -623,15 +623,16 @@
 
     <script>
         // ==========================================
-        // 0. Firebase 初始化與登入系統
+        // 0. Firebase 初始化與登入系統 (使用最新的 Config)
         // ==========================================
         const firebaseConfig = {
-            apiKey: "AIzaSyBqZLFskqgyiAEc127dh95rXsOPQVLSurM",
+            apiKey: "AIzaSyAI5lx2XT3ysBhTREBW637s_AlWC49LYJQ",
             authDomain: "test-5dbba.firebaseapp.com",
             projectId: "test-5dbba",
-            storageBucket: "test-5dbba.appspot.com",
+            storageBucket: "test-5dbba.firebasestorage.app",
             messagingSenderId: "878665537417",
-            appId: "1:878665537417:web:xxxxxx"
+            appId: "1:878665537417:web:0c5b32f6a01ff9df803358",
+            measurementId: "G-NFM5EEWYHP"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -667,22 +668,11 @@
         // 1. 內建與自訂單字庫系統
         // ==========================================
         let csvDatabase = [
-            { word: "hello", phonetic: "/həˈloʊ/", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call). It means 'listen to me' or 'hi'." },
-            { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye' (God be with you). A wish for a safe trip." },
-            { word: "hi", phonetic: "/haɪ/", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'. A sound to get someone's attention." },
+            { word: "hello", phonetic: "/həˈloʊ/", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call)." },
+            { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye'." },
+            { word: "hi", phonetic: "/haɪ/", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'." },
             { word: "bye", phonetic: "/baɪ/", morphological: "None", sentence: "Bye, have a good day.", etymology: "A short form of 'goodbye'." },
-            { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning' (early day). A wish for a good start to the day." },
-            { word: "good afternoon", phonetic: "/ɡʊd ˌæftərˈnuːn/", morphological: "None", sentence: "Good afternoon, teacher.", etymology: "From 'good', 'after' (later), and 'noon' (middle of the day)." },
-            { word: "good evening", phonetic: "/ɡʊd ˈiːvnɪŋ/", morphological: "None", sentence: "Good evening, everyone.", etymology: "From 'good' and 'evening' (end of the day)." },
-            { word: "good night", phonetic: "/ɡʊd ˈnaɪt/", morphological: "None", sentence: "Good night, go to sleep.", etymology: "From 'good' and 'night' (dark time). Said before going to sleep." },
-            { word: "thank you", phonetic: "/θæŋk juː/", morphological: "None", sentence: "Thank you for the apple.", etymology: "From old word 'thanc' (good thought)." },
-            { word: "thanks", phonetic: "/θæŋks/", morphological: "None", sentence: "Thanks for your help.", etymology: "A short, everyday way to say 'thank you'." },
-            { word: "please", phonetic: "/pliːz/", morphological: "None", sentence: "Please sit down.", etymology: "Short for 'if it please you' (if it makes you happy)." },
-            { word: "OK", phonetic: "/oʊˈkeɪ/", morphological: "None", sentence: "OK, I understand.", etymology: "From 'oll korrect', a funny spelling of 'all correct'." },
-            { word: "yes", phonetic: "/jɛs/", morphological: "None", sentence: "Yes, it is a dog.", etymology: "From old words meaning 'so be it'. Used to agree." },
-            { word: "no", phonetic: "/noʊ/", morphological: "None", sentence: "No, I am not tired.", etymology: "From old words meaning 'not ever'. Used to disagree." },
-            { word: "sorry", phonetic: "/ˈsɔːri/", morphological: "sorrier, sorriest", sentence: "I am sorry, I am late.", etymology: "From old word 'sarig' (sad or sore)." },
-            { word: "welcome", phonetic: "/ˈwɛlkəm/", morphological: "welcomed, welcoming", sentence: "Welcome to our school.", etymology: "From 'wil' (wish or happy) and 'cuma' (guest)." }
+            { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning'." }
         ];
         let usedCsvIndex = 0;
         const storageData = [];
@@ -690,7 +680,6 @@
 
         function initDefaultWords() {
             storageData.length = 0;
-            grid.clear();
             usedCsvIndex = 0;
             for (let i = 0; i < 5; i++) {
                 if (usedCsvIndex < csvDatabase.length) {
@@ -699,10 +688,9 @@
                 }
             }
         }
-        // 初次載入
         initDefaultWords();
 
-        // --- CSV 解析器 ---
+        // CSV 逐行解析器 (相容雙引號)
         function parseCSVLine(text) {
             let ret = [], inQuote = false, value = '';
             for (let i = 0; i < text.length; i++) {
@@ -739,24 +727,58 @@
             const lines = pendingCSVText.split(/\r?\n/).filter(l => l.trim() !== '');
             if (lines.length < 2) return showToast('CSV 格式錯誤或無資料');
 
+            // 解析標題列
+            const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+            const wordIdx = headers.findIndex(h => h === 'word');
+            const phoneticIdx = headers.findIndex(h => h === 'phonetic');
+            const morphIdx = headers.findIndex(h => h.includes('morphological'));
+            const sentIdx = headers.findIndex(h => h.includes('sentence'));
+            const etymIdx = headers.findIndex(h => h.includes('etymology'));
+
+            // 尋找擴充欄位 Level, q, r
+            const levelIdx = headers.findIndex(h => h === 'level');
+            const qIdx = headers.findIndex(h => h === 'q');
+            const rIdx = headers.findIndex(h => h === 'r');
+
+            if (wordIdx === -1) return showToast('CSV 標題列必須包含 Word 欄位');
+
             const newCsvData = [];
+            const newGrid = new Map();
+
             for (let i = 1; i < lines.length; i++) {
                 const cols = parseCSVLine(lines[i]);
-                if (cols.length >= 8) {
-                    newCsvData.push({
-                        word: cols[0], phonetic: cols[1], morphological: cols[6],
-                        sentence: cols[7], etymology: cols[8], level: 1
-                    });
+                if (cols.length > wordIdx && cols[wordIdx]) {
+                    const wordData = {
+                        word: cols[wordIdx],
+                        phonetic: phoneticIdx !== -1 ? cols[phoneticIdx] : '',
+                        morphological: morphIdx !== -1 ? cols[morphIdx] : '',
+                        sentence: sentIdx !== -1 ? cols[sentIdx] : '',
+                        etymology: etymIdx !== -1 ? cols[etymIdx] : '',
+                        level: (levelIdx !== -1 && cols[levelIdx]) ? parseInt(cols[levelIdx]) : 1
+                    };
+
+                    // 如果有 q, r 座標，直接放入地圖中
+                    if (qIdx !== -1 && rIdx !== -1 && cols[qIdx] !== '' && cols[rIdx] !== '') {
+                        const q = parseInt(cols[qIdx]);
+                        const r = parseInt(cols[rIdx]);
+                        if (!isNaN(q) && !isNaN(r)) {
+                            newGrid.set(`${q},${r}`, wordData);
+                            continue; // 已放入地圖，跳過加入未練習池
+                        }
+                    }
+                    newCsvData.push(wordData);
                 }
             }
 
-            if (newCsvData.length > 0) {
+            if (newCsvData.length > 0 || newGrid.size > 0) {
                 csvDatabase = newCsvData;
+                grid.clear();
+                newGrid.forEach((val, key) => grid.set(key, val));
                 initDefaultWords();
                 saveToCloud();
                 updateStorageUI();
                 drawCanvas();
-                showToast('單字庫匯入成功！已重置進度。');
+                showToast('單字庫匯入成功！已更新地圖與進度。');
             } else {
                 showToast('無法解析有效單字');
             }
@@ -769,7 +791,6 @@
         const globalTokenCount = document.getElementById('global-token-count');
         const toast = document.getElementById('toast');
 
-        // 將遊戲狀態匯出為 JSON 結構
         function exportGameData() {
             const gridArray = [];
             for (let [key, item] of grid.entries()) {
@@ -785,7 +806,6 @@
             };
         }
 
-        // 載入遊戲狀態
         function importGameData(data) {
             if (data.tokens !== undefined) currentTokens = data.tokens;
             if (data.csvDatabase) csvDatabase = data.csvDatabase;
@@ -796,9 +816,7 @@
 
             grid.clear();
             if (data.grid) {
-                data.grid.forEach(item => {
-                    grid.set(`${item.q},${item.r}`, item);
-                });
+                data.grid.forEach(item => { grid.set(`${item.q},${item.r}`, item); });
             }
 
             globalTokenCount.textContent = currentTokens;
@@ -827,7 +845,7 @@
                     showToast("✅ 已從雲端載入進度");
                     syncStatus.textContent = `最後同步時間: ${new Date().toLocaleTimeString()}`;
                 } else {
-                    saveToCloud(); // 初次登入建立初始存檔
+                    saveToCloud();
                 }
             } catch (e) {
                 console.error("Load error:", e);
@@ -839,7 +857,7 @@
             localStorage.setItem('appTokens', currentTokens);
             globalTokenCount.textContent = currentTokens;
             renderGrammarRules();
-            saveToCloud(); // 代幣更動自動同步
+            saveToCloud();
 
             const display = document.getElementById('global-token-display');
             display.style.transform = 'scale(1.1)';
@@ -1069,7 +1087,6 @@
             ctx.restore();
         }
 
-        // 觸控與滑鼠防呆機制
         let isDragging = false, dragMoved = false, initialPinchDist = null, initialZoom = 1;
         let startPos = { x: 0, y: 0 };
         let lastPos = { x: 0, y: 0 };
@@ -1147,11 +1164,11 @@
                 grid.set(key, storageData.shift());
             }
             updateStorageUI(); drawCanvas();
-            saveToCloud(); // 放置動作完成自動存檔
+            saveToCloud();
         }
 
         // ==========================================
-        // 4. Play 練習系統 (輪替與語音辨識)
+        // 4. Play 練習系統
         // ==========================================
         let practiceQueue = [];
         let currentPracticeIndex = 0;
@@ -1333,7 +1350,7 @@
             updateStorageUI();
             drawCanvas();
             showToast(`練習結束！共 ${passedCount} 題過關，獲得 ${tokensEarned} 代幣`);
-            saveToCloud(); // 練習結束自動存檔
+            saveToCloud();
         }
 
         // ==========================================
