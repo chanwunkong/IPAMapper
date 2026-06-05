@@ -1200,7 +1200,36 @@
                     fontSize -= 1;
                     ctx.font = `bold ${fontSize}px sans-serif`;
                 }
-                ctx.fillText(item.word, pos.x, pos.y);
+                // 在 drawCanvas() 函式中，繪製文字的迴圈處 (原本的 ctx.fillText 區塊)
+
+                for (let [key, item] of grid.entries()) {
+                    const [q, r] = key.split(',').map(Number);
+                    const pos = axialToPixel(q, r);
+                    ctx.fillStyle = '#111111'; // 黑色文字
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    // --- 修改後的斷行與繪製邏輯 ---
+                    const words = item.word.split(' '); // 依空格拆分
+                    let fontSize = 20;
+                    ctx.font = `bold ${fontSize}px sans-serif`;
+
+                    // 計算總高度，確保多行文字整體在六角形中心
+                    const lineHeight = fontSize + 2;
+                    const totalHeight = words.length * lineHeight;
+
+                    words.forEach((line, i) => {
+                        // 動態調整：如果單字太長，稍微縮小字體
+                        if (ctx.measureText(line).width > (HEX_SIZE * sqrt3 * 0.8)) {
+                            fontSize = 16;
+                            ctx.font = `bold ${fontSize}px sans-serif`;
+                        }
+
+                        // 繪製每一行 (垂直位置置中)
+                        const yOffset = pos.y - (totalHeight / 2) + (i * lineHeight) + (lineHeight / 2);
+                        ctx.fillText(line, pos.x, yOffset);
+                    });
+                }
             }
             ctx.restore();
         }
