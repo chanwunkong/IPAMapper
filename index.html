@@ -111,6 +111,7 @@
             font-weight: bold;
             color: var(--text-main);
             flex-shrink: 0;
+            white-space: nowrap;
         }
 
         #hex-canvas {
@@ -184,6 +185,7 @@
             border: none;
             font-weight: bold;
             color: var(--text-main);
+            cursor: pointer;
         }
 
         .word-display {
@@ -229,11 +231,13 @@
             font-size: 14px;
             color: var(--text-main);
             margin-bottom: 12px;
+            line-height: 1.4;
         }
 
         .tts-group {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 10px;
             margin-top: 15px;
         }
@@ -246,6 +250,7 @@
             border-radius: 8px;
             font-size: 14px;
             font-weight: bold;
+            cursor: pointer;
         }
 
         .action-area {
@@ -270,6 +275,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         #mic-btn.listening {
@@ -297,14 +304,15 @@
             font-weight: bold;
             text-align: center;
             height: 24px;
+            transition: color 0.2s;
         }
 
         .feedback-correct {
-            color: #34c759;
+            color: #34c759 !important;
         }
 
         .feedback-wrong {
-            color: #ff3b30;
+            color: #ff3b30 !important;
         }
 
         #next-word-btn {
@@ -316,6 +324,7 @@
             font-size: 16px;
             font-weight: bold;
             display: none;
+            cursor: pointer;
         }
 
         /* --- 文法頁面與共用 --- */
@@ -392,6 +401,7 @@
             font-size: 14px;
             font-weight: bold;
             border: none;
+            cursor: pointer;
         }
 
         .btn-unlock {
@@ -407,6 +417,7 @@
         .btn-disabled {
             background-color: var(--locked-color);
             color: white;
+            cursor: not-allowed;
         }
 
         #bottom-nav {
@@ -428,6 +439,7 @@
             height: 100%;
             font-size: 16px;
             color: #8e8e93;
+            cursor: pointer;
         }
 
         .nav-tab.active {
@@ -467,7 +479,6 @@
         </div>
 
         <div id="main-content">
-            <!-- 單字視圖 -->
             <div id="view-vocabulary" class="view active">
                 <div id="storage-area"></div>
                 <canvas id="hex-canvas"></canvas>
@@ -476,7 +487,6 @@
                 </div>
             </div>
 
-            <!-- 練習面板 -->
             <div id="practice-modal">
                 <div class="practice-header">
                     <div class="practice-title" id="practice-progress">進度: 0/0</div>
@@ -510,7 +520,6 @@
                 </div>
             </div>
 
-            <!-- 文法視圖 -->
             <div id="view-grammar" class="view">
                 <div class="page-header">文法 (WALS)</div>
                 <div id="grammar-content">
@@ -535,21 +544,36 @@
 
     <script>
         // ==========================================
-        // 0. 內建 CSV 單字庫模擬
+        // 0. 內建 CSV 單字庫 (提取自 Lesson1.csv)
         // ==========================================
         const csvDatabase = [
-            { word: "hello", phonetic: "/həˈloʊ/", morphological: "hellos", sentence: "Hello, how are you?", etymology: "From Old High German 'halâ'." },
-            { word: "goodbye", phonetic: "/ɡʊdˈbaɪ/", morphological: "goodbyes", sentence: "Goodbye, see you tomorrow.", etymology: "Contraction of 'God be with ye'." },
-            { word: "morning", phonetic: "/ˈmɔːrnɪŋ/", morphological: "mornings", sentence: "Good morning!", etymology: "From Middle English 'morwening'." },
-            { word: "afternoon", phonetic: "/ˌæftərˈnuːn/", morphological: "afternoons", sentence: "We will meet in the afternoon.", etymology: "From 'after' + 'noon'." },
-            { word: "evening", phonetic: "/ˈiːvnɪŋ/", morphological: "evenings", sentence: "It is a beautiful evening.", etymology: "From Old English 'ǣfnung'." },
-            { word: "night", phonetic: "/naɪt/", morphological: "nights", sentence: "Good night, sleep tight.", etymology: "From Old English 'neaht'." },
-            { word: "please", phonetic: "/pliːz/", morphological: "pleased, pleasing", sentence: "Please sit down.", etymology: "From Old French 'plaisir'." },
-            { word: "thank", phonetic: "/θæŋk/", morphological: "thanks, thanked", sentence: "Thank you for your help.", etymology: "From Old English 'þancian'." },
-            { word: "sorry", phonetic: "/ˈsɑːri/", morphological: "sorrier, sorriest", sentence: "I am sorry for the delay.", etymology: "From Old English 'sārig'." },
-            { word: "welcome", phonetic: "/ˈwelkəm/", morphological: "welcomed, welcoming", sentence: "You are welcome here.", etymology: "From Old English 'wilcuma'." }
+            { word: "hello", phonetic: "/həˈloʊ/", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call). It means 'listen to me' or 'hi'." },
+            { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye' (God be with you). A wish for a safe trip." },
+            { word: "hi", phonetic: "/haɪ/", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'. A sound to get someone's attention." },
+            { word: "bye", phonetic: "/baɪ/", morphological: "None", sentence: "Bye, have a good day.", etymology: "A short form of 'goodbye'." },
+            { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning' (early day). A wish for a good start to the day." },
+            { word: "good afternoon", phonetic: "/ɡʊd ˌæftərˈnuːn/", morphological: "None", sentence: "Good afternoon, teacher.", etymology: "From 'good', 'after' (later), and 'noon' (middle of the day)." },
+            { word: "good evening", phonetic: "/ɡʊd ˈiːvnɪŋ/", morphological: "None", sentence: "Good evening, everyone.", etymology: "From 'good' and 'evening' (end of the day)." },
+            { word: "good night", phonetic: "/ɡʊd ˈnaɪt/", morphological: "None", sentence: "Good night, go to sleep.", etymology: "From 'good' and 'night' (dark time). Said before going to sleep." },
+            { word: "thank you", phonetic: "/θæŋk juː/", morphological: "None", sentence: "Thank you for the apple.", etymology: "From old word 'thanc' (good thought)." },
+            { word: "thanks", phonetic: "/θæŋks/", morphological: "None", sentence: "Thanks for your help.", etymology: "A short, everyday way to say 'thank you'." },
+            { word: "please", phonetic: "/pliːz/", morphological: "None", sentence: "Please sit down.", etymology: "Short for 'if it please you' (if it makes you happy)." },
+            { word: "OK", phonetic: "/oʊˈkeɪ/", morphological: "None", sentence: "OK, I understand.", etymology: "From 'oll korrect', a funny spelling of 'all correct'." },
+            { word: "yes", phonetic: "/jɛs/", morphological: "None", sentence: "Yes, it is a dog.", etymology: "From old words meaning 'so be it'. Used to agree." },
+            { word: "no", phonetic: "/noʊ/", morphological: "None", sentence: "No, I am not tired.", etymology: "From old words meaning 'not ever'. Used to disagree." },
+            { word: "sorry", phonetic: "/ˈsɔːri/", morphological: "sorrier, sorriest", sentence: "I am sorry, I am late.", etymology: "From old word 'sarig' (sad or sore)." },
+            { word: "welcome", phonetic: "/ˈwɛlkəm/", morphological: "welcomed, welcoming", sentence: "Welcome to our school.", etymology: "From 'wil' (wish or happy) and 'cuma' (guest)." }
         ];
-        let usedCsvIndex = 0; // 模擬資料庫提取進度
+        let usedCsvIndex = 0;
+
+        // 遊戲起始提供前 5 個單字放入存放區
+        const storageData = [];
+        for (let i = 0; i < 5; i++) {
+            if (usedCsvIndex < csvDatabase.length) {
+                storageData.push({ ...csvDatabase[usedCsvIndex], level: 1 });
+                usedCsvIndex++;
+            }
+        }
 
         // ==========================================
         // 1. 全域狀態與代幣系統
@@ -578,9 +602,8 @@
         // ==========================================
         // 2. 六角形 Canvas 與地圖邏輯 (字體自適應)
         // ==========================================
-        const storageData = [];
         const grid = new Map();
-        const HEX_SIZE = 65; // 尺寸放大
+        const HEX_SIZE = 65;
 
         let camera = { x: 0, y: 0, zoom: 1 };
         const sqrt3 = Math.sqrt(3);
@@ -655,7 +678,7 @@
             storageData.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'storage-item';
-                div.textContent = item.word; // 顯示單字
+                div.textContent = item.word;
                 storageArea.appendChild(div);
             });
         }
@@ -775,7 +798,6 @@
                 }
             }
 
-            // 自適應字體渲染
             for (let [key, item] of grid.entries()) {
                 const [q, r] = key.split(',').map(Number);
                 const pos = axialToPixel(q, r);
@@ -785,7 +807,6 @@
 
                 let fontSize = 22;
                 ctx.font = `bold ${fontSize}px sans-serif`;
-                // 限制最大寬度為六角形寬度減去一點 padding
                 const maxWidth = (HEX_SIZE * sqrt3) - 20;
                 while (ctx.measureText(item.word).width > maxWidth && fontSize > 10) {
                     fontSize -= 1;
@@ -796,35 +817,74 @@
             ctx.restore();
         }
 
-        // 畫布互動控制
-        let isDragging = false, dragMoved = false, lastPos = { x: 0, y: 0 };
-        canvas.addEventListener('mousedown', (e) => { isDragging = true; dragMoved = false; lastPos = { x: e.clientX, y: e.clientY }; });
+        // ==========================================
+        // 修正：觸控與滑鼠防呆機制 (Ghost Click & Drag Sensitivity)
+        // ==========================================
+        let isDragging = false, dragMoved = false, initialPinchDist = null, initialZoom = 1;
+        let startPos = { x: 0, y: 0 };
+        let lastPos = { x: 0, y: 0 };
+
+        function getPinchDist(e) {
+            return Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
+        }
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // 防止手機預設行為及幽靈點擊
+            if (e.touches.length === 1) {
+                isDragging = true; dragMoved = false;
+                startPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            } else if (e.touches.length === 2) {
+                isDragging = false; initialPinchDist = getPinchDist(e); initialZoom = camera.zoom;
+            }
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (isDragging && e.touches.length === 1) {
+                const dx = e.touches[0].clientX - lastPos.x, dy = e.touches[0].clientY - lastPos.y;
+
+                // 改以起始點計算絕對距離，避免緩慢滑動被當作點擊
+                if (Math.abs(e.touches[0].clientX - startPos.x) > 5 || Math.abs(e.touches[0].clientY - startPos.y) > 5) {
+                    dragMoved = true;
+                }
+
+                camera.x += dx; camera.y += dy;
+                lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                drawCanvas();
+            } else if (e.touches.length === 2 && initialPinchDist) {
+                camera.zoom = Math.min(Math.max(initialZoom * (getPinchDist(e) / initialPinchDist), 0.5), 3);
+                drawCanvas();
+            }
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault(); // 再次防止幽靈點擊 (Ghost Click)
+            if (isDragging && !dragMoved && e.changedTouches.length === 1) {
+                handleCanvasClick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+            }
+            isDragging = false; initialPinchDist = null;
+        });
+
+        // 保留給電腦滑鼠測試用
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true; dragMoved = false;
+            startPos = { x: e.clientX, y: e.clientY };
+            lastPos = { x: e.clientX, y: e.clientY };
+        });
         canvas.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const dx = e.clientX - lastPos.x, dy = e.clientY - lastPos.y;
-            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
+            if (Math.abs(e.clientX - startPos.x) > 5 || Math.abs(e.clientY - startPos.y) > 5) dragMoved = true;
             camera.x += dx; camera.y += dy; lastPos = { x: e.clientX, y: e.clientY }; drawCanvas();
         });
         canvas.addEventListener('mouseup', (e) => {
             if (isDragging && !dragMoved) handleCanvasClick(e.clientX, e.clientY);
             isDragging = false;
         });
-
-        canvas.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) { isDragging = true; dragMoved = false; lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault(); camera.zoom = Math.min(Math.max(camera.zoom * (e.deltaY > 0 ? 0.9 : 1.1), 0.5), 3); drawCanvas();
         }, { passive: false });
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (isDragging && e.touches.length === 1) {
-                const dx = e.touches[0].clientX - lastPos.x, dy = e.touches[0].clientY - lastPos.y;
-                if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
-                camera.x += dx; camera.y += dy; lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; drawCanvas();
-            }
-        }, { passive: false });
-        canvas.addEventListener('touchend', (e) => {
-            if (isDragging && !dragMoved && e.changedTouches.length === 1) handleCanvasClick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-            isDragging = false;
-        });
 
         function handleCanvasClick(clientX, clientY) {
             const rect = canvas.getBoundingClientRect();
@@ -833,7 +893,7 @@
 
             if (grid.has(key)) {
                 if (!isConnectedAfterRemoval(axial.q, axial.r)) return showToast('移除此方塊會造成斷裂');
-                if (storageData.length >= 5) return showToast('存放區已滿');
+                if (storageData.length >= 5) return showToast('存放區已滿，無法收回單字');
                 storageData.push(grid.get(key)); grid.delete(key);
             } else {
                 if (storageData.length === 0) return showToast('無可用單字');
@@ -844,7 +904,7 @@
         }
 
         // ==========================================
-        // 3. Play 練習系統
+        // 3. Play 練習系統 (輪替與語音辨識)
         // ==========================================
         let practiceQueue = [];
         let currentPracticeIndex = 0;
@@ -875,16 +935,16 @@
 
             practiceQueue = [];
 
-            // 優先選取地圖上的字 (Lv1~Lv4)
+            // 1. 挑選地圖上的升級單字 (符合規則的高等級單字：無數量上限)
             const mapKeys = Array.from(grid.entries()).filter(([_, item]) => item.level < 5).map(([k, _]) => k);
-            for (let i = 0; i < Math.min(5, mapKeys.length); i++) {
+            for (let i = 0; i < mapKeys.length; i++) {
                 const key = mapKeys[i];
                 practiceQueue.push({ ...grid.get(key), source: 'map', key: key, attempts: 0, successes: 0 });
             }
 
-            // 若不足 5 題，從 CSV 補足，且受限於存放區空位
+            // 2. 挑選新單字：名單上的前 5 個 Lv0 單字 (受限於存放區剩餘空位防爆)
             const availableSlots = 5 - storageData.length;
-            const neededNewWords = Math.min(5 - practiceQueue.length, availableSlots);
+            const neededNewWords = Math.min(5, availableSlots);
 
             for (let i = 0; i < neededNewWords; i++) {
                 if (usedCsvIndex < csvDatabase.length) {
@@ -894,7 +954,7 @@
             }
 
             if (practiceQueue.length === 0) {
-                showToast('沒有可練習的單字');
+                showToast('目前沒有可練習的單字');
                 return;
             }
 
@@ -909,7 +969,6 @@
                 return;
             }
 
-            // 循環尋找未完成的單字
             let found = false;
             for (let i = 0; i < practiceQueue.length; i++) {
                 let idx = (currentPracticeIndex + i) % practiceQueue.length;
@@ -927,7 +986,6 @@
 
             currentWordData = practiceQueue[currentPracticeIndex];
 
-            // UI 更新
             document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
             document.getElementById('p-word').textContent = currentWordData.word;
             document.getElementById('p-phonetic').textContent = currentWordData.phonetic;
@@ -939,17 +997,15 @@
             document.getElementById('recognition-feedback').className = "";
             document.getElementById('next-word-btn').style.display = 'none';
 
-            // 進入單字自動朗讀
             speakText(currentWordData.word);
         }
 
-        // 語音辨識
         function toggleMic() {
             if (isListening) return;
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                alert("抱歉，您的瀏覽器不支援語音辨識。");
+                alert("抱歉，您的瀏覽器不支援語音辨識功能。");
                 return;
             }
 
@@ -961,6 +1017,7 @@
                 isListening = true;
                 document.getElementById('mic-btn').classList.add('listening');
                 document.getElementById('recognition-feedback').textContent = "聆聽中...";
+                document.getElementById('recognition-feedback').className = "";
             };
 
             recognition.onresult = (event) => {
@@ -970,6 +1027,7 @@
 
             recognition.onerror = () => {
                 document.getElementById('recognition-feedback').textContent = "未接收到語音，請重試";
+                document.getElementById('recognition-feedback').className = "feedback-wrong";
             };
 
             recognition.onend = () => {
@@ -983,7 +1041,7 @@
         function judgeSpeech(transcript) {
             currentWordData.attempts++;
             const spokenText = transcript.toLowerCase().replace(/[^\w\s]|_/g, "");
-            const targetWord = currentWordData.word.toLowerCase();
+            const targetWord = currentWordData.word.toLowerCase().replace(/[^\w\s]|_/g, "");
 
             const feedbackEl = document.getElementById('recognition-feedback');
 
@@ -1015,12 +1073,10 @@
                     tokensEarned += 5;
 
                     if (item.source === 'map') {
-                        // 地圖原位升級
                         const mapItem = grid.get(item.key);
                         mapItem.level += 1;
                         grid.set(item.key, mapItem);
                     } else if (item.source === 'csv') {
-                        // 新字進入存放區
                         storageData.push({ word: item.word, level: item.level });
                     }
                 }
