@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hexagon Vocabulary & Grammar</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --bg-color: #f5f5f7;
@@ -327,7 +332,7 @@
             cursor: pointer;
         }
 
-        /* --- 文法頁面與共用 --- */
+        /* --- 文法頁面 --- */
         .page-header {
             height: 60px;
             background: rgba(255, 255, 255, 0.9);
@@ -420,6 +425,54 @@
             cursor: not-allowed;
         }
 
+        /* --- 設定頁面 (Settings) --- */
+        .settings-container {
+            padding: 20px;
+            background: var(--bg-color);
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .settings-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5ea;
+        }
+
+        .settings-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
         #bottom-nav {
             height: 80px;
             background: var(--nav-bg);
@@ -445,12 +498,6 @@
         .nav-tab.active {
             color: var(--hex-active);
             font-weight: bold;
-        }
-
-        .placeholder-text {
-            margin: auto;
-            font-size: 20px;
-            color: #8e8e93;
         }
 
         #toast {
@@ -529,7 +576,39 @@
             </div>
 
             <div id="view-settings" class="view">
-                <div class="placeholder-text">設定頁面 (建置中)</div>
+                <div class="page-header">設定 (Settings)</div>
+                <div class="settings-container">
+
+                    <div class="settings-card">
+                        <div class="settings-title">帳號與雲端同步</div>
+                        <div class="settings-row">
+                            <button id="loginBtn" class="action-btn btn-unlock">使用 Google 登入</button>
+                            <button id="logoutBtn" class="action-btn btn-disabled" style="display:none;">登出</button>
+                            <div id="user-info" style="font-size:14px; color:var(--text-secondary); margin-top:8px;">未登入
+                            </div>
+                            <div id="sync-status" style="font-size:12px; color:var(--accent-color); margin-top:4px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="settings-title">自訂單字庫 (CSV)</div>
+                        <div class="settings-row">
+                            <div style="font-size:14px; color:var(--text-secondary); line-height:1.4;">
+                                格式需包含：Word, Phonetic, Lexical Category, Primary POS, Internal Components, WALS Trigger,
+                                Morphological Variations, A1 Example Sentence, Etymology
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button class="action-btn btn-view" style="width:100%;">選擇 CSV 檔案</button>
+                                <input type="file" id="csvUpload" accept=".csv">
+                            </div>
+                            <div id="csv-filename" style="font-size:14px; color:var(--text-main);">尚未選擇檔案</div>
+                            <button id="importCsvBtn" class="action-btn btn-unlock"
+                                style="margin-top:10px;">匯入並重置進度</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             <div id="toast">操作無效</div>
@@ -544,9 +623,50 @@
 
     <script>
         // ==========================================
-        // 0. 內建 CSV 單字庫 (提取自 Lesson1.csv)
+        // 0. Firebase 初始化與登入系統
         // ==========================================
-        const csvDatabase = [
+        const firebaseConfig = {
+            apiKey: "AIzaSyBqZLFskqgyiAEc127dh95rXsOPQVLSurM",
+            authDomain: "test-5dbba.firebaseapp.com",
+            projectId: "test-5dbba",
+            storageBucket: "test-5dbba.appspot.com",
+            messagingSenderId: "878665537417",
+            appId: "1:878665537417:web:xxxxxx"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('user-info');
+        const syncStatus = document.getElementById('sync-status');
+
+        loginBtn.onclick = () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(err => alert("登入失敗：" + err.message));
+        };
+
+        logoutBtn.onclick = () => auth.signOut();
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                userInfo.textContent = `已登入：${user.email}`;
+                await loadFromCloud(user);
+            } else {
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                userInfo.textContent = '未登入 (進度僅儲存於本機)';
+                syncStatus.textContent = '';
+            }
+        });
+
+        // ==========================================
+        // 1. 內建與自訂單字庫系統
+        // ==========================================
+        let csvDatabase = [
             { word: "hello", phonetic: "/həˈloʊ/", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call). It means 'listen to me' or 'hi'." },
             { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye' (God be with you). A wish for a safe trip." },
             { word: "hi", phonetic: "/haɪ/", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'. A sound to get someone's attention." },
@@ -565,28 +685,162 @@
             { word: "welcome", phonetic: "/ˈwɛlkəm/", morphological: "welcomed, welcoming", sentence: "Welcome to our school.", etymology: "From 'wil' (wish or happy) and 'cuma' (guest)." }
         ];
         let usedCsvIndex = 0;
-
-        // 遊戲起始提供前 5 個單字放入存放區
         const storageData = [];
-        for (let i = 0; i < 5; i++) {
-            if (usedCsvIndex < csvDatabase.length) {
-                storageData.push({ ...csvDatabase[usedCsvIndex], level: 1 });
-                usedCsvIndex++;
+        const grid = new Map();
+
+        function initDefaultWords() {
+            storageData.length = 0;
+            grid.clear();
+            usedCsvIndex = 0;
+            for (let i = 0; i < 5; i++) {
+                if (usedCsvIndex < csvDatabase.length) {
+                    storageData.push({ ...csvDatabase[usedCsvIndex], level: 1 });
+                    usedCsvIndex++;
+                }
             }
         }
+        // 初次載入
+        initDefaultWords();
+
+        // --- CSV 解析器 ---
+        function parseCSVLine(text) {
+            let ret = [], inQuote = false, value = '';
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                if (inQuote) {
+                    if (char === '"') {
+                        if (text[i + 1] === '"') { value += '"'; i++; } else { inQuote = false; }
+                    } else { value += char; }
+                } else {
+                    if (char === '"') { inQuote = true; }
+                    else if (char === ',') { ret.push(value.trim()); value = ''; }
+                    else { value += char; }
+                }
+            }
+            ret.push(value.trim());
+            return ret;
+        }
+
+        const csvUpload = document.getElementById('csvUpload');
+        let pendingCSVText = '';
+        csvUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('csv-filename').textContent = `已選取: ${file.name}`;
+                const reader = new FileReader();
+                reader.onload = (evt) => { pendingCSVText = evt.target.result; };
+                reader.readAsText(file);
+            }
+        });
+
+        document.getElementById('importCsvBtn').addEventListener('click', () => {
+            if (!pendingCSVText) return showToast('請先選擇 CSV 檔案');
+
+            const lines = pendingCSVText.split(/\r?\n/).filter(l => l.trim() !== '');
+            if (lines.length < 2) return showToast('CSV 格式錯誤或無資料');
+
+            const newCsvData = [];
+            for (let i = 1; i < lines.length; i++) {
+                const cols = parseCSVLine(lines[i]);
+                if (cols.length >= 8) {
+                    newCsvData.push({
+                        word: cols[0], phonetic: cols[1], morphological: cols[6],
+                        sentence: cols[7], etymology: cols[8], level: 1
+                    });
+                }
+            }
+
+            if (newCsvData.length > 0) {
+                csvDatabase = newCsvData;
+                initDefaultWords();
+                saveToCloud();
+                updateStorageUI();
+                drawCanvas();
+                showToast('單字庫匯入成功！已重置進度。');
+            } else {
+                showToast('無法解析有效單字');
+            }
+        });
 
         // ==========================================
-        // 1. 全域狀態與代幣系統
+        // 2. 雲端同步與代幣系統
         // ==========================================
         let currentTokens = parseInt(localStorage.getItem('appTokens')) || 100;
         const globalTokenCount = document.getElementById('global-token-count');
         const toast = document.getElementById('toast');
+
+        // 將遊戲狀態匯出為 JSON 結構
+        function exportGameData() {
+            const gridArray = [];
+            for (let [key, item] of grid.entries()) {
+                const [q, r] = key.split(',').map(Number);
+                gridArray.push({ ...item, q, r });
+            }
+            return {
+                tokens: currentTokens,
+                grid: gridArray,
+                storage: storageData,
+                csvDatabase: csvDatabase,
+                usedCsvIndex: usedCsvIndex
+            };
+        }
+
+        // 載入遊戲狀態
+        function importGameData(data) {
+            if (data.tokens !== undefined) currentTokens = data.tokens;
+            if (data.csvDatabase) csvDatabase = data.csvDatabase;
+            if (data.usedCsvIndex !== undefined) usedCsvIndex = data.usedCsvIndex;
+
+            storageData.length = 0;
+            if (data.storage) data.storage.forEach(item => storageData.push(item));
+
+            grid.clear();
+            if (data.grid) {
+                data.grid.forEach(item => {
+                    grid.set(`${item.q},${item.r}`, item);
+                });
+            }
+
+            globalTokenCount.textContent = currentTokens;
+            renderGrammarRules();
+            updateStorageUI();
+            drawCanvas();
+        }
+
+        async function saveToCloud() {
+            if (!auth.currentUser) return;
+            try {
+                const data = exportGameData();
+                await db.collection('users').doc(auth.currentUser.uid).collection('hexagonApp').doc('saveData').set(data);
+                syncStatus.textContent = `最後同步時間: ${new Date().toLocaleTimeString()}`;
+            } catch (e) {
+                console.error("Sync error:", e);
+                syncStatus.textContent = "同步失敗，請檢查網路";
+            }
+        }
+
+        async function loadFromCloud(user) {
+            try {
+                const doc = await db.collection('users').doc(user.uid).collection('hexagonApp').doc('saveData').get();
+                if (doc.exists) {
+                    importGameData(doc.data());
+                    showToast("✅ 已從雲端載入進度");
+                    syncStatus.textContent = `最後同步時間: ${new Date().toLocaleTimeString()}`;
+                } else {
+                    saveToCloud(); // 初次登入建立初始存檔
+                }
+            } catch (e) {
+                console.error("Load error:", e);
+            }
+        }
 
         function updateTokens(amount) {
             currentTokens += amount;
             localStorage.setItem('appTokens', currentTokens);
             globalTokenCount.textContent = currentTokens;
             renderGrammarRules();
+            saveToCloud(); // 代幣更動自動同步
+
             const display = document.getElementById('global-token-display');
             display.style.transform = 'scale(1.1)';
             setTimeout(() => display.style.transform = 'scale(1)', 150);
@@ -600,11 +854,9 @@
         globalTokenCount.textContent = currentTokens;
 
         // ==========================================
-        // 2. 六角形 Canvas 與地圖邏輯 (字體自適應)
+        // 3. 六角形 Canvas 與地圖邏輯
         // ==========================================
-        const grid = new Map();
         const HEX_SIZE = 65;
-
         let camera = { x: 0, y: 0, zoom: 1 };
         const sqrt3 = Math.sqrt(3);
 
@@ -817,9 +1069,7 @@
             ctx.restore();
         }
 
-        // ==========================================
-        // 修正：觸控與滑鼠防呆機制 (Ghost Click & Drag Sensitivity)
-        // ==========================================
+        // 觸控與滑鼠防呆機制
         let isDragging = false, dragMoved = false, initialPinchDist = null, initialZoom = 1;
         let startPos = { x: 0, y: 0 };
         let lastPos = { x: 0, y: 0 };
@@ -829,7 +1079,7 @@
         }
 
         canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // 防止手機預設行為及幽靈點擊
+            e.preventDefault();
             if (e.touches.length === 1) {
                 isDragging = true; dragMoved = false;
                 startPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -843,12 +1093,9 @@
             e.preventDefault();
             if (isDragging && e.touches.length === 1) {
                 const dx = e.touches[0].clientX - lastPos.x, dy = e.touches[0].clientY - lastPos.y;
-
-                // 改以起始點計算絕對距離，避免緩慢滑動被當作點擊
                 if (Math.abs(e.touches[0].clientX - startPos.x) > 5 || Math.abs(e.touches[0].clientY - startPos.y) > 5) {
                     dragMoved = true;
                 }
-
                 camera.x += dx; camera.y += dy;
                 lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
                 drawCanvas();
@@ -859,14 +1106,13 @@
         }, { passive: false });
 
         canvas.addEventListener('touchend', (e) => {
-            e.preventDefault(); // 再次防止幽靈點擊 (Ghost Click)
+            e.preventDefault();
             if (isDragging && !dragMoved && e.changedTouches.length === 1) {
                 handleCanvasClick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
             }
             isDragging = false; initialPinchDist = null;
         });
 
-        // 保留給電腦滑鼠測試用
         canvas.addEventListener('mousedown', (e) => {
             isDragging = true; dragMoved = false;
             startPos = { x: e.clientX, y: e.clientY };
@@ -901,10 +1147,11 @@
                 grid.set(key, storageData.shift());
             }
             updateStorageUI(); drawCanvas();
+            saveToCloud(); // 放置動作完成自動存檔
         }
 
         // ==========================================
-        // 3. Play 練習系統 (輪替與語音辨識)
+        // 4. Play 練習系統 (輪替與語音辨識)
         // ==========================================
         let practiceQueue = [];
         let currentPracticeIndex = 0;
@@ -935,14 +1182,12 @@
 
             practiceQueue = [];
 
-            // 1. 挑選地圖上的升級單字 (符合規則的高等級單字：無數量上限)
             const mapKeys = Array.from(grid.entries()).filter(([_, item]) => item.level < 5).map(([k, _]) => k);
             for (let i = 0; i < mapKeys.length; i++) {
                 const key = mapKeys[i];
                 practiceQueue.push({ ...grid.get(key), source: 'map', key: key, attempts: 0, successes: 0 });
             }
 
-            // 2. 挑選新單字：名單上的前 5 個 Lv0 單字 (受限於存放區剩餘空位防爆)
             const availableSlots = 5 - storageData.length;
             const neededNewWords = Math.min(5, availableSlots);
 
@@ -1077,7 +1322,7 @@
                         mapItem.level += 1;
                         grid.set(item.key, mapItem);
                     } else if (item.source === 'csv') {
-                        storageData.push({ word: item.word, level: item.level });
+                        storageData.push({ word: item.word, level: item.level, phonetic: item.phonetic, morphological: item.morphological, sentence: item.sentence, etymology: item.etymology });
                     }
                 }
             });
@@ -1088,10 +1333,11 @@
             updateStorageUI();
             drawCanvas();
             showToast(`練習結束！共 ${passedCount} 題過關，獲得 ${tokensEarned} 代幣`);
+            saveToCloud(); // 練習結束自動存檔
         }
 
         // ==========================================
-        // 4. 文法頁面與導航邏輯
+        // 5. 文法頁面與導航邏輯
         // ==========================================
         const UNLOCK_COST = 10;
         const rulesA1 = [
