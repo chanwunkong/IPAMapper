@@ -30,8 +30,7 @@
             -webkit-user-select: none;
         }
 
-        body,
-        html {
+        body, html {
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -47,21 +46,47 @@
             position: relative;
         }
 
-        #global-token-display {
+        #top-right-controls {
             position: absolute;
             top: 12px;
             right: 15px;
             z-index: 100;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 10px;
+        }
+
+        #checkin-display {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff3b30;
+            background: rgba(255, 230, 230, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 204, 204, 0.8);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #checkin-display:active { transform: scale(0.95); }
+
+        #global-token-display {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             font-size: 14px;
             font-weight: bold;
             color: #d6a200;
-            background: #fff9e6;
+            background: rgba(255, 249, 230, 0.95);
+            backdrop-filter: blur(5px);
             padding: 6px 12px;
             border-radius: 20px;
-            border: 1px solid #ffe699;
+            border: 1px solid rgba(255, 230, 153, 0.8);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s;
         }
@@ -82,11 +107,8 @@
             left: 0;
         }
 
-        .view.active {
-            display: flex;
-        }
+        .view.active { display: flex; }
 
-        /* --- 單字頁面 --- */
         #storage-area {
             height: 60px;
             background: rgba(255, 255, 255, 0.9);
@@ -146,430 +168,160 @@
             cursor: pointer;
         }
 
-        #play-btn:active {
-            transform: scale(0.95);
-        }
+        #play-btn:active { transform: scale(0.95); }
 
-        /* --- 練習面板 (Practice Modal) --- */
         #practice-modal {
             display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
-            z-index: 200;
-            flex-direction: column;
-            padding: 20px;
-            overflow-y: auto;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 200;
+            flex-direction: column; padding: 20px; overflow-y: auto;
         }
 
-        #practice-modal.active {
-            display: flex;
-        }
+        #practice-modal.active { display: flex; }
 
         .practice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-top: env(safe-area-inset-top);
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-top: env(safe-area-inset-top);
         }
 
-        .practice-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--text-secondary);
-        }
+        .practice-title { font-size: 18px; font-weight: bold; color: var(--text-secondary); }
 
         .speed-btn {
-            padding: 6px 12px;
-            border-radius: 15px;
-            background: #e5e5ea;
-            border: none;
-            font-weight: bold;
-            color: var(--text-main);
-            cursor: pointer;
+            padding: 6px 12px; border-radius: 15px; background: #e5e5ea; border: none;
+            font-weight: bold; color: var(--text-main); cursor: pointer;
         }
 
         .word-display {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            background: var(--card-bg); border-radius: 16px; padding: 24px;
+            text-align: center; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); margin-bottom: 20px;
+            transition: background-color 0.3s;
         }
 
-        .word-text {
-            font-size: 36px;
-            font-weight: bold;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-
-        .word-phonetic {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
+        .word-text { font-size: 36px; font-weight: bold; color: var(--text-main); margin-bottom: 8px; }
+        .word-phonetic { font-size: 16px; color: var(--text-secondary); margin-bottom: 16px; }
 
         .info-section {
-            text-align: left;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #e5e5ea;
-            user-select: text;
-            -webkit-user-select: text;
+            text-align: left; margin-top: 16px; padding-top: 16px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            user-select: text; -webkit-user-select: text;
         }
 
-        .info-label {
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
+        .info-label { font-size: 12px; font-weight: bold; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+        .info-content { font-size: 14px; color: var(--text-main); margin-bottom: 12px; line-height: 1.4; }
 
-        .info-content {
-            font-size: 14px;
-            color: var(--text-main);
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
-
-        /* --- 底部操作區與語音按鈕 --- */
         .action-area {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            padding-bottom: env(safe-area-inset-bottom);
+            margin-top: auto; display: flex; flex-direction: column; align-items: center;
+            gap: 15px; padding-bottom: env(safe-area-inset-bottom);
         }
 
-        .tts-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 5px;
-        }
+        .tts-group { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 5px; }
+        .tts-btn { background: rgba(0,0,0,0.05); color: var(--text-main); border: none; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
 
-        .tts-btn {
-            background: #e5e5ea;
-            color: var(--text-main);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .mic-skip-group {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        .mic-skip-group { display: flex; align-items: center; gap: 20px; }
 
         #mic-btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s;
+            background-color: var(--accent-color); color: white; border: none; border-radius: 50%;
+            width: 70px; height: 70px; font-size: 16px; font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s;
         }
 
         #mic-btn.listening {
-            background-color: #ff3b30;
-            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+            background-color: #ff3b30; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
             animation: pulse 1.5s infinite;
         }
 
         #skip-btn {
-            background-color: #f2f2f7;
-            color: #ff3b30;
-            border: none;
-            border-radius: 20px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            background-color: #f2f2f7; color: #ff3b30; border: none; border-radius: 20px;
+            padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-            }
+        @keyframes pulse { 0% { transform: scale(0.95); } 50% { transform: scale(1.05); } 100% { transform: scale(0.95); } }
 
-            50% {
-                transform: scale(1.05);
-            }
-
-            100% {
-                transform: scale(0.95);
-            }
-        }
-
-        #recognition-feedback {
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            height: 24px;
-            transition: color 0.2s;
-        }
-
-        .feedback-correct {
-            color: #34c759 !important;
-        }
-
-        .feedback-wrong {
-            color: #ff3b30 !important;
-        }
+        #recognition-feedback { font-size: 16px; font-weight: bold; text-align: center; height: 24px; transition: color 0.2s; }
+        .feedback-correct { color: #34c759 !important; }
+        .feedback-wrong { color: #ff3b30 !important; }
 
         #next-word-btn {
-            background-color: #333333;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 12px 40px;
-            font-size: 16px;
-            font-weight: bold;
-            display: none;
-            cursor: pointer;
+            background-color: #333333; color: white; border: none; border-radius: 20px;
+            padding: 12px 40px; font-size: 16px; font-weight: bold; display: none; cursor: pointer;
         }
 
-        /* --- 文法頁面 --- */
+        #calendar-modal {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 300; justify-content: center; align-items: center;
+        }
+        #calendar-modal.active { display: flex; }
+        .calendar-content { background: var(--card-bg); width: 300px; border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .calendar-header { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; font-size: 18px; }
+        .close-cal { cursor: pointer; color: var(--text-secondary); font-size: 20px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .cal-day-label { font-size: 12px; color: var(--text-secondary); font-weight: bold; margin-bottom: 5px; }
+        .cal-day { 
+            padding: 5px 0; border-radius: 50%; width: 32px; height: 32px; 
+            line-height: 22px; margin: 0 auto; font-size: 14px; 
+            display: flex; justify-content: center; align-items: center;
+        }
+        .cal-day.checked { background: #34c759; color: white; font-weight: bold; }
+        .cal-day.today { border: 2px solid #007aff; }
+
         .page-header {
-            height: 60px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            border-bottom: 1px solid var(--locked-color);
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--text-main);
-            z-index: 10;
+            height: 60px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--locked-color);
+            font-size: 18px; font-weight: bold; color: var(--text-main); z-index: 10;
         }
 
-        #grammar-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background-color: var(--bg-color);
-        }
+        #grammar-content { flex: 1; overflow-y: auto; padding: 20px; background-color: var(--bg-color); }
+        .section-title { font-size: 14px; color: var(--text-secondary); margin-bottom: 15px; letter-spacing: 1px; }
+        .rule-list { display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
+        .rule-card { background: var(--card-bg); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+        .rule-info { display: flex; flex-direction: column; gap: 4px; }
+        .rule-id { font-size: 12px; color: var(--text-secondary); font-family: monospace; }
+        .rule-name { font-size: 16px; font-weight: bold; color: var(--text-main); }
+        .rule-card.locked .rule-name { color: var(--text-secondary); }
 
-        .section-title {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-        }
+        .action-btn { padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: bold; border: none; cursor: pointer; }
+        .btn-unlock { background-color: var(--accent-color); color: white; }
+        .btn-view { background-color: #f2f2f7; color: var(--accent-color); }
+        .btn-disabled { background-color: var(--locked-color); color: white; cursor: not-allowed; }
+        .btn-delete { background-color: #ff3b30; color: white; padding: 6px 12px; font-size: 12px; }
 
-        .rule-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding-bottom: 20px;
-        }
+        .settings-container { padding: 20px; background: var(--bg-color); flex: 1; overflow-y: auto; padding-bottom: 100px; }
+        .settings-card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+        .settings-title { font-size: 16px; font-weight: bold; color: var(--text-main); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e5e5ea; }
+        .settings-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
 
-        .rule-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
+        .dataset-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f2f2f7; border-radius: 8px; margin-bottom: 8px; }
+        .dataset-item label { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; color: var(--text-main); cursor: pointer; flex: 1; }
 
-        .rule-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .rule-id {
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-family: monospace;
-        }
-
-        .rule-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-
-        .rule-card.locked .rule-name {
-            color: var(--text-secondary);
-        }
-
-        .action-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-unlock {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .btn-view {
-            background-color: #f2f2f7;
-            color: var(--accent-color);
-        }
-
-        .btn-disabled {
-            background-color: var(--locked-color);
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .btn-delete {
-            background-color: #ff3b30;
-            color: white;
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-        /* --- 設定頁面 (Settings) --- */
-        .settings-container {
-            padding: 20px;
-            background: var(--bg-color);
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 100px;
-        }
-
-        .settings-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .settings-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--text-main);
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e5e5ea;
-        }
-
-        .settings-row {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .dataset-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: #f2f2f7;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-
-        .dataset-item label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text-main);
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-        }
-
-        .file-input-wrapper input[type=file] {
-            font-size: 100px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .file-input-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
 
         #bottom-nav {
-            height: 80px;
-            background: var(--nav-bg);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #e5e5ea;
-            padding-bottom: env(safe-area-inset-bottom);
-            z-index: 100;
+            height: 80px; background: var(--nav-bg); display: flex; justify-content: space-around;
+            align-items: center; border-top: 1px solid #e5e5ea; padding-bottom: env(safe-area-inset-bottom); z-index: 100;
         }
-
-        .nav-tab {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            font-size: 16px;
-            color: #8e8e93;
-            cursor: pointer;
-        }
-
-        .nav-tab.active {
-            color: var(--hex-active);
-            font-weight: bold;
-        }
+        .nav-tab { flex: 1; display: flex; justify-content: center; align-items: center; height: 100%; font-size: 16px; color: #8e8e93; cursor: pointer; }
+        .nav-tab.active { color: var(--hex-active); font-weight: bold; }
 
         #toast {
-            position: absolute;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 300;
+            position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7); color: white; padding: 8px 16px; border-radius: 20px;
+            font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 300;
         }
     </style>
 </head>
 
 <body>
     <div id="app">
-        <div id="global-token-display">
-            <span>代幣</span>
-            <span id="global-token-count">0</span>
+        <div id="top-right-controls">
+            <div id="checkin-display" onclick="openCalendarModal()">
+                <span>🔥 打卡</span>
+                <span id="streak-count">0</span>
+            </div>
+            <div id="global-token-display">
+                <span>代幣</span>
+                <span id="global-token-count">0</span>
+            </div>
         </div>
 
         <div id="main-content">
@@ -587,11 +339,13 @@
                     <button class="speed-btn" id="speed-toggle" onclick="toggleSpeed()">語速: 正常</button>
                 </div>
 
-                <div class="word-display">
+                <div class="word-display" id="practice-word-card">
                     <div class="word-text" id="p-word"></div>
                     <div class="word-phonetic" id="p-phonetic"></div>
 
                     <div class="info-section">
+                        <div class="info-label">詞性 (POS)</div>
+                        <div class="info-content" id="p-pos"></div>
                         <div class="info-label">詞形變化</div>
                         <div class="info-content" id="p-morph"></div>
                         <div class="info-label">A1 例句</div>
@@ -619,6 +373,16 @@
                 </div>
             </div>
 
+            <div id="calendar-modal">
+                <div class="calendar-content">
+                    <div class="calendar-header">
+                        <span id="calendar-month">2026年 6月</span>
+                        <span class="close-cal" onclick="closeCalendarModal()">×</span>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid"></div>
+                </div>
+            </div>
+
             <div id="view-grammar" class="view">
                 <div class="page-header">文法 (WALS)</div>
                 <div id="grammar-content">
@@ -630,42 +394,35 @@
             <div id="view-settings" class="view">
                 <div class="page-header">設定 (Settings)</div>
                 <div class="settings-container">
-
                     <div class="settings-card">
                         <div class="settings-title">帳號與雲端同步</div>
                         <div class="settings-row">
                             <button id="loginBtn" class="action-btn btn-unlock">使用 Google 登入</button>
                             <button id="logoutBtn" class="action-btn btn-disabled" style="display:none;">登出</button>
-                            <div id="user-info" style="font-size:14px; color:var(--text-secondary); margin-top:8px;">未登入
-                                (進度僅儲存於本機)</div>
-                            <div id="sync-status" style="font-size:12px; color:var(--accent-color); margin-top:4px;">
-                            </div>
+                            <div id="user-info" style="font-size:14px; color:var(--text-secondary); margin-top:8px;">未登入 (進度僅儲存於本機)</div>
+                            <div id="sync-status" style="font-size:12px; color:var(--accent-color); margin-top:4px;"></div>
                         </div>
                     </div>
 
                     <div class="settings-card">
                         <div class="settings-title">我的單字庫 (Datasets)</div>
-                        <div class="settings-row" id="dataset-list">
-                        </div>
+                        <div class="settings-row" id="dataset-list"></div>
                     </div>
 
                     <div class="settings-card">
                         <div class="settings-title">新增單字庫 (匯入 CSV)</div>
                         <div class="settings-row">
                             <div style="font-size:14px; color:var(--text-secondary); line-height:1.4;">
-                                CSV 格式需包含：Word, Phonetic, Morphological, Sentence,
-                                Etymology。匯入後將成為獨立單字庫供抽取練習，不影響目前地圖上的字。
+                                CSV 格式需包含：Word, Phonetic, POS, Morphological, Sentence, Etymology。
                             </div>
                             <div class="file-input-wrapper">
                                 <button class="action-btn btn-view" style="width:100%;">選擇 CSV 檔案</button>
                                 <input type="file" id="csvUpload" accept=".csv">
                             </div>
                             <div id="csv-filename" style="font-size:14px; color:var(--text-main);">尚未選擇檔案</div>
-                            <button id="importCsvBtn" class="action-btn btn-unlock"
-                                style="margin-top:10px;">上傳並匯入</button>
+                            <button id="importCsvBtn" class="action-btn btn-unlock" style="margin-top:10px;">上傳並匯入</button>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -680,17 +437,13 @@
     </div>
 
     <script>
-        // ==========================================
-        // 0. Firebase 初始化與登入系統 
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyAI5lx2XT3ysBhTREBW637s_AlWC49LYJQ",
             authDomain: "test-5dbba.firebaseapp.com",
             projectId: "test-5dbba",
             storageBucket: "test-5dbba.firebasestorage.app",
             messagingSenderId: "878665537417",
-            appId: "1:878665537417:web:0c5b32f6a01ff9df803358",
-            measurementId: "G-NFM5EEWYHP"
+            appId: "1:878665537417:web:0c5b32f6a01ff9df803358"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -705,7 +458,6 @@
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).catch(err => alert("登入失敗：" + err.message));
         };
-
         logoutBtn.onclick = () => auth.signOut();
 
         auth.onAuthStateChanged(async (user) => {
@@ -722,24 +474,33 @@
             }
         });
 
-        // ==========================================
-        // 1. 單字庫架構分離 (Datasets vs Game State)
-        // ==========================================
         const defaultWords = [
-            { word: "hello", phonetic: "/həˈloʊ/", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call)." },
-            { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye'." },
-            { word: "hi", phonetic: "/haɪ/", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'." },
-            { word: "bye", phonetic: "/baɪ/", morphological: "None", sentence: "Bye, have a good day.", etymology: "A short form of 'goodbye'." },
-            { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning'." },
-            { word: "please", phonetic: "/pliːz/", morphological: "None", sentence: "Please sit down.", etymology: "Short for 'if it please you'." }
+            { word: "hello", phonetic: "/həˈloʊ/", pos: "Interjection", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call)." },
+            { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", pos: "Interjection", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye'." },
+            { word: "hi", phonetic: "/haɪ/", pos: "Interjection", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'." },
+            { word: "bye", phonetic: "/baɪ/", pos: "Interjection", morphological: "None", sentence: "Bye, have a good day.", etymology: "A short form of 'goodbye'." },
+            { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", pos: "Phrase", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning'." },
+            { word: "please", phonetic: "/pliːz/", pos: "Adverb", morphological: "None", sentence: "Please sit down.", etymology: "Short for 'if it please you'." }
         ];
 
         let datasets = [];
         let activeDatasetId = '';
         let usedIndices = {};
+        let checkInHistory = [];
 
         const storageData = [];
         const grid = new Map();
+
+        function getPosColor(posString) {
+            if (!posString) return '#f2f2f2'; 
+            const lower = posString.toLowerCase();
+            if (lower.includes('verb') && !lower.includes('adverb')) return '#ffe6e6'; 
+            if (lower.includes('adverb') || lower.includes('phrase')) return '#ffecd9';
+            if (lower.includes('noun')) return '#e6f2ff';
+            if (lower.includes('adj')) return '#e6ffe6';
+            if (lower.includes('interjection') || lower.includes('particle')) return '#ffffe6';
+            return '#f2f2f2'; 
+        }
 
         function initDatasets() {
             if (datasets.length === 0) {
@@ -750,12 +511,17 @@
 
                 for (let i = 0; i < 5; i++) {
                     if (usedIndices['default'] < defaultDs.words.length) {
-                        storageData.push({ ...defaultDs.words[usedIndices['default']], level: 1 });
+                        storageData.push({ 
+                            ...defaultDs.words[usedIndices['default']], 
+                            level: 1, 
+                            levelUpdatedAt: Date.now() 
+                        });
                         usedIndices['default']++;
                     }
                 }
             }
             renderDatasets();
+            updateStreakUI();
         }
 
         function getActiveDataset() {
@@ -789,15 +555,12 @@
         }
 
         window.deleteDataset = function (id) {
-            if (confirm('確定要刪除此單字庫嗎？地圖上現有的單字不會受影響。')) {
+            if (confirm('確定要刪除此單字庫嗎？地圖上的單字不受影響。')) {
                 datasets = datasets.filter(d => d.id !== id);
                 delete usedIndices[id];
-                if (activeDatasetId === id) {
-                    activeDatasetId = 'default';
-                }
+                if (activeDatasetId === id) activeDatasetId = 'default';
                 saveToCloud();
                 renderDatasets();
-                showToast('單字庫已刪除');
             }
         }
 
@@ -837,16 +600,17 @@
             if (!pendingCSVText) return showToast('請先選擇 CSV 檔案');
 
             const lines = pendingCSVText.split(/\r?\n/).filter(l => l.trim() !== '');
-            if (lines.length < 2) return showToast('CSV 格式錯誤或無資料');
+            if (lines.length < 2) return showToast('CSV 格式錯誤');
 
             const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
             const wordIdx = headers.findIndex(h => h === 'word');
             const phoneticIdx = headers.findIndex(h => h === 'phonetic');
+            const posIdx = headers.findIndex(h => h.includes('pos') || h.includes('lexical'));
             const morphIdx = headers.findIndex(h => h.includes('morphological'));
             const sentIdx = headers.findIndex(h => h.includes('sentence'));
             const etymIdx = headers.findIndex(h => h.includes('etymology'));
 
-            if (wordIdx === -1) return showToast('CSV 標題列必須包含 Word 欄位');
+            if (wordIdx === -1) return showToast('缺少 Word 欄位');
 
             const newWords = [];
             for (let i = 1; i < lines.length; i++) {
@@ -855,6 +619,7 @@
                     newWords.push({
                         word: cols[wordIdx],
                         phonetic: phoneticIdx !== -1 ? cols[phoneticIdx] : '',
+                        pos: posIdx !== -1 ? cols[posIdx] : 'Other',
                         morphological: morphIdx !== -1 ? cols[morphIdx] : '',
                         sentence: sentIdx !== -1 ? cols[sentIdx] : '',
                         etymology: etymIdx !== -1 ? cols[etymIdx] : ''
@@ -864,31 +629,18 @@
 
             if (newWords.length > 0) {
                 const dsId = 'ds_' + Date.now();
-                datasets.push({
-                    id: dsId,
-                    name: pendingFileName,
-                    words: newWords
-                });
-
+                datasets.push({ id: dsId, name: pendingFileName, words: newWords });
                 activeDatasetId = dsId;
                 usedIndices[dsId] = 0;
 
                 saveToCloud();
                 renderDatasets();
-
-                pendingCSVText = '';
-                csvUpload.value = '';
+                pendingCSVText = ''; csvUpload.value = '';
                 document.getElementById('csv-filename').textContent = '尚未選擇檔案';
-
-                showToast(`成功匯入 ${newWords.length} 個單字！已切換為目前題庫。`);
-            } else {
-                showToast('無法解析有效單字');
+                showToast(`成功匯入 ${newWords.length} 個單字！`);
             }
         });
 
-        // ==========================================
-        // 2. 雲端同步與代幣系統
-        // ==========================================
         let currentTokens = parseInt(localStorage.getItem('appTokens')) || 100;
         const globalTokenCount = document.getElementById('global-token-count');
         const toast = document.getElementById('toast');
@@ -905,21 +657,17 @@
                 storage: storageData,
                 datasets: datasets,
                 activeDatasetId: activeDatasetId,
-                usedIndices: usedIndices
+                usedIndices: usedIndices,
+                checkInHistory: checkInHistory
             };
         }
 
         function importGameData(data) {
             if (data.tokens !== undefined) currentTokens = data.tokens;
-
-            if (data.datasets && data.datasets.length > 0) {
-                datasets = data.datasets;
-            } else {
-                datasets = [];
-            }
-
+            datasets = (data.datasets && data.datasets.length > 0) ? data.datasets : [];
             if (data.activeDatasetId) activeDatasetId = data.activeDatasetId;
             if (data.usedIndices) usedIndices = data.usedIndices;
+            checkInHistory = data.checkInHistory || [];
 
             storageData.length = 0;
             if (data.storage) data.storage.forEach(item => storageData.push(item));
@@ -933,14 +681,14 @@
             globalTokenCount.textContent = currentTokens;
             renderGrammarRules();
             updateStorageUI();
+            updateStreakUI();
             drawCanvas();
         }
 
         async function saveToCloud() {
             if (!auth.currentUser) return;
             try {
-                const data = exportGameData();
-                await db.collection('users').doc(auth.currentUser.uid).collection('hexagonApp').doc('saveData').set(data);
+                await db.collection('users').doc(auth.currentUser.uid).collection('hexagonApp').doc('saveData').set(exportGameData());
                 syncStatus.textContent = `最後同步時間: ${new Date().toLocaleTimeString()}`;
             } catch (e) {
                 console.error("Sync error:", e);
@@ -953,16 +701,13 @@
                 const doc = await db.collection('users').doc(user.uid).collection('hexagonApp').doc('saveData').get();
                 if (doc.exists) {
                     importGameData(doc.data());
-                    showToast("✅ 已從雲端載入進度");
+                    showToast("已從雲端載入進度");
                     syncStatus.textContent = `最後同步時間: ${new Date().toLocaleTimeString()}`;
                 } else {
                     initDatasets();
                     saveToCloud();
                 }
-            } catch (e) {
-                console.error("Load error:", e);
-                initDatasets();
-            }
+            } catch (e) { console.error("Load error:", e); initDatasets(); }
         }
 
         function updateTokens(amount) {
@@ -971,49 +716,110 @@
             globalTokenCount.textContent = currentTokens;
             renderGrammarRules();
             saveToCloud();
-
-            const display = document.getElementById('global-token-display');
-            display.style.transform = 'scale(1.1)';
-            setTimeout(() => display.style.transform = 'scale(1)', 150);
         }
 
         function showToast(msg) {
-            toast.textContent = msg;
-            toast.style.opacity = '1';
+            toast.textContent = msg; toast.style.opacity = '1';
             setTimeout(() => { toast.style.opacity = '0'; }, 1500);
         }
 
-        globalTokenCount.textContent = currentTokens;
+        function updateStreakUI() {
+            if (!checkInHistory) checkInHistory = [];
+            let streak = 0;
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            let d = new Date();
+            
+            if (checkInHistory.includes(todayStr)) {
+                streak = 1; d.setDate(d.getDate() - 1);
+            } else {
+                d.setDate(d.getDate() - 1);
+                if (!checkInHistory.includes(d.toLocaleDateString('en-CA'))) {
+                    document.getElementById('streak-count').textContent = 0;
+                    return;
+                }
+            }
 
-        if (!auth.currentUser) {
-            initDatasets();
+            while (true) {
+                const dateStr = d.toLocaleDateString('en-CA');
+                if (checkInHistory.includes(dateStr)) {
+                    streak++; d.setDate(d.getDate() - 1);
+                } else { break; }
+            }
+            document.getElementById('streak-count').textContent = streak;
         }
 
-        // ==========================================
-        // 3. 六角形 Canvas 與地圖邏輯 
-        // ==========================================
+        function recordCheckIn() {
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            if (!checkInHistory.includes(todayStr)) {
+                checkInHistory.push(todayStr);
+                checkInHistory.sort();
+                updateStreakUI();
+                saveToCloud();
+            }
+        }
+
+        function openCalendarModal() {
+            document.getElementById('calendar-modal').classList.add('active');
+            renderCalendar();
+        }
+
+        function closeCalendarModal() {
+            document.getElementById('calendar-modal').classList.remove('active');
+        }
+
+        function renderCalendar() {
+            const calGrid = document.getElementById('calendar-grid');
+            const calMonth = document.getElementById('calendar-month');
+            calGrid.innerHTML = '';
+            
+            const now = new Date();
+            calMonth.textContent = now.getFullYear() + '年 ' + (now.getMonth() + 1) + '月';
+            
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const todayStr = now.toLocaleDateString('en-CA');
+            
+            const days = ['日','一','二','三','四','五','六'];
+            days.forEach(d => {
+                let el = document.createElement('div');
+                el.className = 'cal-day-label'; el.textContent = d;
+                calGrid.appendChild(el);
+            });
+
+            for(let i=0; i<firstDay; i++) { calGrid.appendChild(document.createElement('div')); }
+
+            for(let i=1; i<=daysInMonth; i++) {
+                let d = new Date(now.getFullYear(), now.getMonth(), i);
+                let dStr = d.toLocaleDateString('en-CA');
+                
+                let el = document.createElement('div');
+                el.className = 'cal-day';
+                el.textContent = i;
+                if (checkInHistory.includes(dStr)) el.classList.add('checked');
+                if (dStr === todayStr) el.classList.add('today');
+                
+                calGrid.appendChild(el);
+            }
+        }
+
+        if (!auth.currentUser) initDatasets();
+        globalTokenCount.textContent = currentTokens;
+
         const HEX_SIZE = 65;
         let camera = { x: 0, y: 0, zoom: 1 };
         const sqrt3 = Math.sqrt(3);
 
         function axialToPixel(q, r) {
-            const x = HEX_SIZE * sqrt3 * (q + r / 2);
-            const y = HEX_SIZE * 3 / 2 * r;
-            return { x, y };
+            return { x: HEX_SIZE * sqrt3 * (q + r / 2), y: HEX_SIZE * 3 / 2 * r };
         }
 
         function pixelToAxial(px, py) {
             const q = (sqrt3 / 3 * px - 1 / 3 * py) / HEX_SIZE;
             const r = (2 / 3 * py) / HEX_SIZE;
-            return axialRound(q, r);
-        }
-
-        function axialRound(q, r) {
             const s = -q - r;
-            let rq = Math.round(q); let rr = Math.round(r); let rs = Math.round(s);
-            const qDiff = Math.abs(rq - q); const rDiff = Math.abs(rr - r); const sDiff = Math.abs(rs - s);
-            if (qDiff > rDiff && qDiff > sDiff) rq = -rr - rs;
-            else if (rDiff > sDiff) rr = -rq - rs;
+            let rq = Math.round(q), rr = Math.round(r), rs = Math.round(s);
+            const qD = Math.abs(rq - q), rD = Math.abs(rr - r), sD = Math.abs(rs - s);
+            if (qD > rD && qD > sD) rq = -rr - rs; else if (rD > sD) rr = -rq - rs;
             return { q: rq, r: rr };
         }
 
@@ -1028,9 +834,7 @@
         }
 
         function hasAdjacent(q, r) {
-            for (let dir of neighborDirs) {
-                if (grid.has(`${q + dir.q},${r + dir.r}`)) return true;
-            }
+            for (let dir of neighborDirs) if (grid.has(`${q + dir.q},${r + dir.r}`)) return true;
             return false;
         }
 
@@ -1038,18 +842,13 @@
             if (grid.size <= 1) return true;
             const targetKey = `${q},${r}`;
             let startNode = null;
-            for (let key of grid.keys()) {
-                if (key !== targetKey) { startNode = key; break; }
-            }
+            for (let key of grid.keys()) if (key !== targetKey) { startNode = key; break; }
             if (!startNode) return true;
 
-            const visited = new Set();
-            const queue = [startNode];
+            const visited = new Set(), queue = [startNode];
             visited.add(startNode);
-
             while (queue.length > 0) {
-                const current = queue.shift();
-                const [cq, cr] = current.split(',').map(Number);
+                const [cq, cr] = queue.shift().split(',').map(Number);
                 for (let dir of neighborDirs) {
                     const nKey = `${cq + dir.q},${cr + dir.r}`;
                     if (nKey !== targetKey && grid.has(nKey) && !visited.has(nKey)) {
@@ -1060,13 +859,13 @@
             return visited.size === grid.size - 1;
         }
 
-        const storageArea = document.getElementById('storage-area');
         function updateStorageUI() {
+            const storageArea = document.getElementById('storage-area');
             storageArea.innerHTML = '';
             storageData.forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'storage-item';
-                div.textContent = item.word;
+                div.className = 'storage-item'; div.textContent = item.word;
+                div.style.backgroundColor = getPosColor(item.pos);
                 storageArea.appendChild(div);
             });
         }
@@ -1077,54 +876,59 @@
 
         function resizeCanvas() {
             if (!document.getElementById('view-vocabulary').classList.contains('active')) return;
-            width = canvas.parentElement.clientWidth;
-            height = canvas.parentElement.clientHeight;
+            width = canvas.parentElement.clientWidth; height = canvas.parentElement.clientHeight;
             const dpr = window.devicePixelRatio || 1;
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
+            canvas.width = width * dpr; canvas.height = height * dpr;
             ctx.scale(dpr, dpr);
-            if (camera.x === 0 && camera.y === 0) {
-                camera.x = width / 2; camera.y = height / 2;
-            }
+            if (camera.x === 0 && camera.y === 0) { camera.x = width / 2; camera.y = height / 2; }
             drawCanvas();
         }
 
-        function drawHexBackground(x, y, radius) {
+        function drawHexPath(x, y, radius) {
             ctx.beginPath();
             for (let i = 0; i < 6; i++) {
                 const angle = (i * 60 - 30) * Math.PI / 180;
                 ctx[i === 0 ? 'moveTo' : 'lineTo'](x + radius * Math.cos(angle), y + radius * Math.sin(angle));
             }
             ctx.closePath();
-            ctx.strokeStyle = '#ebebeb'; ctx.lineWidth = 1; ctx.stroke();
         }
 
-        const contourColors = [
-            { fill: 'transparent', stroke: 'transparent' },
-            { fill: '#f0f0f0', stroke: '#c0c0c0' }, { fill: '#e0e0e0', stroke: '#a0a0a0' },
-            { fill: '#d0d0d0', stroke: '#808080' }, { fill: '#c0c0c0', stroke: '#606060' },
-            { fill: '#b0b0b0', stroke: '#404040' }
+        const contourStyles = [
+            { width: 0, stroke: 'transparent' },
+            { width: 0, stroke: 'transparent' }, 
+            { width: 2, stroke: '#b3b3b3' },     
+            { width: 3, stroke: '#808080' },     
+            { width: 4, stroke: '#4d4d4d' },     
+            { width: 5, stroke: '#d4af37' }      
         ];
 
         function drawCanvas() {
             ctx.clearRect(0, 0, width, height);
-            ctx.save();
-            ctx.translate(camera.x, camera.y);
-            ctx.scale(camera.zoom, camera.zoom);
+            ctx.save(); ctx.translate(camera.x, camera.y); ctx.scale(camera.zoom, camera.zoom);
 
             const viewRadius = Math.max(width, height) / camera.zoom / HEX_SIZE;
             const centerAxial = pixelToAxial(-camera.x / camera.zoom, -camera.y / camera.zoom);
             const range = Math.ceil(viewRadius);
 
+            ctx.strokeStyle = '#ebebeb'; ctx.lineWidth = 1;
             for (let q = centerAxial.q - range; q <= centerAxial.q + range; q++) {
                 for (let r = centerAxial.r - range; r <= centerAxial.r + range; r++) {
-                    drawHexBackground(axialToPixel(q, r).x, axialToPixel(q, r).y, HEX_SIZE);
+                    const pos = axialToPixel(q, r);
+                    drawHexPath(pos.x, pos.y, HEX_SIZE); ctx.stroke();
                 }
             }
 
-            for (let l = 1; l <= 5; l++) {
+            for (let [key, item] of grid.entries()) {
+                const [q, r] = key.split(',').map(Number);
+                const pos = axialToPixel(q, r);
+                drawHexPath(pos.x, pos.y, HEX_SIZE);
+                ctx.fillStyle = getPosColor(item.pos);
+                ctx.fill();
+            }
+
+            for (let l = 2; l <= 5; l++) {
                 let segments = [];
-                const shift_mag = (l * 5 * 2 / sqrt3) / HEX_SIZE;
+                const shift_mag = (l * 3 * 2 / sqrt3) / HEX_SIZE; 
 
                 for (let [key, item] of grid.entries()) {
                     if (item.level < l) continue;
@@ -1161,15 +965,15 @@
                         let nextIdx = unvisited.findIndex(s => ptKey(s.start) === targetKey);
                         if (nextIdx === -1) break;
                         let nextSeg = unvisited.splice(nextIdx, 1)[0];
-                        currentLoop.push(nextSeg.start);
-                        targetKey = ptKey(nextSeg.end);
+                        currentLoop.push(nextSeg.start); targetKey = ptKey(nextSeg.end);
                         if (ptKey(nextSeg.end) === ptKey(currentLoop[0])) break;
                     }
                     loops.push(currentLoop);
                 }
 
                 if (loops.length > 0) {
-                    ctx.fillStyle = contourColors[l].fill; ctx.strokeStyle = contourColors[l].stroke; ctx.lineWidth = 2;
+                    ctx.strokeStyle = contourStyles[l].stroke; 
+                    ctx.lineWidth = contourStyles[l].width;
                     ctx.beginPath();
                     for (let loop of loops) {
                         if (loop.length < 3) continue;
@@ -1182,119 +986,44 @@
                         }
                         ctx.closePath();
                     }
-                    ctx.fill('evenodd'); ctx.stroke();
+                    ctx.stroke();
                 }
             }
 
             for (let [key, item] of grid.entries()) {
                 const [q, r] = key.split(',').map(Number);
                 const pos = axialToPixel(q, r);
-                ctx.fillStyle = '#111111';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#111111'; 
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
 
-                let fontSize = 22;
+                const words = item.word.split(' ');
+                let fontSize = 20;
                 ctx.font = `bold ${fontSize}px sans-serif`;
-                const maxWidth = (HEX_SIZE * sqrt3) - 20;
-                while (ctx.measureText(item.word).width > maxWidth && fontSize > 10) {
-                    fontSize -= 1;
-                    ctx.font = `bold ${fontSize}px sans-serif`;
-                }
-                // 在 drawCanvas() 函式中，繪製文字的迴圈處 (原本的 ctx.fillText 區塊)
+                const lineHeight = fontSize + 2;
+                const totalHeight = words.length * lineHeight;
 
-                for (let [key, item] of grid.entries()) {
-                    const [q, r] = key.split(',').map(Number);
-                    const pos = axialToPixel(q, r);
-                    ctx.fillStyle = '#111111'; // 黑色文字
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-
-                    // --- 修改後的斷行與繪製邏輯 ---
-                    const words = item.word.split(' '); // 依空格拆分
-                    let fontSize = 20;
-                    ctx.font = `bold ${fontSize}px sans-serif`;
-
-                    // 計算總高度，確保多行文字整體在六角形中心
-                    const lineHeight = fontSize + 2;
-                    const totalHeight = words.length * lineHeight;
-
-                    words.forEach((line, i) => {
-                        // 動態調整：如果單字太長，稍微縮小字體
-                        if (ctx.measureText(line).width > (HEX_SIZE * sqrt3 * 0.8)) {
-                            fontSize = 16;
-                            ctx.font = `bold ${fontSize}px sans-serif`;
-                        }
-
-                        // 繪製每一行 (垂直位置置中)
-                        const yOffset = pos.y - (totalHeight / 2) + (i * lineHeight) + (lineHeight / 2);
-                        ctx.fillText(line, pos.x, yOffset);
-                    });
-                }
+                words.forEach((line, i) => {
+                    if (ctx.measureText(line).width > (HEX_SIZE * sqrt3 * 0.8)) {
+                        fontSize = 16; ctx.font = `bold ${fontSize}px sans-serif`;
+                    }
+                    const yOffset = pos.y - (totalHeight / 2) + (i * lineHeight) + (lineHeight / 2);
+                    ctx.fillText(line, pos.x, yOffset);
+                });
             }
             ctx.restore();
         }
 
         let isDragging = false, dragMoved = false, initialPinchDist = null, initialZoom = 1;
-        let startPos = { x: 0, y: 0 };
-        let lastPos = { x: 0, y: 0 };
+        let startPos = { x: 0, y: 0 }, lastPos = { x: 0, y: 0 };
 
-        function getPinchDist(e) {
-            return Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
-        }
-
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            if (e.touches.length === 1) {
-                isDragging = true; dragMoved = false;
-                startPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            } else if (e.touches.length === 2) {
-                isDragging = false; initialPinchDist = getPinchDist(e); initialZoom = camera.zoom;
-            }
-        }, { passive: false });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (isDragging && e.touches.length === 1) {
-                const dx = e.touches[0].clientX - lastPos.x, dy = e.touches[0].clientY - lastPos.y;
-                if (Math.abs(e.touches[0].clientX - startPos.x) > 5 || Math.abs(e.touches[0].clientY - startPos.y) > 5) {
-                    dragMoved = true;
-                }
-                camera.x += dx; camera.y += dy;
-                lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                drawCanvas();
-            } else if (e.touches.length === 2 && initialPinchDist) {
-                camera.zoom = Math.min(Math.max(initialZoom * (getPinchDist(e) / initialPinchDist), 0.5), 3);
-                drawCanvas();
-            }
-        }, { passive: false });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            if (isDragging && !dragMoved && e.changedTouches.length === 1) {
-                handleCanvasClick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-            }
-            isDragging = false; initialPinchDist = null;
-        });
-
-        canvas.addEventListener('mousedown', (e) => {
-            isDragging = true; dragMoved = false;
-            startPos = { x: e.clientX, y: e.clientY };
-            lastPos = { x: e.clientX, y: e.clientY };
-        });
-        canvas.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const dx = e.clientX - lastPos.x, dy = e.clientY - lastPos.y;
-            if (Math.abs(e.clientX - startPos.x) > 5 || Math.abs(e.clientY - startPos.y) > 5) dragMoved = true;
-            camera.x += dx; camera.y += dy; lastPos = { x: e.clientX, y: e.clientY }; drawCanvas();
-        });
-        canvas.addEventListener('mouseup', (e) => {
-            if (isDragging && !dragMoved) handleCanvasClick(e.clientX, e.clientY);
-            isDragging = false;
-        });
-        canvas.addEventListener('wheel', (e) => {
-            e.preventDefault(); camera.zoom = Math.min(Math.max(camera.zoom * (e.deltaY > 0 ? 0.9 : 1.1), 0.5), 3); drawCanvas();
-        }, { passive: false });
+        function getPinchDist(e) { return Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2)); }
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); if (e.touches.length === 1) { isDragging = true; dragMoved = false; startPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; } else if (e.touches.length === 2) { isDragging = false; initialPinchDist = getPinchDist(e); initialZoom = camera.zoom; } }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDragging && e.touches.length === 1) { const dx = e.touches[0].clientX - lastPos.x, dy = e.touches[0].clientY - lastPos.y; if (Math.abs(e.touches[0].clientX - startPos.x) > 5 || Math.abs(e.touches[0].clientY - startPos.y) > 5) dragMoved = true; camera.x += dx; camera.y += dy; lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; drawCanvas(); } else if (e.touches.length === 2 && initialPinchDist) { camera.zoom = Math.min(Math.max(initialZoom * (getPinchDist(e) / initialPinchDist), 0.5), 3); drawCanvas(); } }, { passive: false });
+        canvas.addEventListener('touchend', (e) => { e.preventDefault(); if (isDragging && !dragMoved && e.changedTouches.length === 1) handleCanvasClick(e.changedTouches[0].clientX, e.changedTouches[0].clientY); isDragging = false; initialPinchDist = null; });
+        canvas.addEventListener('mousedown', (e) => { isDragging = true; dragMoved = false; startPos = { x: e.clientX, y: e.clientY }; lastPos = { x: e.clientX, y: e.clientY }; });
+        canvas.addEventListener('mousemove', (e) => { if (!isDragging) return; const dx = e.clientX - lastPos.x, dy = e.clientY - lastPos.y; if (Math.abs(e.clientX - startPos.x) > 5 || Math.abs(e.clientY - startPos.y) > 5) dragMoved = true; camera.x += dx; camera.y += dy; lastPos = { x: e.clientX, y: e.clientY }; drawCanvas(); });
+        canvas.addEventListener('mouseup', (e) => { if (isDragging && !dragMoved) handleCanvasClick(e.clientX, e.clientY); isDragging = false; });
+        canvas.addEventListener('wheel', (e) => { e.preventDefault(); camera.zoom = Math.min(Math.max(camera.zoom * (e.deltaY > 0 ? 0.9 : 1.1), 0.5), 3); drawCanvas(); }, { passive: false });
 
         function handleCanvasClick(clientX, clientY) {
             const rect = canvas.getBoundingClientRect();
@@ -1308,15 +1037,13 @@
             } else {
                 if (storageData.length === 0) return showToast('無可用單字');
                 if (grid.size > 0 && !hasAdjacent(axial.q, axial.r)) return showToast('必須放置於相鄰位置');
-                grid.set(key, storageData.shift());
+                const newItem = storageData.shift();
+                newItem.levelUpdatedAt = Date.now(); 
+                grid.set(key, newItem);
             }
-            updateStorageUI(); drawCanvas();
-            saveToCloud();
+            updateStorageUI(); drawCanvas(); saveToCloud();
         }
 
-        // ==========================================
-        // 4. Play 練習系統 (防重複抽字 + 跳過功能)
-        // ==========================================
         let practiceQueue = [];
         let currentPracticeIndex = 0;
         let isSlowSpeed = false;
@@ -1330,75 +1057,69 @@
         }
 
         function speakText(text) {
-            if (!text) return;
-            window.speechSynthesis.cancel();
+            if (!text) return; window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = isSlowSpeed ? 0.6 : 1.0;
+            utterance.lang = 'en-US'; utterance.rate = isSlowSpeed ? 0.6 : 1.0;
             window.speechSynthesis.speak(utterance);
         }
 
+        function shuffleAndTake(arr, n) {
+            return arr.sort(() => 0.5 - Math.random()).slice(0, n);
+        }
+
+        function takeOldest(arr, n) {
+            return arr.sort((a, b) => (a.levelUpdatedAt || 0) - (b.levelUpdatedAt || 0)).slice(0, n);
+        }
+
         document.getElementById('play-btn').addEventListener('click', () => {
-            if (storageData.length >= 5) {
-                showToast('存放區已滿，請先將單字放入地圖');
-                return;
-            }
+            if (storageData.length >= 5) return showToast('存放區已滿，請先將單字放入地圖');
+            
+            let l5 = [], l4 = [], l3 = [], l2 = [], l1 = [];
+            const existingWords = new Set(); 
 
-            practiceQueue = [];
-            const existingWords = new Set(); // 用來記錄所有已經在地圖或存放區的單字 (黑名單)
+            storageData.forEach(item => existingWords.add(item.word.toLowerCase().trim()));
 
-            // 1. 將地圖上【所有】單字加入去重黑名單
             for (let [key, item] of grid.entries()) {
                 existingWords.add(item.word.toLowerCase().trim());
-                // 如果該字尚未滿級，則加入本次練習佇列
-                if (item.level < 5) {
-                    practiceQueue.push({ ...item, source: 'map', key: key, attempts: 0, successes: 0 });
-                }
+                let pItem = { ...item, source: 'map', key: key, attempts: 0, successes: 0 };
+
+                if (item.level === 5) l5.push(pItem);
+                else if (item.level === 4) l4.push(pItem);
+                else if (item.level === 3) l3.push(pItem);
+                else if (item.level === 2) l2.push(pItem);
+                else if (item.level === 1) l1.push(pItem);
             }
 
-            // 2. 將存放區的單字也加入黑名單
-            storageData.forEach(item => {
-                existingWords.add(item.word.toLowerCase().trim());
-            });
+            practiceQueue = [
+                ...shuffleAndTake(l5, 5), 
+                ...takeOldest(l4, 5),     
+                ...takeOldest(l3, 5),     
+                ...takeOldest(l2, 5),     
+                ...takeOldest(l1, 5)      
+            ];
 
-            // 3. 從「目前選擇的題庫」抓新字 (避開黑名單)
+            let l0 = [];
             const activeDs = getActiveDataset();
             let currentIndex = usedIndices[activeDatasetId] || 0;
-            const availableSlots = 5 - storageData.length;
-            const neededNewWords = Math.min(5, availableSlots);
+            const neededNewWords = Math.min(5, 5 - storageData.length);
 
-            let newWordsAdded = 0;
-            let isDepleted = false;
-
-            while (newWordsAdded < neededNewWords) {
-                // 如果目前題庫已經被掃完
-                if (currentIndex >= activeDs.words.length) {
-                    isDepleted = true;
-                    break;
-                }
-
+            while (l0.length < neededNewWords && currentIndex < activeDs.words.length) {
                 const newWordObj = activeDs.words[currentIndex];
                 const normalizedWord = newWordObj.word.toLowerCase().trim();
-
-                // 檢查是否重複，若沒有重複才加入練習佇列
                 if (!existingWords.has(normalizedWord)) {
-                    practiceQueue.push({ ...newWordObj, level: 1, source: 'csv', attempts: 0, successes: 0 });
-                    existingWords.add(normalizedWord); // 加入黑名單防止抽到雙胞胎
-                    newWordsAdded++;
+                    l0.push({ ...newWordObj, level: 1, source: 'csv', attempts: 0, successes: 0 });
+                    existingWords.add(normalizedWord);
                 }
                 currentIndex++;
             }
+            usedIndices[activeDatasetId] = currentIndex;
+
+            practiceQueue = [...practiceQueue, ...l0];
 
             if (practiceQueue.length === 0) {
-                showToast('地圖皆已滿級，且目前題庫已無新字！請切換或匯入新題庫。');
+                showToast('題庫已全數練習完畢且地圖皆已滿級！請匯入新題庫。');
                 return;
             }
-            if (isDepleted && newWordsAdded < neededNewWords) {
-                showToast('目前題庫的新單字已全數抽出或存在於地圖中！');
-            }
-
-            // 更新這份題庫的抽取進度
-            usedIndices[activeDatasetId] = currentIndex;
 
             currentPracticeIndex = 0;
             document.getElementById('practice-modal').classList.add('active');
@@ -1406,43 +1127,36 @@
         });
 
         function renderPracticeWord() {
-            if (practiceQueue.length === 0) {
-                endPractice();
-                return;
-            }
+            if (practiceQueue.length === 0) return endPractice();
 
             let found = false;
             for (let i = 0; i < practiceQueue.length; i++) {
                 let idx = (currentPracticeIndex + i) % practiceQueue.length;
                 if (practiceQueue[idx].successes < 3 && practiceQueue[idx].attempts < 5) {
-                    currentPracticeIndex = idx;
-                    found = true;
-                    break;
+                    currentPracticeIndex = idx; found = true; break;
                 }
             }
 
-            if (!found) {
-                endPractice();
-                return;
-            }
+            if (!found) return endPractice();
 
             currentWordData = practiceQueue[currentPracticeIndex];
 
+            document.getElementById('practice-word-card').style.backgroundColor = getPosColor(currentWordData.pos);
             document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
             document.getElementById('p-word').textContent = currentWordData.word;
             document.getElementById('p-phonetic').textContent = currentWordData.phonetic;
+            document.getElementById('p-pos').textContent = currentWordData.pos || 'N/A';
             document.getElementById('p-morph').textContent = currentWordData.morphological;
             document.getElementById('p-sentence').textContent = currentWordData.sentence;
             document.getElementById('p-etymology').textContent = currentWordData.etymology;
 
-            document.getElementById('recognition-feedback').textContent = "請點擊麥克風發音";
-            document.getElementById('recognition-feedback').className = "";
+            const fb = document.getElementById('recognition-feedback');
+            fb.textContent = "請點擊麥克風發音"; fb.className = "";
             document.getElementById('next-word-btn').style.display = 'none';
 
             speakText(currentWordData.word);
         }
 
-        // 跳過按鈕：將目前單字達嘗試上限，強制放棄本次練習
         function skipWord() {
             if (!currentWordData) return;
             currentWordData.attempts = 5;
@@ -1452,147 +1166,111 @@
 
         function toggleMic() {
             if (isListening) return;
-
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                alert("抱歉，您的瀏覽器不支援語音辨識功能。");
-                return;
-            }
+            if (!SpeechRecognition) return alert("抱歉，您的瀏覽器不支援語音辨識功能。");
 
             recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
+            recognition.lang = 'en-US'; recognition.interimResults = false;
 
             recognition.onstart = () => {
-                isListening = true;
-                document.getElementById('mic-btn').classList.add('listening');
-                document.getElementById('recognition-feedback').textContent = "聆聽中...";
-                document.getElementById('recognition-feedback').className = "";
+                isListening = true; document.getElementById('mic-btn').classList.add('listening');
+                const fb = document.getElementById('recognition-feedback');
+                fb.textContent = "聆聽中..."; fb.className = "";
             };
 
             recognition.onresult = (event) => {
+                currentWordData.attempts++;
                 const transcript = event.results[0][0].transcript;
-                judgeSpeech(transcript);
+                const spokenText = transcript.toLowerCase().replace(/[^\w\s]|_/g, "");
+                const targetWord = currentWordData.word.toLowerCase().replace(/[^\w\s]|_/g, "");
+                
+                const feedbackEl = document.getElementById('recognition-feedback');
+                if (spokenText.includes(targetWord)) {
+                    currentWordData.successes++;
+                    feedbackEl.textContent = `辨識結果: ${transcript} (正確!)`;
+                    feedbackEl.className = "feedback-correct";
+                } else {
+                    feedbackEl.textContent = `辨識結果: ${transcript} (錯誤)`;
+                    feedbackEl.className = "feedback-wrong";
+                }
+
+                document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+                document.getElementById('next-word-btn').style.display = 'block';
             };
 
             recognition.onerror = () => {
-                document.getElementById('recognition-feedback').textContent = "未接收到語音，請重試";
-                document.getElementById('recognition-feedback').className = "feedback-wrong";
+                const fb = document.getElementById('recognition-feedback');
+                fb.textContent = "未接收到語音，請重試"; fb.className = "feedback-wrong";
             };
 
-            recognition.onend = () => {
-                isListening = false;
-                document.getElementById('mic-btn').classList.remove('listening');
-            };
-
+            recognition.onend = () => { isListening = false; document.getElementById('mic-btn').classList.remove('listening'); };
             recognition.start();
         }
 
-        function judgeSpeech(transcript) {
-            currentWordData.attempts++;
-            const spokenText = transcript.toLowerCase().replace(/[^\w\s]|_/g, "");
-            const targetWord = currentWordData.word.toLowerCase().replace(/[^\w\s]|_/g, "");
-
-            const feedbackEl = document.getElementById('recognition-feedback');
-
-            if (spokenText.includes(targetWord)) {
-                currentWordData.successes++;
-                feedbackEl.textContent = `辨識結果: ${transcript} (正確!)`;
-                feedbackEl.className = "feedback-correct";
-            } else {
-                feedbackEl.textContent = `辨識結果: ${transcript} (錯誤)`;
-                feedbackEl.className = "feedback-wrong";
-            }
-
-            document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
-            document.getElementById('next-word-btn').style.display = 'block';
-        }
-
-        function moveToNextWord() {
-            currentPracticeIndex = (currentPracticeIndex + 1) % practiceQueue.length;
-            renderPracticeWord();
-        }
+        function moveToNextWord() { currentPracticeIndex = (currentPracticeIndex + 1) % practiceQueue.length; renderPracticeWord(); }
 
         function endPractice() {
-            let tokensEarned = 0;
-            let passedCount = 0;
+            let tokensEarned = 0; let passedCount = 0;
 
             practiceQueue.forEach(item => {
                 if (item.successes >= 3) {
-                    passedCount++;
-                    tokensEarned += 5;
-
+                    passedCount++; tokensEarned += 5;
                     if (item.source === 'map') {
                         const mapItem = grid.get(item.key);
-                        mapItem.level += 1;
+                        if (mapItem.level < 5) mapItem.level += 1;
+                        mapItem.levelUpdatedAt = Date.now(); 
                         grid.set(item.key, mapItem);
                     } else if (item.source === 'csv') {
-                        storageData.push({ word: item.word, level: item.level, phonetic: item.phonetic, morphological: item.morphological, sentence: item.sentence, etymology: item.etymology });
+                        storageData.push({ 
+                            word: item.word, level: item.level, pos: item.pos, 
+                            phonetic: item.phonetic, morphological: item.morphological, 
+                            sentence: item.sentence, etymology: item.etymology,
+                            levelUpdatedAt: Date.now()
+                        });
+                    }
+                } else if (item.attempts >= 5) {
+                    if (item.source === 'map') {
+                        const mapItem = grid.get(item.key);
+                        if (mapItem.level === 5) {
+                            mapItem.level = 4; 
+                            mapItem.levelUpdatedAt = Date.now(); 
+                            grid.set(item.key, mapItem);
+                        }
+                    } else if (item.source === 'csv') {
+                        const activeDs = getActiveDataset();
+                        activeDs.words.push({
+                            word: item.word, phonetic: item.phonetic, pos: item.pos,
+                            morphological: item.morphological, sentence: item.sentence, etymology: item.etymology
+                        });
                     }
                 }
             });
 
             if (tokensEarned > 0) updateTokens(tokensEarned);
+            recordCheckIn();
 
             document.getElementById('practice-modal').classList.remove('active');
-            updateStorageUI();
-            drawCanvas();
+            updateStorageUI(); drawCanvas(); saveToCloud();
             showToast(`練習結束！共 ${passedCount} 題過關，獲得 ${tokensEarned} 代幣`);
-            saveToCloud();
         }
 
-        // ==========================================
-        // 5. 文法頁面與導航邏輯
-        // ==========================================
         const UNLOCK_COST = 10;
-        const rulesA1 = [
-            { id: 81, name: '核心語序' }, { id: 87, name: '形容詞與名詞' },
-            { id: 88, name: '指示詞與名詞' }, { id: 89, name: '數詞與名詞' },
-            { id: 26, name: '綴詞傾向' }, { id: 33, name: '複數標記' },
-            { id: 37, name: '定冠詞' }, { id: 38, name: '不定冠詞' },
-            { id: 66, name: '過去式' }, { id: 67, name: '未來式' },
-            { id: 112, name: '否定詞' }, { id: 116, name: '是非問句' }
-        ];
-
+        const rulesA1 = [{ id: 81, name: '核心語序' }, { id: 87, name: '形容詞與名詞' }, { id: 88, name: '指示詞與名詞' }, { id: 89, name: '數詞與名詞' }, { id: 26, name: '綴詞傾向' }, { id: 33, name: '複數標記' }, { id: 37, name: '定冠詞' }, { id: 38, name: '不定冠詞' }, { id: 66, name: '過去式' }, { id: 67, name: '未來式' }, { id: 112, name: '否定詞' }, { id: 116, name: '是非問句' }];
         function isRuleUnlocked(ruleId) { return localStorage.getItem(`wals_unlocked_${ruleId}`) === 'true'; }
-
         function unlockRule(ruleId, ruleName) {
             if (isRuleUnlocked(ruleId)) return;
-            if (currentTokens >= UNLOCK_COST) {
-                localStorage.setItem(`wals_unlocked_${ruleId}`, 'true');
-                updateTokens(-UNLOCK_COST);
-                showToast(`解鎖成功：${ruleName}`);
-            } else { showToast('代幣不足'); }
+            if (currentTokens >= UNLOCK_COST) { localStorage.setItem(`wals_unlocked_${ruleId}`, 'true'); updateTokens(-UNLOCK_COST); showToast(`解鎖成功：${ruleName}`); } else { showToast('代幣不足'); }
         }
-
         function renderGrammarRules() {
-            const container = document.getElementById('rule-list');
-            container.innerHTML = '';
+            const container = document.getElementById('rule-list'); container.innerHTML = '';
             rulesA1.forEach(rule => {
-                const unlocked = isRuleUnlocked(rule.id);
-                const canAfford = currentTokens >= UNLOCK_COST;
-                const card = document.createElement('div');
-                card.className = `rule-card ${unlocked ? '' : 'locked'}`;
-
-                card.innerHTML = `
-                    <div class="rule-info">
-                        <div class="rule-id">WALS ${rule.id}</div>
-                        <div class="rule-name">${rule.name}</div>
-                    </div>
-                `;
-
+                const unlocked = isRuleUnlocked(rule.id), canAfford = currentTokens >= UNLOCK_COST;
+                const card = document.createElement('div'); card.className = `rule-card ${unlocked ? '' : 'locked'}`;
+                card.innerHTML = `<div class="rule-info"><div class="rule-id">WALS ${rule.id}</div><div class="rule-name">${rule.name}</div></div>`;
                 const btnDiv = document.createElement('button');
-                if (unlocked) {
-                    btnDiv.className = 'action-btn btn-view';
-                    btnDiv.textContent = '查看';
-                    btnDiv.onclick = () => showToast(`查看規則：${rule.name}`);
-                } else {
-                    btnDiv.className = canAfford ? 'action-btn btn-unlock' : 'action-btn btn-disabled';
-                    btnDiv.textContent = `解鎖 (${UNLOCK_COST})`;
-                    btnDiv.onclick = () => canAfford ? unlockRule(rule.id, rule.name) : showToast('代幣不足');
-                }
-                card.appendChild(btnDiv);
-                container.appendChild(card);
+                if (unlocked) { btnDiv.className = 'action-btn btn-view'; btnDiv.textContent = '查看'; btnDiv.onclick = () => showToast(`查看規則：${rule.name}`); } 
+                else { btnDiv.className = canAfford ? 'action-btn btn-unlock' : 'action-btn btn-disabled'; btnDiv.textContent = `解鎖 (${UNLOCK_COST})`; btnDiv.onclick = () => canAfford ? unlockRule(rule.id, rule.name) : showToast('代幣不足'); }
+                card.appendChild(btnDiv); container.appendChild(card);
             });
         }
         renderGrammarRules();
@@ -1601,16 +1279,13 @@
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.target).classList.add('active');
+                tab.classList.add('active'); document.getElementById(tab.dataset.target).classList.add('active');
                 if (tab.dataset.target === 'view-vocabulary') resizeCanvas();
             });
         });
 
         window.addEventListener('resize', resizeCanvas);
-        updateStorageUI();
-        resizeCanvas();
+        updateStorageUI(); resizeCanvas();
     </script>
 </body>
-
 </html>
