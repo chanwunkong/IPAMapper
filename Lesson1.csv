@@ -1,17 +1,81 @@
-Word,Phonetic,Lexical Category,Primary POS,Internal Components,WALS Trigger,Morphological Variations,Example Sentence,Etymology
-hello,/həˈloʊ/,Formulaic,Interjection,[Int] hello,None,None,"Hello, how are you?","From 'holla' (shout or call). It means 'listen to me' or 'hi'."
-goodbye,/ˌɡʊdˈbaɪ/,Formulaic,Interjection,[Int] goodbye,None,None,"Goodbye, see you tomorrow.","Short for 'God be with ye' (God be with you). A wish for a safe trip."
-hi,/haɪ/,Formulaic,Interjection,[Int] hi,None,None,"Hi, I am Tom.","From 'hy' or 'hey'. A sound to get someone's attention."
-bye,/baɪ/,Formulaic,Interjection,[Int] bye,None,None,"Bye, have a good day.","A short form of 'goodbye'."
-good morning,/ɡʊd ˈmɔːrnɪŋ/,Formulaic,Phrase,[Adj] good + [Noun] morning,None,None,"Good morning, mom.","From 'good' and 'morning' (early day). A wish for a good start to the day."
-good afternoon,/ɡʊd ˌæftərˈnuːn/,Formulaic,Phrase,[Adj] good + [Prep] after + [Noun] noon,None,None,"Good afternoon, teacher.","From 'good', 'after' (later), and 'noon' (middle of the day)."
-good evening,/ɡʊd ˈiːvnɪŋ/,Formulaic,Phrase,[Adj] good + [Noun] evening,None,None,"Good evening, everyone.","From 'good' and 'evening' (end of the day)."
-good night,/ɡʊd ˈnaɪt/,Formulaic,Phrase,[Adj] good + [Noun] night,None,None,"Good night, go to sleep.","From 'good' and 'night' (dark time). Said before going to sleep."
-thank you,/θæŋk juː/,Formulaic,Phrase,[Verb] thank + [Pron] you,None,None,Thank you for the apple.,From old word 'thanc' (good thought).
-thanks,/θæŋks/,Formulaic,Interjection/Noun,[Noun] thank + [Suffix] s,None,None,Thanks for your help.,"A short, everyday way to say 'thank you'."
-please,/pliːz/,Formulaic,Adverb/Interjection,[Adv] please,None,None,Please sit down.,"Short for 'if it please you' (if it makes you happy)."
-OK,/oʊˈkeɪ/,Formulaic,Interjection,[Int] OK,None,None,"OK, I understand.","From 'oll korrect', a funny spelling of 'all correct'."
-yes,/jɛs/,Formulaic,Particle,[Part] yes,None,None,"Yes, it is a dog.","From old words meaning 'so be it'. Used to agree."
-no,/noʊ/,Lexical,Negator/Determiner,[Part/Det] no,Triggers WALS 112,None,"No, I am not tired.","From old words meaning 'not ever'. Used to disagree."
-sorry,/ˈsɔːri/,Lexical,Adjective,[Adj] sorry,None,"sorrier, sorriest","I am sorry, I am late.",From old word 'sarig' (sad or sore).
-welcome,/ˈwɛlkəm/,Lexical,Adjective/Verb,[Adj/Verb] welcome,None,"welcomed, welcoming",Welcome to our school.,"From 'wil' (wish or happy) and 'cuma' (guest)."
+Word,Phonetic,Lexical Category,Primary POS,Internal Components,Morphological Variations,Example Sentence,Etymology
+hello,/h??lo?/,Formulaic,Interjection,[Int] hello,None,"Hello, how are you?",From 'holla' (shout or call). It means 'listen to me' or 'hi'.
+goodbye,/?ɡ?d?baɪ/,Formulaic,Interjection,[Int] goodbye,None,"Goodbye, see you tomorrow.",Short for 'God be with ye' (God be with you). A wish for a safe trip.
+hi,/haɪ/,Formulaic,Interjection,[Int] hi,None,"Hi, I am Tom.",From 'hy' or 'hey'. A sound to get someone's attention.
+bye,/baɪ/,Formulaic,Interjection,[Int] bye,None,"Bye, have a good day.",A short form of 'goodbye'.
+good morning,/ɡ?d ?m??rnɪ?/,Formulaic,Phrase,[Adj] good + [Noun] morning,None,"Good morning, mom.",From 'good' and 'morning' (early day). A wish for a good start to the day.
+good afternoon,/ɡ?d ?æft?r?nu?n/,Formulaic,Phrase,[Adj] good + [Prep] after + [Noun] noon,None,"Good afternoon, teacher.","From 'good', 'after' (later), and 'noon' (middle of the day)."
+good evening,/ɡ?d ?i?vnɪ?/,Formulaic,Phrase,[Adj] good + [Noun] evening,None,"Good evening, everyone.",From 'good' and 'evening' (end of the day).
+good night,/ɡ?d ?naɪt/,Formulaic,Phrase,[Adj] good + [Noun] night,None,"Good night, go to sleep.",From 'good' and 'night' (dark time). Said before going to sleep.
+thank you,/θæ?k ju?/,Formulaic,Phrase,[Verb] thank + [Pron] you,None,Thank you for the apple.,From old word 'thanc' (good thought).
+thanks,/θæ?ks/,Formulaic,Interjection/Noun,[Noun] thank + [Suffix] s,None,Thanks for your help.,"A short, everyday way to say 'thank you'."
+please,/pli?z/,Formulaic,Adverb/Interjection,[Adv] please,None,Please sit down.,Short for 'if it please you' (if it makes you happy).
+OK,/o??keɪ/,Formulaic,Interjection,[Int] OK,None,"OK, I understand.","From 'oll korrect', a funny spelling of 'all correct'."
+yes,/j?s/,Formulaic,Particle,[Part] yes,None,"Yes, it is a dog.",From old words meaning 'so be it'. Used to agree.
+no,/no?/,Lexical,Negator/Determiner,[Part/Det] no,None,"No, I am not tired.",From old words meaning 'not ever'. Used to disagree.
+sorry,/?s??ri/,Lexical,Adjective,[Adj] sorry,"sorrier, sorriest","I am sorry, I am late.",From old word 'sarig' (sad or sore).
+welcome,/?w?lk?m/,Lexical,Adjective/Verb,[Adj/Verb] welcome,"welcomed, welcoming",Welcome to our school.,From 'wil' (wish or happy) and 'cuma' (guest).
+man,/mæn/,Lexical,Noun,[Noun] man,men,That man is my father.,From an old word for an adult male.
+woman,/?w?m?n/,Lexical,Noun,[Noun] woman,women,The woman is reading a book.,From old words meaning wife and person.
+boy,/b?ɪ/,Lexical,Noun,[Noun] boy,boys,The boy likes to play games.,From an old word for a male child.
+girl,/ɡ??rl/,Lexical,Noun,[Noun] girl,girls,The girl has a red bag.,From an old word for a young person.
+friend,/fr?nd/,Lexical,Noun,[Noun] friend,friends,He is my good friend.,From an old word meaning to love.
+boyfriend,/?b?ɪ?fr?nd/,Lexical,Noun,[Noun] boy + [Noun] friend,boyfriends,Her boyfriend is very tall.,Made of the words boy and friend.
+girlfriend,/?ɡ??rl?fr?nd/,Lexical,Noun,[Noun] girl + [Noun] friend,girlfriends,His girlfriend has long hair.,Made of the words girl and friend.
+person,/?p??rs?n/,Lexical,Noun,[Noun] person,"persons, people",She is a very nice person.,From an old word for a mask used by actors.
+people,/?pi?p?l/,Lexical,Noun,[Noun] people,None,Many people are in the park.,From an old word for a group of humans.
+adult,/?æd?lt/,Lexical,Noun,[Noun] adult,adults,This book is for adults.,From an old word meaning grown up.
+baby,/?beɪbi/,Lexical,Noun,[Noun] baby,babies,The baby is sleeping now.,From the sounds a young child makes.
+Mr,/?mɪst?r/,Lexical,Noun,[Noun] Mr,Messrs,Mr. Smith is my teacher.,A short form of the word master.
+Mrs,/?mɪsɪz/,Lexical,Noun,[Noun] Mrs,Mmes,Mrs. Jones has a cat.,A short form of the word mistress.
+miss,/mɪs/,Lexical,Noun,[Noun] miss,"misses, missed, missing","Excuse me, miss.",A short form of the word mistress.
+zero,/?zɪro?/,Lexical,Number,[Num] zero,"zeros, zeroes",I have zero apples.,From an old word meaning empty.
+one,/w?n/,Lexical,Number/Pronoun,[Num] one,ones,I have one dog.,From a very old word for a single thing.
+two,/tu?/,Lexical,Number,[Num] two,twos,She has two cats.,From a very old word for the number 2.
+three,/θri?/,Lexical,Number,[Num] three,threes,I see three birds.,From a very old word for the number 3.
+four,/f??r/,Lexical,Number,[Num] four,fours,The car has four doors.,From a very old word for the number 4.
+five,/faɪv/,Lexical,Number,[Num] five,fives,I have five fingers on my hand.,From a very old word for the number 5.
+six,/sɪks/,Lexical,Number,[Num] six,sixes,There are six eggs in the box.,From a very old word for the number 6.
+seven,/?s?v?n/,Lexical,Number,[Num] seven,sevens,A week has seven days.,From a very old word for the number 7.
+eight,/eɪt/,Lexical,Number,[Num] eight,eights,A spider has eight legs.,From a very old word for the number 8.
+nine,/naɪn/,Lexical,Number,[Num] nine,nines,I sleep for nine hours.,From a very old word for the number 9.
+ten,/t?n/,Lexical,Number,[Num] ten,tens,I have ten toes.,From a very old word for the number 10.
+eleven,/ɪ?l?v?n/,Lexical,Number,[Num] eleven,elevens,He is eleven years old.,From old words meaning one left over after ten.
+twelve,/tw?lv/,Lexical,Number,[Num] twelve,twelves,A year has twelve months.,From old words meaning two left over after ten.
+thirteen,/θ??r?ti?n/,Lexical,Number,[Num] three + [Suffix] teen,thirteens,The book has thirteen pages.,From old words for three and ten.
+fourteen,/f??r?ti?n/,Lexical,Number,[Num] four + [Suffix] teen,fourteens,I need fourteen cups.,From old words for four and ten.
+fifteen,/fɪf?ti?n/,Lexical,Number,[Num] five + [Suffix] teen,fifteens,She is fifteen today.,From old words for five and ten.
+sixteen,/sɪk?sti?n/,Lexical,Number,[Num] six + [Suffix] teen,sixteens,We have sixteen apples.,From old words for six and ten.
+seventeen,/?s?v?n?ti?n/,Lexical,Number,[Num] seven + [Suffix] teen,seventeens,There are seventeen chairs.,From old words for seven and ten.
+eighteen,/eɪ?ti?n/,Lexical,Number,[Num] eight + [Suffix] teen,eighteens,The boy is eighteen years old.,From old words for eight and ten.
+nineteen,/naɪn?ti?n/,Lexical,Number,[Num] nine + [Suffix] teen,nineteens,I see nineteen cars.,From old words for nine and ten.
+twenty,/?tw?nti/,Lexical,Number,[Num] two + [Suffix] ty,twenties,There are twenty students in the room.,From old words for two and ten.
+thirty,/?θ??rti/,Lexical,Number,[Num] three + [Suffix] ty,thirties,A month has about thirty days.,From old words for three and ten.
+forty,/?f??rti/,Lexical,Number,[Num] four + [Suffix] ty,forties,My dad is forty years old.,From old words for four and ten.
+fifty,/?fɪfti/,Lexical,Number,[Num] five + [Suffix] ty,fifties,I have fifty dollars.,From old words for five and ten.
+sixty,/?sɪksti/,Lexical,Number,[Num] six + [Suffix] ty,sixties,An hour has sixty minutes.,From old words for six and ten.
+seventy,/?s?v?nti/,Lexical,Number,[Num] seven + [Suffix] ty,seventies,My grandma is seventy.,From old words for seven and ten.
+eighty,/?eɪti/,Lexical,Number,[Num] eight + [Suffix] ty,eighties,The book costs eighty cents.,From old words for eight and ten.
+ninety,/?naɪnti/,Lexical,Number,[Num] nine + [Suffix] ty,nineties,It is ninety degrees outside.,From old words for nine and ten.
+hundred,/?h?ndr?d/,Lexical,Number,[Num] hundred,hundreds,That toy costs one hundred dollars.,From an old word for the number 100.
+parent,/?p?r?nt/,Lexical,Noun,[Noun] parent,parents,My parent is at work.,From an old word meaning to bring forth or give birth.
+father,/?f??ð?r/,Lexical,Noun,[Noun] father,fathers,My father is a tall man.,From a very old word for a male parent.
+mother,/?m?ð?r/,Lexical,Noun,[Noun] mother,mothers,His mother cooks good food.,From a very old word for a female parent.
+dad,/dæd/,Lexical,Noun,[Noun] dad,dads,My dad drives a red car.,From the first sounds a baby makes to a father.
+mom,/m?m/,Lexical,Noun,[Noun] mom,moms,I love my mom.,From the first sounds a baby makes to a mother.
+wife,/waɪf/,Lexical,Noun,[Noun] wife,wives,He loves his wife.,From an old word meaning woman.
+husband,/?h?zb?nd/,Lexical,Noun,[Noun] husband,husbands,Her husband is very nice.,From old words meaning house and dweller.
+child,/t?aɪld/,Lexical,Noun,[Noun] child,children,The child plays with a ball.,From an old word for a young person.
+son,/s?n/,Lexical,Noun,[Noun] son,sons,Their son is five years old.,From a very old word for a male child.
+daughter,/?d??t?r/,Lexical,Noun,[Noun] daughter,daughters,She is my lovely daughter.,From a very old word for a female child.
+sister,/?sɪst?r/,Lexical,Noun,[Noun] sister,sisters,My sister likes to sing.,From a very old word for a female sibling.
+brother,/?br?ð?r/,Lexical,Noun,[Noun] brother,brothers,I have one brother.,From a very old word for a male sibling.
+family,/?fæm?li/,Lexical,Noun,[Noun] family,families,My family is big.,From an old word for people living in one house.
+grandmother,/?ɡrænd?m?ð?r/,Lexical,Noun,[Adj] grand + [Noun] mother,grandmothers,My grandmother tells good stories.,Made of the words grand (big or old) and mother.
+grandfather,/?ɡrænd?f??ð?r/,Lexical,Noun,[Adj] grand + [Noun] father,grandfathers,My grandfather walks in the park.,Made of the words grand (big or old) and father.
+grandchild,/?ɡrænd?t?aɪld/,Lexical,Noun,[Adj] grand + [Noun] child,grandchildren,The grandchild loves her.,Made of the words grand and child.
+aunt,/ænt/,Lexical,Noun,[Noun] aunt,aunts,My aunt gives me a book.,From an old word for a father's or mother's sister.
+uncle,/???k?l/,Lexical,Noun,[Noun] uncle,uncles,His uncle is a funny man.,From an old word for a father's or mother's brother.
+niece,/ni?s/,Lexical,Noun,[Noun] niece,nieces,My niece is a happy baby.,From an old word for a granddaughter or brother's daughter.
+nephew,/?n?fju?/,Lexical,Noun,[Noun] nephew,nephews,He plays with his nephew.,From an old word for a grandson or sister's son.
+cousin,/?k?z?n/,Lexical,Noun,[Noun] cousin,cousins,My cousin and I are friends.,From an old word for a mother's sister's child.
