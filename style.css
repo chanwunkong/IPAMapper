@@ -227,6 +227,21 @@ body, html {
     padding: 12px 40px; font-size: 16px; font-weight: bold; display: none; cursor: pointer;
 }
 
+#l1-dots { display: flex; gap: 10px; justify-content: center; align-items: center; height: 20px; }
+.l1-dot { width: 14px; height: 14px; border-radius: 50%; background: #e5e5ea; border: 2px solid #c7c7cc; transition: background 0.3s, border-color 0.3s; }
+.l1-dot.filled { background: #34c759; border-color: #28a745; }
+
+#l1-countdown-bar { width: 100%; height: 4px; background: #34c759; border-radius: 2px; }
+
+.l1-retry-btn {
+    background-color: var(--accent-color); color: white; border: none; border-radius: 20px;
+    padding: 14px 32px; font-size: 16px; font-weight: bold; cursor: pointer;
+}
+.l1-next-btn {
+    background-color: #f2f2f7; color: var(--text-secondary); border: none; border-radius: 20px;
+    padding: 10px 24px; font-size: 14px; font-weight: bold; cursor: pointer;
+}
+
 #calendar-modal {
     display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.5); z-index: 300; justify-content: center; align-items: center;

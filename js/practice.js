@@ -4,6 +4,7 @@ let isSlowSpeed = false;
 let recognition = null;
 let isListening = false;
 let currentWordData = null;
+let autoAdvanceTimer = null;
 
 function toggleSpeed() {
     isSlowSpeed = !isSlowSpeed;
@@ -143,17 +144,27 @@ function toggleMic() {
         const targetWord = currentWordData.word.toLowerCase().replace(/[^\w\s]|_/g, "");
 
         const feedbackEl = document.getElementById('recognition-feedback');
+        document.getElementById('l1-mic-area').style.display = 'none';
+
         if (spokenText.includes(targetWord)) {
             currentWordData.successes++;
-            feedbackEl.textContent = `辨識結果: ${transcript} (正確!)`;
+            updateL1Dots(currentWordData.successes);
+            feedbackEl.textContent = `正確！辨識到: ${transcript}`;
             feedbackEl.className = "feedback-correct";
+            document.getElementById('l1-result-actions').style.display = 'none';
+            startAutoAdvance();
         } else {
-            feedbackEl.textContent = `辨識結果: ${transcript} (錯誤)`;
+            feedbackEl.textContent = `辨識到: ${transcript}`;
             feedbackEl.className = "feedback-wrong";
+            if (currentWordData.attempts >= 5) {
+                document.getElementById('l1-result-actions').style.display = 'none';
+                startAutoAdvance();
+            } else {
+                document.getElementById('l1-result-actions').style.display = 'flex';
+            }
         }
 
         document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
-        document.getElementById('next-word-btn').style.display = 'block';
     };
 
     recognition.onerror = () => {
@@ -163,6 +174,44 @@ function toggleMic() {
 
     recognition.onend = () => { isListening = false; document.getElementById('mic-btn').classList.remove('listening'); };
     recognition.start();
+}
+
+function startAutoAdvance() {
+    const countdown = document.getElementById('l1-countdown');
+    const bar = document.getElementById('l1-countdown-bar');
+    countdown.style.display = 'flex';
+    bar.style.transition = 'none';
+    bar.style.width = '100%';
+    bar.offsetWidth;
+    bar.style.transition = 'width 1.5s linear';
+    bar.style.width = '0%';
+    autoAdvanceTimer = setTimeout(() => { moveToNextWord(); }, 1500);
+}
+
+function cancelAutoAdvance() {
+    if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+    const countdown = document.getElementById('l1-countdown');
+    if (countdown) countdown.style.display = 'none';
+}
+
+function updateL1Dots(successes) {
+    const container = document.getElementById('l1-dots');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'l1-dot' + (i < successes ? ' filled' : '');
+        container.appendChild(dot);
+    }
+}
+
+function l1RetryMic() {
+    document.getElementById('l1-result-actions').style.display = 'none';
+    document.getElementById('l1-mic-area').style.display = 'flex';
+    const fb = document.getElementById('recognition-feedback');
+    fb.textContent = '請點擊麥克風發音';
+    fb.className = '';
+    toggleMic();
 }
 
 function moveToNextWord() { currentPracticeIndex = (currentPracticeIndex + 1) % practiceQueue.length; renderPracticeWord(); }
@@ -221,9 +270,14 @@ registerQuestionModule(1, {
         const fb = document.getElementById('recognition-feedback');
         fb.textContent = "請點擊麥克風發音"; fb.className = "";
         document.getElementById('next-word-btn').style.display = 'none';
+        document.getElementById('l1-mic-area').style.display = 'flex';
+        document.getElementById('l1-result-actions').style.display = 'none';
+        document.getElementById('l1-countdown').style.display = 'none';
+        updateL1Dots(wordData.successes || 0);
         speakText(wordData.word);
     },
     deactivate() {
+        cancelAutoAdvance();
         document.getElementById('action-l1').style.display = 'none';
         if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
         isListening = false;

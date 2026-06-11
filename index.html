@@ -76,12 +76,20 @@
                         <div class="tts-group">
                             <button class="tts-btn" onclick="speakText(currentWordData.word)">聽單字</button>
                             <button class="tts-btn" onclick="speakText(currentWordData.sentence)">聽例句</button>
-                            <button class="tts-btn" onclick="speakText(currentWordData.etymology)">聽字源</button>
                         </div>
+                        <div id="l1-dots"></div>
                         <div id="recognition-feedback">請點擊麥克風發音</div>
-                        <div class="mic-skip-group">
+                        <div id="l1-mic-area" style="display:flex; align-items:center; gap:20px;">
                             <button id="mic-btn" onclick="toggleMic()">收音</button>
                             <button id="skip-btn" onclick="skipWord()">跳過</button>
+                        </div>
+                        <div id="l1-result-actions" style="display:none; align-items:center; gap:15px;">
+                            <button class="l1-retry-btn" onclick="l1RetryMic()">再試</button>
+                            <button class="l1-next-btn" onclick="cancelAutoAdvance(); moveToNextWord()">下一題</button>
+                        </div>
+                        <div id="l1-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <div id="l1-countdown-bar"></div>
+                            <button class="l1-next-btn" onclick="cancelAutoAdvance(); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
