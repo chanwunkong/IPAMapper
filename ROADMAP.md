@@ -2,15 +2,40 @@
 
 ## 當前任務 (Current Focus)
 
-### L4+ 功能
-- [ ] 開發 L4 自由造句題型 (文法與初步應用)：顯示目標單字，以 POS 序列驗證句子是否符合已解鎖 WALS 規則，並啟動地圖路徑計分
-- [ ] 將文法 (WALS) 解鎖狀態的 UI 呈現與存檔資料完全綁定
-- [ ] 開發 L5 自由對話系統：無提示，整合 LLM 驗證上下文邏輯與 WALS 規則，並進行大範圍的地圖路徑連線計分
+### Bug 修正（建議優先執行）
+- [ ] [BUG-1] `js/practice.js:49,306` — `shuffleAndTake()` 與 `generateL1AOptions()` 的 `sort(() => 0.5 - Math.random())` 改為 Fisher-Yates 演算法，修正選項分佈不均問題
+- [ ] [BUG-2] `js/practice.js:271-281` — `endPractice()` 失敗單字回塞前加重複檢查：`if (!activeDs.words.find(w => w.word === item.word))`
+- [ ] [BUG-3] `js/practice.js:203` — `startAutoAdvance()` 開頭先呼叫 `cancelAutoAdvance()` 清除舊計時器，防止快速點擊產生多個並行計時器
+- [ ] [BUG-4] `js/canvas.js:181-193` — 地圖單字字體縮放改為 `while` 迴圈逐步縮小，直到 `measureText` 寬度符合邊界（現在只縮一次到 16px）
+- [ ] [BUG-5] `js/questions/q-stub.js:207` — L3 Canvas 初始化的 `setTimeout(resizeL3Canvas, 50)` 改為 `requestAnimationFrame` 確保 layout 完成後才讀取尺寸
+
+### UX 改善（高優先）
+- [ ] [UX-1] `index.html:53` — 練習退出按鈕加入確認提示，防止誤觸損失進度（`confirm()` 或輕量 Modal）
+- [ ] [UX-2] `index.html:59` — 無障礙停用通知文字改為「已停用語音題型，本場僅顯示文字題。重新開始練習可恢復。」
+- [ ] [UX-3] `js/questions/q-stub.js:304` — L3-V 輸入框 placeholder 改為「輸入單字，按 Enter 加入句子（支援任何單字）」
+
+### UX 改善（中優先）
+- [ ] [UX-4] 倒計時進度條區域補充靜態文字「自動跳題中...」，讓使用者知道計時器正在倒數
+- [ ] [UX-5] `style.css:106` — `#storage-area` 的 `padding-right: 180px` 改為響應式寫法，防止小螢幕截斷
+- [ ] [UX-6] `index.html:19-21` — 打卡連續天數顯示加入副標「連續天數，中斷後歸零」小字說明
+- [ ] [UX-7] `js/grammar.js:97` — WALS 規則「查看」按鈕改為彈出詳情卡片：顯示規則說明、`posTypes[]` 序列需求、對應例句
+
+### L4+ 核心功能
+- [ ] [L4-1] 開發 L4 自由造句題型：顯示目標單字，使用者輸入完整句子，以 `buildWordPosMap()` 解析每詞 POS 後呼叫 `checkWalsRule()`，驗證至少一條已解鎖規則；通過升級給代幣，失敗提示缺少的 POS
+- [ ] [L4-2] `js/grammar.js` — WALS 規則解鎖狀態的 UI 標記與存檔資料完全綁定（現在 `unlockedRules` 已在存檔中，確認 UI 渲染與載入時同步）
+- [ ] [L5-1] 開發 L5 自由對話系統：先以 mock 驗證 UI 流程（無提示輸入框 + 結果判斷區），再規劃 LLM API 整合
 
 ### 基礎優化
 - [ ] 優化 Web Speech API 語音辨識失敗時的提示與重試體驗
-- [ ] 測試 Firebase 登入狀態下的存檔同步功能
-- [ ] 實作讀取 CSV 題庫時的錯誤格式防呆機制
+- [ ] 執行 Firebase 登入同步 E2E 流程：登入 → 練習 → 退出 → 換裝置 → 驗證資料還原
+- [ ] 新增 Lesson2.csv：動詞 30 個 + 形容詞 30 個，補充 WALS 87（形容詞與名詞）等規則的練習素材
+
+### QA 測試清單（新功能驗收）
+- [ ] [QA-1] TEMP-1：無存檔按「載入 Lesson1」→ 提示；有存檔載入 → 成功；重複載入 → 提示「已載入」
+- [ ] [QA-2] SKIP：練習中啟用無障礙 → L1-S / L1-A 不再出現；退出後重進 → 按鈕恢復
+- [ ] [QA-3] DUP-2：兩個含相同單字的 CSV 練習後切換 → 相同單字不重複出現
+- [ ] [QA-4] SRS 升降級回歸：答對 3 次升級並更新時間戳；L5 失敗降 L4；L1-L4 失敗等級與時間戳不變
+- [ ] [QA-5] 邊界條件：全 L5 無新詞 → 提示完畢不當機；儲存區滿 → 提示不進入練習；POS 不合規 CSV → 警告但仍匯入
 
 ## 短期目標 (Short-term Goals)
 - (目前階段的核心功能已全數集中於當前任務進行開發)
