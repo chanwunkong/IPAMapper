@@ -1,5 +1,6 @@
 let isDragging = false, dragMoved = false, initialPinchDist = null, initialZoom = 1;
 let startPos = { x: 0, y: 0 }, lastPos = { x: 0, y: 0 };
+let selectedHexKey = null;
 
 function getPinchDist(e) { return Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2)); }
 canvas.addEventListener('touchstart', (e) => { e.preventDefault(); if (e.touches.length === 1) { isDragging = true; dragMoved = false; startPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY }; } else if (e.touches.length === 2) { isDragging = false; initialPinchDist = getPinchDist(e); initialZoom = camera.zoom; } }, { passive: false });
@@ -17,16 +18,43 @@ function handleCanvasClick(clientX, clientY) {
     const key = `${axial.q},${axial.r}`;
 
     if (grid.has(key)) {
-        if (!isConnectedAfterRemoval(axial.q, axial.r)) return showToast('移除此方塊會造成斷裂');
-        if (storageData.length >= 5) return showToast('存放區已滿，無法收回單字');
-        storageData.push(grid.get(key)); grid.delete(key);
+        // 點擊既有方塊：朗讀並顯示互動面板
+        selectedHexKey = key;
+        speakText(grid.get(key).word);
+        showHexWordPanel(grid.get(key));
     } else {
+        // 點擊空地：放置單字
+        closeHexWordPanel();
         if (storageData.length === 0) return showToast('無可用單字');
         if (grid.size > 0 && !hasAdjacent(axial.q, axial.r)) return showToast('必須放置於相鄰位置');
         const newItem = storageData.shift();
         newItem.levelUpdatedAt = Date.now();
         grid.set(key, newItem);
+        updateStorageUI(); drawCanvas(); saveCurrentData();
     }
+}
+
+function showHexWordPanel(item) {
+    document.getElementById('hwp-word').textContent = item.word;
+    document.getElementById('hwp-phonetic').textContent = item.phonetic || '';
+    document.getElementById('hwp-pos').textContent = item.pos || '';
+    document.getElementById('hwp-level').textContent = `Lv.${item.level}`;
+    document.getElementById('hex-word-panel').classList.add('active');
+}
+
+function closeHexWordPanel() {
+    selectedHexKey = null;
+    document.getElementById('hex-word-panel').classList.remove('active');
+}
+
+function retrieveCurrentHexWord() {
+    if (!selectedHexKey || !grid.has(selectedHexKey)) return closeHexWordPanel();
+    const [q, r] = selectedHexKey.split(',').map(Number);
+    if (!isConnectedAfterRemoval(q, r)) return showToast('移除此方塊會造成斷裂');
+    if (storageData.length >= 5) return showToast('存放區已滿，無法收回單字');
+    storageData.push(grid.get(selectedHexKey));
+    grid.delete(selectedHexKey);
+    closeHexWordPanel();
     updateStorageUI(); drawCanvas(); saveCurrentData();
 }
 

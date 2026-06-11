@@ -30,6 +30,19 @@
             <div id="view-vocabulary" class="view active">
                 <div id="storage-area"></div>
                 <canvas id="hex-canvas"></canvas>
+                <div id="hex-word-panel">
+                    <div id="hwp-word"></div>
+                    <div id="hwp-phonetic"></div>
+                    <div id="hwp-meta">
+                        <span id="hwp-pos"></span>
+                        <span id="hwp-level"></span>
+                    </div>
+                    <div class="hwp-btn-row">
+                        <button class="action-btn btn-delete" onclick="retrieveCurrentHexWord()">收回</button>
+                        <button class="action-btn btn-view" onclick="closeHexWordPanel()">關閉</button>
+                    </div>
+                </div>
+
                 <div id="play-btn-container">
                     <button id="play-btn">Play</button>
                 </div>
