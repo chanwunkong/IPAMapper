@@ -29,6 +29,11 @@
 - [x] (2026-06-12) [UX-P-4] `js/questions/q-stub.js` — L1-V 隱藏 `p-etymology-row`、`audio-disable-bar`；L2-V/L2-A activate 隱藏 `p-sentence-row`（例句即題目，不可顯示）+ `p-etymology-row`；L2-V `renderL2Pool/Answer` 依 POS 套用底色（`buildWordPosMap` + `getPosColor`）
 - [x] (2026-06-12) [UX-P-5] `js/questions/q-stub.js` — L2-A canvas：移除目標單字水印；高度 110→180px；加入 Handwriting Recognition API（`navigator.createHandwritingRecognizer`），筆畫結束後辨識自動填入 input；不支援環境靜默降級
 
+### 路線 F：題型音訊控制重構
+
+- [x] (2026-06-12) [UX-P-10] `index.html` + `js/questions/q-stub.js` — 移除 L1-V 閃卡自評模組（題型過於被動，無助語形記憶）
+- [x] (2026-06-12) [UX-P-11] `index.html` + `js/practice.js` + `js/dispatcher.js` — 拆分音訊停用：`practiceListeningDisabled` / `practiceSpeakingDisabled`；「無法聆聽」只在 L1-A/L1-S 顯示；「無法說話」只在 L1-S 顯示；dispatcher 改用 `requiresListening` / `requiresSpeaking` 旗標過濾
+
 ### 題型待改進（掃描記錄）
 
 - [ ] [UX-P-6] L2-A：目前手寫辨識依賴 Chrome 99+ Handwriting Recognition API，未支援的瀏覽器只能手動輸入；考慮加入 Tesseract.js 作為廣域降級方案（但體積大，需評估）

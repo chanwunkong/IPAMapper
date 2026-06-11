@@ -1,45 +1,3 @@
-// L1-V: 閃卡自評 — 顯示單字、音標、POS，使用者自評認識/不認識
-registerQuestionModule(1, {
-    activate(wordData) {
-        document.getElementById('p-etymology-row').style.display = 'none';
-        document.getElementById('p-sentence-row').style.display = 'none';
-        document.getElementById('audio-disable-bar').style.display = 'none';
-        document.getElementById('p-word').style.visibility = 'visible';
-        document.getElementById('action-l1v').style.display = 'flex';
-        document.getElementById('next-word-btn').style.display = 'none';
-        document.getElementById('l1v-buttons').style.display = 'flex';
-        document.getElementById('l1v-feedback').textContent = '';
-        document.getElementById('l1v-feedback').className = '';
-        document.getElementById('l1v-countdown').style.display = 'none';
-    },
-    deactivate() {
-        cancelAutoAdvance('l1v-countdown');
-        document.getElementById('p-word').style.visibility = 'visible';
-        document.getElementById('action-l1v').style.display = 'none';
-    }
-});
-
-function l1vKnow() {
-    currentWordData.attempts++;
-    currentWordData.successes++;
-    const fb = document.getElementById('l1v-feedback');
-    fb.textContent = '已記錄';
-    fb.className = 'feedback-correct';
-    document.getElementById('l1v-buttons').style.display = 'none';
-    startAutoAdvance('l1v-countdown');
-    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
-}
-
-function l1vDontKnow() {
-    currentWordData.attempts++;
-    const fb = document.getElementById('l1v-feedback');
-    fb.textContent = `繼續練習：${currentWordData.word}`;
-    fb.className = 'feedback-wrong';
-    document.getElementById('l1v-buttons').style.display = 'none';
-    startAutoAdvance('l1v-countdown');
-    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
-}
-
 // L2-V: 句型重組 — 點選詞塊依序還原例句
 let l2OriginalTokens = [];
 let l2AnswerTokens = [];
@@ -49,6 +7,7 @@ registerQuestionModule(2, {
     activate(wordData) {
         document.getElementById('p-sentence-row').style.display = 'none';
         document.getElementById('p-etymology-row').style.display = 'none';
+        showAudioButtons(false, false);
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l2').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
@@ -257,6 +216,7 @@ registerQuestionModule(2, {
     activate(wordData) {
         document.getElementById('p-sentence-row').style.display = 'none';
         document.getElementById('p-etymology-row').style.display = 'none';
+        showAudioButtons(false, false);
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l3').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
@@ -321,6 +281,7 @@ let l3vTokens = [];
 
 registerQuestionModule(3, {
     activate(wordData) {
+        showAudioButtons(false, false);
         document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l3v').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
@@ -469,6 +430,7 @@ document.addEventListener('keydown', e => {
 // L4: 文法應用 (stub)
 registerQuestionModule(4, {
     activate(wordData) {
+        showAudioButtons(false, false);
         document.getElementById('action-l4').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
         document.getElementById('grammar-input').value = '';

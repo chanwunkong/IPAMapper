@@ -58,8 +58,10 @@
                     <button class="speed-btn" id="speed-toggle" onclick="toggleSpeed()">語速: 正常</button>
                 </div>
                 <div id="audio-disable-bar">
-                    <button id="audio-disable-btn" onclick="disableAudio()">無法聆聽/說話</button>
-                    <span id="audio-disabled-notice" style="display:none;">已停用語音題型，本場僅顯示文字題。重新開始練習可恢復。</span>
+                    <button id="disable-listening-btn" style="display:none;" onclick="disableListening()">無法聆聽</button>
+                    <button id="disable-speaking-btn" style="display:none;" onclick="disableSpeaking()">無法說話</button>
+                    <span id="listening-disabled-notice" style="display:none;">聆聽已停用</span>
+                    <span id="speaking-disabled-notice" style="display:none;">說話已停用</span>
                 </div>
 
                 <div class="word-display" id="practice-word-card">
@@ -107,21 +109,6 @@
                             <span class="countdown-label">自動跳題中...</span>
                             <div id="l1-countdown-bar" class="countdown-bar"></div>
                             <button class="l1-next-btn" onclick="cancelAutoAdvance('l1-countdown'); moveToNextWord()">立即繼續</button>
-                        </div>
-                    </div>
-
-                    <!-- L1-V: 閃卡自評 -->
-                    <div id="action-l1v" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
-                        <div style="font-size:14px; color:var(--text-secondary); text-align:center;">你認識這個單字嗎？</div>
-                        <div id="l1v-buttons" style="display:flex; gap:15px;">
-                            <button class="action-btn btn-unlock" onclick="l1vKnow()">認識</button>
-                            <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="l1vDontKnow()">不認識</button>
-                        </div>
-                        <div id="l1v-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
-                        <div id="l1v-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
-                            <span class="countdown-label">自動跳題中...</span>
-                            <div class="countdown-bar"></div>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l1v-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 

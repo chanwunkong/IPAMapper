@@ -5,13 +5,28 @@ let recognition = null;
 let isListening = false;
 let currentWordData = null;
 let autoAdvanceTimer = null;
-let practiceAudioDisabled = false;
+let practiceListeningDisabled = false;
+let practiceSpeakingDisabled = false;
 
-function disableAudio() {
-    practiceAudioDisabled = true;
-    document.getElementById('audio-disable-btn').style.display = 'none';
-    document.getElementById('audio-disabled-notice').style.display = 'inline';
+function disableListening() {
+    practiceListeningDisabled = true;
+    document.getElementById('disable-listening-btn').style.display = 'none';
+    document.getElementById('listening-disabled-notice').style.display = 'inline';
     if (currentWordData) dispatchQuestion(currentWordData);
+}
+
+function disableSpeaking() {
+    practiceSpeakingDisabled = true;
+    document.getElementById('disable-speaking-btn').style.display = 'none';
+    document.getElementById('speaking-disabled-notice').style.display = 'inline';
+    if (currentWordData) dispatchQuestion(currentWordData);
+}
+
+function showAudioButtons(canListening, canSpeaking) {
+    document.getElementById('disable-listening-btn').style.display =
+        (canListening && !practiceListeningDisabled) ? '' : 'none';
+    document.getElementById('disable-speaking-btn').style.display =
+        (canSpeaking && !practiceSpeakingDisabled) ? '' : 'none';
 }
 
 function toggleSpeed() {
@@ -123,9 +138,10 @@ document.getElementById('play-btn').addEventListener('click', () => {
     }
 
     currentPracticeIndex = 0;
-    practiceAudioDisabled = false;
-    document.getElementById('audio-disable-btn').style.display = '';
-    document.getElementById('audio-disabled-notice').style.display = 'none';
+    practiceListeningDisabled = false;
+    practiceSpeakingDisabled = false;
+    document.getElementById('listening-disabled-notice').style.display = 'none';
+    document.getElementById('speaking-disabled-notice').style.display = 'none';
     document.getElementById('practice-modal').classList.add('active');
     renderPracticeWord();
 });
@@ -135,7 +151,7 @@ function resetWordCardFields() {
     document.getElementById('p-sentence-row').style.display = '';
     document.getElementById('p-etymology-row').style.display = '';
     document.getElementById('p-morph-row').style.display = '';
-    document.getElementById('audio-disable-bar').style.display = '';
+    showAudioButtons(false, false);
 }
 
 function renderPracticeWord() {
@@ -380,9 +396,10 @@ function startDebugPractice(level, moduleIdx) {
     const testWord = { ...baseWord, level, source: 'debug', attempts: 0, successes: 0 };
     practiceQueue = [testWord];
     currentPracticeIndex = 0;
-    practiceAudioDisabled = false;
-    document.getElementById('audio-disable-btn').style.display = '';
-    document.getElementById('audio-disabled-notice').style.display = 'none';
+    practiceListeningDisabled = false;
+    practiceSpeakingDisabled = false;
+    document.getElementById('listening-disabled-notice').style.display = 'none';
+    document.getElementById('speaking-disabled-notice').style.display = 'none';
     document.getElementById('practice-modal').classList.add('active');
 
     currentWordData = testWord;
@@ -408,9 +425,11 @@ function startDebugPractice(level, moduleIdx) {
 
 // L1-S: 語音辨識題型模組
 registerQuestionModule(1, {
-    requiresAudio: true,
+    requiresListening: true,
+    requiresSpeaking: true,
     activate(wordData) {
         document.getElementById('p-etymology-row').style.display = 'none';
+        showAudioButtons(true, true);
         document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l1').style.display = 'flex';
         const fb = document.getElementById('recognition-feedback');
@@ -433,10 +452,11 @@ registerQuestionModule(1, {
 
 // L1-A: 聽音選字題型模組
 registerQuestionModule(1, {
-    requiresAudio: true,
+    requiresListening: true,
     activate(wordData) {
         document.getElementById('p-sentence-row').style.display = 'none';
         document.getElementById('p-etymology-row').style.display = 'none';
+        showAudioButtons(true, false);
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l1a').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';

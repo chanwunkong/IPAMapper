@@ -451,9 +451,9 @@ body, html {
 .l3v-hint-item { display: flex; align-items: center; gap: 6px; }
 .l3v-hint-satisfied { color: #34c759; }
 .l3v-hint-unsatisfied { color: #c7c7cc; }
-#audio-disable-bar { display: flex; justify-content: center; align-items: center; min-height: 26px; padding: 2px 0 4px; }
-#audio-disable-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid #c7c7cc; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
-#audio-disabled-notice { font-size: 12px; color: #ff9500; font-weight: 600; letter-spacing: 0.02em; }
+#audio-disable-bar { display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 26px; padding: 2px 0 4px; flex-wrap: wrap; flex-shrink: 0; }
+#disable-listening-btn, #disable-speaking-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid #c7c7cc; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
+#listening-disabled-notice, #speaking-disabled-notice { font-size: 12px; color: #ff9500; font-weight: 600; }
 
 /* Route C: Passage Import */
 .passage-word-area { display: flex; flex-wrap: wrap; gap: 6px; }
