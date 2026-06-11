@@ -21,6 +21,23 @@
 
 ## 當前任務 (Current Focus)
 
+### 路線 E：題型面板整改 (Practice UX)
+
+- [x] (2026-06-12) [UX-P-1] `style.css` + `index.html` — 練習面板版面：`#practice-modal` 改 `overflow:hidden`；word card 壓縮；action area 設 `flex:1; overflow-y:auto; min-height:0` — 全畫面不捲動
+- [x] (2026-06-12) [UX-P-2] `index.html` — word card info-section 各欄位加上 row wrapper（`p-sentence-row`、`p-etymology-row`），便於各題型按需隱藏
+- [x] (2026-06-12) [UX-P-3] `js/practice.js` — `resetWordCardFields()` 在 `renderPracticeWord()` 前呼叫重設所有欄位可見性；L1-A/L1-S activate 隱藏 `p-sentence-row`、`p-etymology-row`；L1-V activate 額外隱藏 `audio-disable-bar`
+- [x] (2026-06-12) [UX-P-4] `js/questions/q-stub.js` — L1-V 隱藏 `p-etymology-row`、`audio-disable-bar`；L2-V/L2-A activate 隱藏 `p-sentence-row`（例句即題目，不可顯示）+ `p-etymology-row`；L2-V `renderL2Pool/Answer` 依 POS 套用底色（`buildWordPosMap` + `getPosColor`）
+- [x] (2026-06-12) [UX-P-5] `js/questions/q-stub.js` — L2-A canvas：移除目標單字水印；高度 110→180px；加入 Handwriting Recognition API（`navigator.createHandwritingRecognizer`），筆畫結束後辨識自動填入 input；不支援環境靜默降級
+
+### 題型待改進（掃描記錄）
+
+- [ ] [UX-P-6] L2-A：目前手寫辨識依賴 Chrome 99+ Handwriting Recognition API，未支援的瀏覽器只能手動輸入；考慮加入 Tesseract.js 作為廣域降級方案（但體積大，需評估）
+- [ ] [UX-P-7] L3-V：WALS hints 區塊 + input row 在小螢幕可能仍超出一屏；考慮 hints 改為可折疊
+- [ ] [UX-P-8] L1-A 選項按鈕：選項字型偏小、按鈕尺寸偏窄，觸控易誤按；建議放大至最小 44px 觸控目標
+- [ ] [UX-P-9] 練習進度列（`practice-progress`）目前顯示「目標進度: N/3 | 剩餘機會: N」，措辭對非熟悉 SRS 的使用者不直觀；考慮改為圖示化（進度圓點 + 心形機會）
+
+
+
 ### 路線 B：文法計分強化 (Grammar Scoring)
 
 目標：讓 WALS 規則解鎖對練習產生即時、可感知的代幣回饋。同時滿足越多規則 → 代幣越多，鼓勵使用者主動造出更複雜的句子。

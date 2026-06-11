@@ -130,6 +130,14 @@ document.getElementById('play-btn').addEventListener('click', () => {
     renderPracticeWord();
 });
 
+function resetWordCardFields() {
+    document.getElementById('p-word').style.visibility = 'visible';
+    document.getElementById('p-sentence-row').style.display = '';
+    document.getElementById('p-etymology-row').style.display = '';
+    document.getElementById('p-morph-row').style.display = '';
+    document.getElementById('audio-disable-bar').style.display = '';
+}
+
 function renderPracticeWord() {
     if (practiceQueue.length === 0) return endPractice();
 
@@ -154,6 +162,7 @@ function renderPracticeWord() {
     document.getElementById('p-sentence').innerHTML = renderHighlightedSentence(currentWordData.sentence);
     document.getElementById('p-etymology').textContent = currentWordData.etymology;
 
+    resetWordCardFields();
     dispatchQuestion(currentWordData);
 }
 
@@ -401,6 +410,7 @@ function startDebugPractice(level, moduleIdx) {
 registerQuestionModule(1, {
     requiresAudio: true,
     activate(wordData) {
+        document.getElementById('p-etymology-row').style.display = 'none';
         document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l1').style.display = 'flex';
         const fb = document.getElementById('recognition-feedback');
@@ -425,6 +435,8 @@ registerQuestionModule(1, {
 registerQuestionModule(1, {
     requiresAudio: true,
     activate(wordData) {
+        document.getElementById('p-sentence-row').style.display = 'none';
+        document.getElementById('p-etymology-row').style.display = 'none';
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l1a').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';

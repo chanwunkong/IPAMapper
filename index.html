@@ -67,14 +67,22 @@
                     <div class="word-phonetic" id="p-phonetic"></div>
 
                     <div class="info-section">
-                        <div class="info-label">詞性 (POS)</div>
-                        <div class="info-content" id="p-pos"></div>
-                        <div class="info-label">詞形變化</div>
-                        <div class="info-content" id="p-morph"></div>
-                        <div class="info-label">A1 例句</div>
-                        <div class="info-content" id="p-sentence"></div>
-                        <div class="info-label">字源 (Etymology)</div>
-                        <div class="info-content" id="p-etymology"></div>
+                        <div id="p-pos-row">
+                            <div class="info-label">詞性 (POS)</div>
+                            <div class="info-content" id="p-pos"></div>
+                        </div>
+                        <div id="p-morph-row">
+                            <div class="info-label">詞形變化</div>
+                            <div class="info-content" id="p-morph"></div>
+                        </div>
+                        <div id="p-sentence-row">
+                            <div class="info-label">A1 例句</div>
+                            <div class="info-content" id="p-sentence"></div>
+                        </div>
+                        <div id="p-etymology-row">
+                            <div class="info-label">字源 (Etymology)</div>
+                            <div class="info-content" id="p-etymology"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -159,7 +167,7 @@
                             <button class="tts-btn" onclick="speakText(currentWordData.sentence)">再聽例句</button>
                         </div>
                         <div id="l3-gap-sentence" class="l3-gap-sentence"></div>
-                        <canvas id="l3-canvas" style="width:100%; max-width:320px; height:110px; background:#f8f8f8; border-radius:12px; touch-action:none; display:block;"></canvas>
+                        <canvas id="l3-canvas" style="width:100%; max-width:340px; height:180px; background:#f8f8f8; border-radius:12px; touch-action:none; display:block;"></canvas>
                         <button class="tts-btn" onclick="clearL3Canvas()">清除畫布</button>
                         <input type="text" id="l3-input" placeholder="填入缺少的單字..." autocomplete="off" autocorrect="off" spellcheck="false" style="padding:10px; border:1.5px solid #c7c7cc; border-radius:10px; font-size:16px; width:100%; max-width:280px; text-align:center; user-select:text; -webkit-user-select:text;">
                         <div id="l3-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>

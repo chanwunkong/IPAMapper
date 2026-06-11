@@ -1,6 +1,9 @@
-// L1-V: 閃卡自評 — 顯示單字、音標、例句，使用者自評認識/不認識
+// L1-V: 閃卡自評 — 顯示單字、音標、POS，使用者自評認識/不認識
 registerQuestionModule(1, {
     activate(wordData) {
+        document.getElementById('p-etymology-row').style.display = 'none';
+        document.getElementById('p-sentence-row').style.display = 'none';
+        document.getElementById('audio-disable-bar').style.display = 'none';
         document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l1v').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
@@ -37,13 +40,15 @@ function l1vDontKnow() {
     document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
 }
 
-// L2: 句型重組 — 點選詞塊依序還原例句
+// L2-V: 句型重組 — 點選詞塊依序還原例句
 let l2OriginalTokens = [];
 let l2AnswerTokens = [];
 let l2PoolTokens = [];
 
 registerQuestionModule(2, {
     activate(wordData) {
+        document.getElementById('p-sentence-row').style.display = 'none';
+        document.getElementById('p-etymology-row').style.display = 'none';
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l2').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
@@ -73,10 +78,14 @@ registerQuestionModule(2, {
 function renderL2Pool() {
     const pool = document.getElementById('l2-word-pool');
     pool.innerHTML = '';
+    const wordMap = buildWordPosMap();
     l2PoolTokens.forEach((token, i) => {
         const btn = document.createElement('button');
         btn.className = 'l2-word-chip';
         btn.textContent = token;
+        const clean = token.toLowerCase().replace(/[^a-z]/g, '');
+        const pos = wordMap.get(clean) || '';
+        if (pos) btn.style.backgroundColor = getPosColor(pos);
         btn.onclick = () => l2PoolToAnswer(i);
         pool.appendChild(btn);
     });
@@ -86,10 +95,14 @@ function renderL2Answer() {
     const area = document.getElementById('l2-answer-area');
     area.innerHTML = '';
     area.style.borderStyle = l2AnswerTokens.length > 0 ? 'solid' : 'dashed';
+    const wordMap = buildWordPosMap();
     l2AnswerTokens.forEach((token, i) => {
         const btn = document.createElement('button');
         btn.className = 'l2-word-chip placed';
         btn.textContent = token;
+        const clean = token.toLowerCase().replace(/[^a-z]/g, '');
+        const pos = wordMap.get(clean) || '';
+        if (pos) btn.style.backgroundColor = getPosColor(pos);
         btn.onclick = () => l2AnswerToPool(i);
         area.appendChild(btn);
     });
@@ -135,10 +148,20 @@ function submitL2() {
     document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
 }
 
-// === L3: 聽寫填空 ===
+// === L2-A: 聽寫填空 + 手寫辨識 ===
 const L3_DPR = window.devicePixelRatio || 1;
 let l3Canvas = null, l3Ctx = null;
 let l3Strokes = [], l3IsDrawing = false, l3CurrentStroke = null;
+let l3Recognizer = null;
+let l3Drawing = null;
+
+// 初始化 Handwriting Recognition API（Chrome 99+，不支援時靜默略過）
+(async function initHWR() {
+    if (!('createHandwritingRecognizer' in navigator)) return;
+    try {
+        l3Recognizer = await navigator.createHandwritingRecognizer({ languages: ['en'] });
+    } catch(e) {}
+})();
 
 function initL3Canvas() {
     l3Canvas = document.getElementById('l3-canvas');
@@ -150,17 +173,30 @@ function initL3Canvas() {
         l3Canvas.setPointerCapture(e.pointerId);
         l3IsDrawing = true;
         const r = l3Canvas.getBoundingClientRect();
-        l3CurrentStroke = [{ x: e.clientX - r.left, y: e.clientY - r.top }];
+        l3CurrentStroke = [{ x: e.clientX - r.left, y: e.clientY - r.top, t: e.timeStamp }];
     });
     l3Canvas.addEventListener('pointermove', e => {
         if (!l3IsDrawing) return;
         const r = l3Canvas.getBoundingClientRect();
-        l3CurrentStroke.push({ x: e.clientX - r.left, y: e.clientY - r.top });
+        l3CurrentStroke.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: e.timeStamp });
         redrawL3Canvas();
     });
+
     function endL3() {
         if (l3IsDrawing && l3CurrentStroke && l3CurrentStroke.length) {
             l3Strokes.push(l3CurrentStroke);
+            if (l3Drawing) {
+                try {
+                    const stroke = new HandwritingStroke();
+                    l3CurrentStroke.forEach(pt => stroke.addPoint({ x: pt.x, y: pt.y, t: pt.t }));
+                    l3Drawing.addStroke(stroke);
+                    l3Drawing.getPrediction().then(preds => {
+                        if (preds && preds.length > 0 && preds[0].text) {
+                            document.getElementById('l3-input').value = preds[0].text;
+                        }
+                    }).catch(() => {});
+                } catch(e) {}
+            }
             l3CurrentStroke = null;
             redrawL3Canvas();
         }
@@ -187,17 +223,6 @@ function redrawL3Canvas() {
     const h = l3Canvas.height / L3_DPR;
     l3Ctx.clearRect(0, 0, w, h);
 
-    const word = currentWordData ? currentWordData.word : '';
-    if (word) {
-        l3Ctx.save();
-        l3Ctx.fillStyle = 'rgba(0,0,0,0.07)';
-        l3Ctx.textAlign = 'center';
-        l3Ctx.textBaseline = 'middle';
-        l3Ctx.font = `bold ${Math.min(h * 0.55, 52)}px -apple-system, sans-serif`;
-        l3Ctx.fillText(word, w / 2, h / 2);
-        l3Ctx.restore();
-    }
-
     l3Ctx.save();
     l3Ctx.strokeStyle = '#007aff';
     l3Ctx.lineWidth = 3;
@@ -218,11 +243,20 @@ function redrawL3Canvas() {
 function clearL3Canvas() {
     l3Strokes = [];
     l3CurrentStroke = null;
+    if (l3Drawing) {
+        try { if (typeof l3Drawing.clear === 'function') l3Drawing.clear(); } catch(e) {}
+        if (l3Recognizer) {
+            try { l3Drawing = l3Recognizer.startDrawing({ hints: { recognitionType: 'text' } }); } catch(e) {}
+        }
+    }
+    document.getElementById('l3-input').value = '';
     redrawL3Canvas();
 }
 
 registerQuestionModule(2, {
     activate(wordData) {
+        document.getElementById('p-sentence-row').style.display = 'none';
+        document.getElementById('p-etymology-row').style.display = 'none';
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l3').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
@@ -242,6 +276,9 @@ registerQuestionModule(2, {
 
         l3Strokes = [];
         l3CurrentStroke = null;
+        if (l3Recognizer) {
+            try { l3Drawing = l3Recognizer.startDrawing({ hints: { recognitionType: 'text' } }); } catch(e) {}
+        }
         initL3Canvas();
         requestAnimationFrame(() => requestAnimationFrame(resizeL3Canvas));
 
