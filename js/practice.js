@@ -5,6 +5,14 @@ let recognition = null;
 let isListening = false;
 let currentWordData = null;
 let autoAdvanceTimer = null;
+let practiceAudioDisabled = false;
+
+function disableAudio() {
+    practiceAudioDisabled = true;
+    document.getElementById('audio-disable-btn').style.display = 'none';
+    document.getElementById('audio-disabled-notice').style.display = 'inline';
+    if (currentWordData) dispatchQuestion(currentWordData);
+}
 
 function toggleSpeed() {
     isSlowSpeed = !isSlowSpeed;
@@ -99,6 +107,9 @@ document.getElementById('play-btn').addEventListener('click', () => {
     }
 
     currentPracticeIndex = 0;
+    practiceAudioDisabled = false;
+    document.getElementById('audio-disable-btn').style.display = '';
+    document.getElementById('audio-disabled-notice').style.display = 'none';
     document.getElementById('practice-modal').classList.add('active');
     renderPracticeWord();
 });
@@ -334,6 +345,7 @@ function l1aSelectOption(btn, selected) {
 
 // L1-S: 語音辨識題型模組
 registerQuestionModule(1, {
+    requiresAudio: true,
     activate(wordData) {
         document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l1').style.display = 'flex';
@@ -357,6 +369,7 @@ registerQuestionModule(1, {
 
 // L1-A: 聽音選字題型模組
 registerQuestionModule(1, {
+    requiresAudio: true,
     activate(wordData) {
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l1a').style.display = 'flex';

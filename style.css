@@ -391,3 +391,6 @@ body, html {
 .l3v-hint-item { display: flex; align-items: center; gap: 6px; }
 .l3v-hint-satisfied { color: #34c759; }
 .l3v-hint-unsatisfied { color: #c7c7cc; }
+#audio-disable-bar { display: flex; justify-content: center; align-items: center; min-height: 26px; padding: 2px 0 4px; }
+#audio-disable-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid #c7c7cc; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
+#audio-disabled-notice { font-size: 12px; color: #ff9500; font-weight: 600; letter-spacing: 0.02em; }

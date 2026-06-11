@@ -2,6 +2,12 @@
 
 ## 當前任務 (Current Focus)
 
+### 無障礙模式：跳過語音類題型（Session 旗標）
+- [x] (2026-06-11) [SKIP-1] 在 `js/practice.js` 新增 session-level 旗標 `practiceAudioDisabled`（預設 `false`，每次開啟練習頁面重置，不寫入存檔）
+- [x] (2026-06-11) [SKIP-2] 在 `index.html` 練習頁面頂部新增「無法聆聽/說話」按鈕，點擊後設定旗標並顯示「已停用語音題型」提示，`style.css` 補充對應樣式
+- [x] (2026-06-11) [SKIP-3] 修改 `js/dispatcher.js`：模組支援宣告 `requiresAudio: true`；若旗標為 `true` 則排除音訊模組後再隨機派發
+- [x] (2026-06-11) [SKIP-4] 在 `js/practice.js` 的 L1-S 與 L1-A 模組加入 `requiresAudio: true` 宣告
+
 ### POS 規範系統重構（L4 前置依賴，須依序完成）
 - [ ] [POS-1] 建立 `POS_SPEC.md` — 定義標籤規範、CSV 格式、Morphological 欄位格式、WALS 對照（已完成文件，待後續步驟實作）
 - [ ] [POS-2] 更新 `js/state.js` 的 `getPosColor()` — 依 POS_SPEC 擴充為 9 色對應，改為精確前綴比對取代 `includes()` 模糊比對
