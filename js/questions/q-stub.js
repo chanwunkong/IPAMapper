@@ -394,7 +394,19 @@ function submitL3V() {
     const satisfiedCount = unlockedIds.filter(id => checkWalsRule(id, l3vTokens)).length;
     if (satisfiedCount > 0 || unlockedIds.length === 0) {
         currentWordData.successes++;
-        fb.textContent = satisfiedCount > 0 ? `正確！滿足 ${satisfiedCount} 條規則` : '良好！';
+        if (satisfiedCount >= 3) {
+            const bonus = satisfiedCount * 2;
+            fb.textContent = `完整句型 +${bonus}`;
+            updateTokens(bonus);
+        } else if (satisfiedCount === 2) {
+            fb.textContent = `語法組合 +4`;
+            updateTokens(4);
+        } else if (satisfiedCount === 1) {
+            fb.textContent = `基礎句型 +2`;
+            updateTokens(2);
+        } else {
+            fb.textContent = `良好！`;
+        }
         fb.className = 'feedback-correct';
         document.getElementById('l3v-actions').style.display = 'none';
         startAutoAdvance('l3v-countdown');

@@ -25,7 +25,7 @@
 
 目標：讓 WALS 規則解鎖對練習產生即時、可感知的代幣回饋。同時滿足越多規則 → 代幣越多，鼓勵使用者主動造出更複雜的句子。
 
-- [ ] [SCORE-1] `js/questions/q-stub.js` — `submitL3V()` 根據 `satisfiedCount` 給即時代幣：每滿足一條規則給 2 代幣（`updateTokens(satisfiedCount * 2)`）；反饋文字分層：0 條=「良好」、1 條=「基礎句型 +2」、2 條=「語法組合 +4」、3 條以上=「完整句型 +N」
+- [x] (2026-06-11) [SCORE-1] `js/questions/q-stub.js` — `submitL3V()` 根據 `satisfiedCount` 給即時代幣：每滿足一條規則給 2 代幣（`updateTokens(satisfiedCount * 2)`）；反饋文字分層：0 條=「良好」、1 條=「基礎句型 +2」、2 條=「語法組合 +4」、3 條以上=「完整句型 +N」
 - [ ] [SCORE-2] `js/state.js` + `js/storage.js` — 存檔結構加入 `ruleHitCounts: {}` 記錄每條 WALS 規則在練習中被滿足的累計次數；`submitL3V()` 答題通過時更新對應規則計數並存檔
 - [ ] [SCORE-3] `js/grammar.js` — WALS 規則卡片（已解鎖狀態）顯示「已觸發 N 次」，讓解鎖規則有可見的使用記錄
 
@@ -38,6 +38,11 @@
 - [ ] [TEXT-3] `index.html` + `style.css` — 分析結果區：已知詞灰底、陌生詞高亮 + 各別「加入地圖」按鈕；顯示統計（共 N 詞，已知 X，陌生 Y）
 - [ ] [TEXT-4] `js/passage.js` — `addPassageWordToMap(word)` 將選取的陌生詞建立基礎詞條（word 填入，其餘空白）加入 `storageData`，觸發 `updateStorageUI()`
 - [ ] [TEXT-5] `js/passage.js` + `index.html` — 文章朗讀模式：逐句 TTS 播放、句中標記陌生詞；每隔 3 句自動暫停插入一道陌生詞練習（呼叫 dispatcher）
+
+### 規則定義待解 (Rule Ambiguity)
+
+- [ ] [RULE-1] WALS 116（問句 auxiliary 置句首）與 WALS 81（SVO 語序）衝突：問句結構本身不符合 SVO，需明確定義兩者是否互斥，或問句模式下 `checkWalsRule(81)` 應自動豁免
+- [ ] [RULE-2] 前置修飾語順序：WALS 87（形容詞）、88（指示詞）、89（數詞）同時存在時，英語慣例為 DEM + NUM + ADJ + N（如 "those two big dogs"），但目前 `checkWalsRule` 僅各自獨立驗證位置，未定義三者共存時的順序規則
 
 ### 待辦（低優先）
 
@@ -69,6 +74,7 @@
 
 ## 歷史紀錄 (Archive)
 
+- [x] (2026-06-11) [SCORE-1] `submitL3V()` 即時代幣計分：satisfiedCount × 2，反饋文字分四層（良好 / 基礎句型 / 語法組合 / 完整句型）
 - [x] (2026-06-11) [TEST] 臨時測試工具：DEV 按鈕 + debug modal + `startDebugPractice(level, moduleIdx)` 直接進入任意題型
 - [x] (2026-06-11) [L1-V] L1-V 純視覺閃卡自評題型：`#action-l1v` 面板 + `registerQuestionModule(1,...)` 實作，「認識」/「不認識」雙路徑，無音訊無麥克風
 - [x] (2026-06-11) [ARCH-1] 建立 `ARCHITECTURE.md` — 檔案職責、模組呼叫關係、SRS 資料流、Level-Module 現狀表
