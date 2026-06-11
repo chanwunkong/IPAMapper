@@ -2,17 +2,9 @@
 
 ## 當前任務 (Current Focus)
 
-### Bug 修正（建議優先執行）
-- [x] (2026-06-11) [BUG-1] `js/practice.js` — 新增 `fisherYatesShuffle()`，取代 `shuffleAndTake()` 與 `generateL1AOptions()` 的 `sort(() => 0.5 - Math.random())` 反模式
-- [x] (2026-06-11) [BUG-2] `js/practice.js` — `endPractice()` 失敗單字回塞前加 `find()` 重複檢查，防止同一單字多次寫入 dataset
-- [x] (2026-06-11) [BUG-3] `js/practice.js` — `startAutoAdvance()` 開頭先清除 `autoAdvanceTimer`，防止快速點擊產生多個並行計時器
+### Bug 修正
 - [ ] [BUG-4] `js/canvas.js:181-193` — 地圖單字字體縮放改為 `while` 迴圈逐步縮小，直到 `measureText` 寬度符合邊界（現在只縮一次到 16px）
 - [ ] [BUG-5] `js/questions/q-stub.js:207` — L3 Canvas 初始化的 `setTimeout(resizeL3Canvas, 50)` 改為 `requestAnimationFrame` 確保 layout 完成後才讀取尺寸
-
-### UX 改善（高優先）
-- [ ] [UX-1] `index.html:53` — 練習退出按鈕加入確認提示，防止誤觸損失進度（`confirm()` 或輕量 Modal）
-- [ ] [UX-2] `index.html:59` — 無障礙停用通知文字改為「已停用語音題型，本場僅顯示文字題。重新開始練習可恢復。」
-- [ ] [UX-3] `js/questions/q-stub.js:304` — L3-V 輸入框 placeholder 改為「輸入單字，按 Enter 加入句子（支援任何單字）」
 
 ### UX 改善（中優先）
 - [ ] [UX-4] 倒計時進度條區域補充靜態文字「自動跳題中...」，讓使用者知道計時器正在倒數
@@ -48,6 +40,12 @@
 - 導入完整的跨裝置雲端資料庫架構與離線支援
 
 ## 歷史紀錄 (Archive)
+- [x] (2026-06-11) [BUG-1] `js/practice.js` — 新增 `fisherYatesShuffle()`，修正 `shuffleAndTake()` 與 `generateL1AOptions()` 的 sort 反模式
+- [x] (2026-06-11) [BUG-2] `js/practice.js` — `endPractice()` 失敗單字回塞前加重複檢查
+- [x] (2026-06-11) [BUG-3] `js/practice.js` — `startAutoAdvance()` 開頭先清除舊計時器
+- [x] (2026-06-11) [UX-1] `index.html` — 退出按鈕加 `confirm()` 確認提示
+- [x] (2026-06-11) [UX-2] `index.html` — 無障礙停用通知補充完整說明文字
+- [x] (2026-06-11) [UX-3] `index.html` — L3-V 輸入框 placeholder 改為完整引導說明
 - [x] (2026-06-11) [TEMP-1] 題庫管理區塊加入「載入預設題庫 Lesson1」按鈕，`fetch('./Lesson1.csv')` 讀取後呼叫 `importCSVText()` 匯入，適用 GitHub Pages 環境
 - [x] (2026-06-11) [DUP-1/2] 確認並補強單字去重：現有 `existingWords`(storageData+grid) 機制；新增跨單字庫去重，所有已消耗詞（usedIndices 範圍）一律排除
 - [x] (2026-06-11) [POS-1] 建立 `POS_SPEC.md` — 定義標籤規範、CSV 格式、Morphological 欄位格式、WALS 對照

@@ -50,13 +50,13 @@
 
             <div id="practice-modal">
                 <div class="practice-header">
-                    <button class="speed-btn" style="color:#ff3b30;" onclick="endPractice()">退出</button>
+                    <button class="speed-btn" style="color:#ff3b30;" onclick="if(confirm('確定退出？目前進度將被計算並儲存。'))endPractice()">退出</button>
                     <div class="practice-title" id="practice-progress">進度: 0/0</div>
                     <button class="speed-btn" id="speed-toggle" onclick="toggleSpeed()">語速: 正常</button>
                 </div>
                 <div id="audio-disable-bar">
                     <button id="audio-disable-btn" onclick="disableAudio()">無法聆聽/說話</button>
-                    <span id="audio-disabled-notice" style="display:none;">已停用語音題型</span>
+                    <span id="audio-disabled-notice" style="display:none;">已停用語音題型，本場僅顯示文字題。重新開始練習可恢復。</span>
                 </div>
 
                 <div class="word-display" id="practice-word-card">
@@ -157,7 +157,7 @@
                         <div style="font-size:14px; color:var(--text-secondary); text-align:center;">加入單字組成句子，觀察 WALS 規則提示</div>
                         <div id="l3v-sentence" class="l3v-sentence-area"></div>
                         <div class="l3v-input-row">
-                            <input type="text" id="l3v-input" placeholder="輸入單字..." autocomplete="off" autocorrect="off" spellcheck="false">
+                            <input type="text" id="l3v-input" placeholder="輸入單字，按 Enter 加入（支援任何單字）" autocomplete="off" autocorrect="off" spellcheck="false">
                             <button class="action-btn btn-unlock" onclick="l3vAddWord()">加入</button>
                         </div>
                         <div id="l3v-wals-hints" class="l3v-wals-hints"></div>
