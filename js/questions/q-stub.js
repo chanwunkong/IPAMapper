@@ -182,7 +182,7 @@ function clearL3Canvas() {
     redrawL3Canvas();
 }
 
-registerQuestionModule(3, {
+registerQuestionModule(2, {
     activate(wordData) {
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l3').style.display = 'flex';
@@ -239,6 +239,142 @@ function submitL3() {
     }
     document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
 }
+
+// === L3-V: POS 造句 ===
+let l3vTokens = [];
+
+registerQuestionModule(3, {
+    activate(wordData) {
+        document.getElementById('p-word').style.visibility = 'visible';
+        document.getElementById('action-l3v').style.display = 'flex';
+        document.getElementById('next-word-btn').style.display = 'none';
+        document.getElementById('l3v-feedback').textContent = '';
+        document.getElementById('l3v-feedback').className = '';
+        document.getElementById('l3v-actions').style.display = 'flex';
+        document.getElementById('l3v-countdown').style.display = 'none';
+        document.getElementById('l3v-input').value = '';
+        l3vTokens = [];
+        renderL3VSentence();
+        updateL3VWalsHints();
+        speakText(wordData.word);
+    },
+    deactivate() {
+        cancelAutoAdvance('l3v-countdown');
+        document.getElementById('p-word').style.visibility = 'visible';
+        document.getElementById('action-l3v').style.display = 'none';
+    }
+});
+
+function l3vAddWord() {
+    const input = document.getElementById('l3v-input');
+    const raw = input.value.trim();
+    if (!raw) return;
+    const wordMap = buildWordPosMap();
+    const pos = wordMap.get(raw.toLowerCase()) || '';
+    const morph = (() => {
+        for (const ds of datasets) {
+            const w = ds.words.find(w => w.word.toLowerCase() === raw.toLowerCase());
+            if (w) return w.morphological || '';
+        }
+        for (const item of storageData) {
+            if (item.word.toLowerCase() === raw.toLowerCase()) return item.morphological || '';
+        }
+        for (const [, item] of grid.entries()) {
+            if (item.word.toLowerCase() === raw.toLowerCase()) return item.morphological || '';
+        }
+        return '';
+    })();
+    l3vTokens.push({ word: raw, pos, morphological: morph });
+    input.value = '';
+    renderL3VSentence();
+    updateL3VWalsHints();
+    input.focus();
+}
+
+function l3vRemoveWord(idx) {
+    l3vTokens.splice(idx, 1);
+    renderL3VSentence();
+    updateL3VWalsHints();
+}
+
+function renderL3VSentence() {
+    const area = document.getElementById('l3v-sentence');
+    if (!area) return;
+    if (!l3vTokens.length) {
+        area.innerHTML = '<span style="color:#c7c7cc; font-size:14px;">點擊「加入」放入單字...</span>';
+        return;
+    }
+    area.innerHTML = '';
+    l3vTokens.forEach((t, i) => {
+        const chip = document.createElement('span');
+        chip.className = 'l3v-word-chip';
+        chip.textContent = t.word + ' ×';
+        chip.style.backgroundColor = t.pos ? getPosColor(t.pos) : '#e5e5ea';
+        chip.onclick = () => l3vRemoveWord(i);
+        area.appendChild(chip);
+    });
+}
+
+function updateL3VWalsHints() {
+    const container = document.getElementById('l3v-wals-hints');
+    if (!container) return;
+    const unlocked = rulesA1.filter(r => isRuleUnlocked(r.id));
+    if (!unlocked.length) {
+        container.innerHTML = '<span style="color:#c7c7cc; font-size:13px;">解鎖 WALS 規則後，此處將顯示語法提示。</span>';
+        return;
+    }
+    container.innerHTML = unlocked.map(rule => {
+        const ok = l3vTokens.length > 0 && checkWalsRule(rule.id, l3vTokens);
+        return `<div class="l3v-hint-item ${ok ? 'l3v-hint-satisfied' : 'l3v-hint-unsatisfied'}">${ok ? '✓' : '○'} WALS ${rule.id} ${rule.name}</div>`;
+    }).join('');
+}
+
+function submitL3V() {
+    if (!l3vTokens.length) {
+        const fb = document.getElementById('l3v-feedback');
+        fb.textContent = '請先加入單字';
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    const targetLower = currentWordData.word.toLowerCase();
+    if (!l3vTokens.some(t => t.word.toLowerCase() === targetLower)) {
+        const fb = document.getElementById('l3v-feedback');
+        fb.textContent = `句子必須包含目標單字：${currentWordData.word}`;
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    if (l3vTokens.length < 2) {
+        const fb = document.getElementById('l3v-feedback');
+        fb.textContent = '請至少加入 2 個單字';
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    currentWordData.attempts++;
+    const fb = document.getElementById('l3v-feedback');
+    const unlockedIds = rulesA1.filter(r => isRuleUnlocked(r.id)).map(r => r.id);
+    const satisfiedCount = unlockedIds.filter(id => checkWalsRule(id, l3vTokens)).length;
+    if (satisfiedCount > 0 || unlockedIds.length === 0) {
+        currentWordData.successes++;
+        fb.textContent = satisfiedCount > 0 ? `正確！滿足 ${satisfiedCount} 條規則` : '良好！';
+        fb.className = 'feedback-correct';
+        document.getElementById('l3v-actions').style.display = 'none';
+        startAutoAdvance('l3v-countdown');
+    } else {
+        fb.textContent = '試試看加入更多符合已解鎖規則的單字';
+        fb.className = 'feedback-wrong';
+        if (currentWordData.attempts >= 5) {
+            document.getElementById('l3v-actions').style.display = 'none';
+            startAutoAdvance('l3v-countdown');
+        }
+    }
+    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+}
+
+document.addEventListener('keydown', e => {
+    if (document.getElementById('action-l3v').style.display !== 'none' && e.key === 'Enter') {
+        l3vAddWord();
+    }
+});
 
 // L4: 文法應用 (stub)
 registerQuestionModule(4, {

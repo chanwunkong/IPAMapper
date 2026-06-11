@@ -1,7 +1,8 @@
 const questionModules = {};
 
 function registerQuestionModule(level, module) {
-    questionModules[level] = module;
+    if (!questionModules[level]) questionModules[level] = [];
+    questionModules[level].push(module);
 }
 
 let activeDispatchModule = null;
@@ -9,9 +10,10 @@ let activeDispatchModule = null;
 function dispatchQuestion(wordData) {
     if (activeDispatchModule) activeDispatchModule.deactivate();
     const level = wordData.level || 1;
-    const key = questionModules[level] ? level : 1;
-    activeDispatchModule = questionModules[key];
-    if (activeDispatchModule) activeDispatchModule.activate(wordData);
+    const pool = questionModules[level] || questionModules[1] || [];
+    if (!pool.length) return;
+    activeDispatchModule = pool[Math.floor(Math.random() * pool.length)];
+    activeDispatchModule.activate(wordData);
 }
 
 function deactivateCurrentQuestion() {

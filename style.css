@@ -356,3 +356,38 @@ body, html {
 #hwp-meta { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
 #hwp-pos, #hwp-level { font-size: 12px; color: #555; background: #f2f2f7; border-radius: 6px; padding: 2px 8px; }
 .hwp-btn-row { display: flex; gap: 10px; margin-top: 12px; justify-content: center; }
+
+.l1a-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 320px; }
+.l1a-option-btn {
+    padding: 14px 10px; border: 2px solid #c7c7cc; border-radius: 12px;
+    background: #fff; font-size: 17px; font-weight: 600; font-family: 'Courier New', monospace;
+    cursor: pointer; transition: all 0.15s; color: var(--text-main);
+}
+.l1a-option-btn:active { transform: scale(0.97); }
+.l1a-option-btn.correct { border-color: #34c759; background: #e6fff0; color: #1a8a32; }
+.l1a-option-btn.wrong { border-color: #ff3b30; background: #fff0ee; color: #cc2d24; }
+
+.l3v-sentence-area {
+    display: flex; flex-wrap: wrap; gap: 6px; min-height: 48px;
+    width: 100%; max-width: 320px; padding: 10px; border-radius: 12px;
+    border: 2px dashed #c7c7cc; background: #f9f9f9; align-items: center;
+}
+.l3v-word-chip {
+    padding: 6px 12px; border-radius: 16px; font-size: 15px; font-weight: 500;
+    cursor: pointer; border: 1.5px solid rgba(0,0,0,0.1); transition: opacity 0.15s;
+    user-select: none; -webkit-user-select: none;
+}
+.l3v-word-chip:active { opacity: 0.6; }
+.l3v-input-row { display: flex; gap: 8px; width: 100%; max-width: 320px; align-items: center; }
+.l3v-input-row input {
+    flex: 1; padding: 10px; border: 1.5px solid #c7c7cc; border-radius: 10px;
+    font-size: 16px; user-select: text; -webkit-user-select: text;
+}
+.l3v-wals-hints {
+    width: 100%; max-width: 320px; padding: 10px 14px; border-radius: 10px;
+    background: #f2f2f7; font-size: 13px; line-height: 1.9; color: var(--text-secondary);
+    min-height: 40px;
+}
+.l3v-hint-item { display: flex; align-items: center; gap: 6px; }
+.l3v-hint-satisfied { color: #34c759; }
+.l3v-hint-unsatisfied { color: #c7c7cc; }

@@ -277,7 +277,62 @@ function endPractice() {
     showToast(`練習結束！共 ${passedCount} 題過關，獲得 ${tokensEarned} 代幣`);
 }
 
-// L1 / L5: 語音辨識題型模組
+function generateL1AOptions(word) {
+    const vowels = 'aeiou';
+    const consonants = 'bcdfghjklmnpqrstvwxyz';
+    const lower = word.toLowerCase();
+    const distractors = new Set();
+    let attempts = 0;
+    while (distractors.size < 3 && attempts < 100) {
+        attempts++;
+        const letters = lower.split('');
+        const eligible = letters.map((c, i) => (/[a-z]/.test(c) ? i : -1)).filter(i => i >= 0);
+        if (!eligible.length) break;
+        const idx = eligible[Math.floor(Math.random() * eligible.length)];
+        const ch = letters[idx];
+        const pool = (vowels.includes(ch) ? vowels : consonants).split('').filter(c => c !== ch);
+        const replacement = pool[Math.floor(Math.random() * pool.length)];
+        const distractor = letters.map((c, i) => (i === idx ? replacement : c)).join('');
+        if (distractor !== lower) distractors.add(distractor);
+    }
+    return [lower, ...[...distractors].slice(0, 3)].sort(() => 0.5 - Math.random());
+}
+
+function l1aSelectOption(btn, selected) {
+    const correct = currentWordData.word.toLowerCase();
+    currentWordData.attempts++;
+    document.querySelectorAll('.l1a-option-btn').forEach(b => (b.disabled = true));
+    const fb = document.getElementById('l1a-feedback');
+    if (selected === correct) {
+        currentWordData.successes++;
+        btn.classList.add('correct');
+        fb.textContent = '正確！';
+        fb.className = 'feedback-correct';
+        startAutoAdvance('l1a-countdown');
+    } else {
+        btn.classList.add('wrong');
+        document.querySelectorAll('.l1a-option-btn').forEach(b => {
+            if (b.dataset.word === correct) b.classList.add('correct');
+        });
+        fb.textContent = `正確拼寫：${currentWordData.word}`;
+        fb.className = 'feedback-wrong';
+        if (currentWordData.attempts >= 5) {
+            startAutoAdvance('l1a-countdown');
+        } else {
+            setTimeout(() => {
+                document.querySelectorAll('.l1a-option-btn').forEach(b => {
+                    b.classList.remove('correct', 'wrong');
+                    b.disabled = false;
+                });
+                fb.textContent = '';
+                fb.className = '';
+            }, 1500);
+        }
+    }
+    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+}
+
+// L1-S: 語音辨識題型模組
 registerQuestionModule(1, {
     activate(wordData) {
         document.getElementById('p-word').style.visibility = 'visible';
@@ -297,5 +352,35 @@ registerQuestionModule(1, {
         if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
         isListening = false;
         document.getElementById('mic-btn').classList.remove('listening');
+    }
+});
+
+// L1-A: 聽音選字題型模組
+registerQuestionModule(1, {
+    activate(wordData) {
+        document.getElementById('p-word').style.visibility = 'hidden';
+        document.getElementById('action-l1a').style.display = 'flex';
+        document.getElementById('next-word-btn').style.display = 'none';
+        document.getElementById('l1a-feedback').textContent = '';
+        document.getElementById('l1a-feedback').className = '';
+        document.getElementById('l1a-countdown').style.display = 'none';
+
+        const opts = generateL1AOptions(wordData.word);
+        const container = document.getElementById('l1a-options');
+        container.innerHTML = '';
+        opts.forEach(w => {
+            const btn = document.createElement('button');
+            btn.className = 'l1a-option-btn';
+            btn.textContent = w;
+            btn.dataset.word = w;
+            btn.onclick = () => l1aSelectOption(btn, w);
+            container.appendChild(btn);
+        });
+        speakSequence([wordData.word, wordData.sentence]);
+    },
+    deactivate() {
+        cancelAutoAdvance('l1a-countdown');
+        document.getElementById('p-word').style.visibility = 'visible';
+        document.getElementById('action-l1a').style.display = 'none';
     }
 });

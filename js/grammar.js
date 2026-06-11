@@ -21,6 +21,64 @@ function unlockRule(ruleId, ruleName) {
     }
 }
 
+function checkWalsRule(ruleId, tokens) {
+    const hasPos = p => tokens.some(t => t.pos === p || (t.pos && t.pos.startsWith(p + '.')));
+    switch (ruleId) {
+        case 37: return hasPos('article.definite');
+        case 38: return hasPos('article.indefinite');
+        case 66: return hasPos('verb.past');
+        case 67: return hasPos('auxiliary.future') || hasPos('verb.future');
+        case 112: return hasPos('negation');
+        case 116:
+            if (!tokens.length) return false;
+            return tokens[0].pos === 'auxiliary' || (tokens[0].pos && tokens[0].pos.startsWith('auxiliary.'));
+        case 87:
+            for (let i = 0; i < tokens.length - 1; i++) {
+                if (!tokens[i].pos) continue;
+                if (tokens[i].pos === 'adjective' || tokens[i].pos.startsWith('adjective.')) {
+                    for (let j = i + 1; j < tokens.length; j++) {
+                        if (tokens[j].pos === 'noun' || (tokens[j].pos && tokens[j].pos.startsWith('noun.'))) return true;
+                    }
+                }
+            }
+            return false;
+        case 88:
+            for (let i = 0; i < tokens.length - 1; i++) {
+                if (tokens[i].pos !== 'pronoun.demonstrative') continue;
+                for (let j = i + 1; j < tokens.length; j++) {
+                    if (tokens[j].pos === 'noun' || (tokens[j].pos && tokens[j].pos.startsWith('noun.'))) return true;
+                }
+            }
+            return false;
+        case 89:
+            for (let i = 0; i < tokens.length - 1; i++) {
+                if (!tokens[i].pos) continue;
+                if (tokens[i].pos === 'numeral' || tokens[i].pos.startsWith('numeral.')) {
+                    for (let j = i + 1; j < tokens.length; j++) {
+                        if (tokens[j].pos === 'noun' || (tokens[j].pos && tokens[j].pos.startsWith('noun.'))) return true;
+                    }
+                }
+            }
+            return false;
+        case 81: {
+            let sIdx = -1, vIdx = -1, oIdx = -1;
+            for (let i = 0; i < tokens.length; i++) {
+                const p = tokens[i].pos;
+                if (!p) continue;
+                if (sIdx === -1 && (p.startsWith('pronoun.personal') || p === 'noun' || p.startsWith('noun.'))) { sIdx = i; }
+                else if (sIdx !== -1 && vIdx === -1 && (p === 'verb' || p.startsWith('verb.') || p === 'auxiliary' || p.startsWith('auxiliary.'))) { vIdx = i; }
+                else if (vIdx !== -1 && oIdx === -1 && (p === 'noun' || p.startsWith('noun.') || p.startsWith('pronoun.'))) { oIdx = i; }
+            }
+            return sIdx !== -1 && vIdx !== -1 && oIdx !== -1;
+        }
+        case 26:
+        case 33:
+            return tokens.some(t => t.morphological && t.morphological.includes('/'));
+        default:
+            return false;
+    }
+}
+
 function renderGrammarRules() {
     const container = document.getElementById('rule-list'); container.innerHTML = '';
     rulesA1.forEach(rule => {
