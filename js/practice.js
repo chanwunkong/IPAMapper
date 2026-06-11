@@ -112,11 +112,7 @@ function renderPracticeWord() {
     document.getElementById('p-sentence').textContent = currentWordData.sentence;
     document.getElementById('p-etymology').textContent = currentWordData.etymology;
 
-    const fb = document.getElementById('recognition-feedback');
-    fb.textContent = "請點擊麥克風發音"; fb.className = "";
-    document.getElementById('next-word-btn').style.display = 'none';
-
-    speakText(currentWordData.word);
+    dispatchQuestion(currentWordData);
 }
 
 function skipWord() {
@@ -172,6 +168,7 @@ function toggleMic() {
 function moveToNextWord() { currentPracticeIndex = (currentPracticeIndex + 1) % practiceQueue.length; renderPracticeWord(); }
 
 function endPractice() {
+    deactivateCurrentQuestion();
     let tokensEarned = 0; let passedCount = 0;
 
     practiceQueue.forEach(item => {
@@ -215,3 +212,21 @@ function endPractice() {
     updateStorageUI(); drawCanvas(); saveCurrentData();
     showToast(`練習結束！共 ${passedCount} 題過關，獲得 ${tokensEarned} 代幣`);
 }
+
+// L1 / L5: 語音辨識題型模組
+registerQuestionModule(1, {
+    activate(wordData) {
+        document.getElementById('p-word').style.visibility = 'visible';
+        document.getElementById('action-l1').style.display = 'flex';
+        const fb = document.getElementById('recognition-feedback');
+        fb.textContent = "請點擊麥克風發音"; fb.className = "";
+        document.getElementById('next-word-btn').style.display = 'none';
+        speakText(wordData.word);
+    },
+    deactivate() {
+        document.getElementById('action-l1').style.display = 'none';
+        if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
+        isListening = false;
+        document.getElementById('mic-btn').classList.remove('listening');
+    }
+});
