@@ -249,6 +249,15 @@ body, html {
 .l2-word-chip:active { background: #e5e5ea; }
 .l2-word-chip.placed { background: #e6f2ff; border-color: var(--accent-color); color: var(--accent-color); }
 
+.l3-gap-sentence {
+    font-size: 16px; line-height: 1.8; text-align: center; padding: 8px 4px;
+    color: var(--text-main); user-select: text; -webkit-user-select: text; width: 100%;
+}
+.l3-blank {
+    display: inline-block; min-width: 60px; border-bottom: 2px solid var(--accent-color);
+    color: var(--accent-color); font-weight: bold; text-align: center; letter-spacing: 2px;
+}
+
 .l1-retry-btn {
     background-color: var(--accent-color); color: white; border: none; border-radius: 20px;
     padding: 14px 32px; font-size: 16px; font-weight: bold; cursor: pointer;

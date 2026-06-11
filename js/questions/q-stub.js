@@ -96,18 +96,149 @@ function submitL2() {
     document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
 }
 
-// L3: 句型重組 (stub)
+// === L3: 聽寫填空 ===
+const L3_DPR = window.devicePixelRatio || 1;
+let l3Canvas = null, l3Ctx = null;
+let l3Strokes = [], l3IsDrawing = false, l3CurrentStroke = null;
+
+function initL3Canvas() {
+    l3Canvas = document.getElementById('l3-canvas');
+    if (!l3Canvas || l3Canvas._l3init) return;
+    l3Canvas._l3init = true;
+    l3Ctx = l3Canvas.getContext('2d');
+
+    l3Canvas.addEventListener('pointerdown', e => {
+        l3Canvas.setPointerCapture(e.pointerId);
+        l3IsDrawing = true;
+        const r = l3Canvas.getBoundingClientRect();
+        l3CurrentStroke = [{ x: e.clientX - r.left, y: e.clientY - r.top }];
+    });
+    l3Canvas.addEventListener('pointermove', e => {
+        if (!l3IsDrawing) return;
+        const r = l3Canvas.getBoundingClientRect();
+        l3CurrentStroke.push({ x: e.clientX - r.left, y: e.clientY - r.top });
+        redrawL3Canvas();
+    });
+    function endL3() {
+        if (l3IsDrawing && l3CurrentStroke && l3CurrentStroke.length) {
+            l3Strokes.push(l3CurrentStroke);
+            l3CurrentStroke = null;
+            redrawL3Canvas();
+        }
+        l3IsDrawing = false;
+    }
+    l3Canvas.addEventListener('pointerup', endL3);
+    l3Canvas.addEventListener('pointercancel', endL3);
+    l3Canvas.addEventListener('pointerleave', endL3);
+}
+
+function resizeL3Canvas() {
+    if (!l3Canvas || !l3Ctx) return;
+    const rect = l3Canvas.getBoundingClientRect();
+    if (!rect.width) return;
+    l3Canvas.width = rect.width * L3_DPR;
+    l3Canvas.height = rect.height * L3_DPR;
+    l3Ctx.setTransform(L3_DPR, 0, 0, L3_DPR, 0, 0);
+    redrawL3Canvas();
+}
+
+function redrawL3Canvas() {
+    if (!l3Ctx || !l3Canvas) return;
+    const w = l3Canvas.width / L3_DPR;
+    const h = l3Canvas.height / L3_DPR;
+    l3Ctx.clearRect(0, 0, w, h);
+
+    const word = currentWordData ? currentWordData.word : '';
+    if (word) {
+        l3Ctx.save();
+        l3Ctx.fillStyle = 'rgba(0,0,0,0.07)';
+        l3Ctx.textAlign = 'center';
+        l3Ctx.textBaseline = 'middle';
+        l3Ctx.font = `bold ${Math.min(h * 0.55, 52)}px -apple-system, sans-serif`;
+        l3Ctx.fillText(word, w / 2, h / 2);
+        l3Ctx.restore();
+    }
+
+    l3Ctx.save();
+    l3Ctx.strokeStyle = '#007aff';
+    l3Ctx.lineWidth = 3;
+    l3Ctx.lineJoin = 'round';
+    l3Ctx.lineCap = 'round';
+    const drawS = s => {
+        if (!s || s.length < 2) return;
+        l3Ctx.beginPath();
+        l3Ctx.moveTo(s[0].x, s[0].y);
+        for (let i = 1; i < s.length; i++) l3Ctx.lineTo(s[i].x, s[i].y);
+        l3Ctx.stroke();
+    };
+    l3Strokes.forEach(drawS);
+    if (l3CurrentStroke) drawS(l3CurrentStroke);
+    l3Ctx.restore();
+}
+
+function clearL3Canvas() {
+    l3Strokes = [];
+    l3CurrentStroke = null;
+    redrawL3Canvas();
+}
+
 registerQuestionModule(3, {
     activate(wordData) {
+        document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l3').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
-        document.getElementById('sentence-feedback').textContent = '';
+        document.getElementById('l3-input').value = '';
+        document.getElementById('l3-feedback').textContent = '';
+        document.getElementById('l3-feedback').className = '';
+        document.getElementById('l3-actions').style.display = 'flex';
+        document.getElementById('l3-countdown').style.display = 'none';
+
+        const sentence = escapeHtml(wordData.sentence || '');
+        const escapedWord = wordData.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const gapHtml = sentence.replace(
+            new RegExp(`(?<![\\w])${escapedWord}(?![\\w])`, 'gi'),
+            '<span class="l3-blank">___</span>'
+        );
+        document.getElementById('l3-gap-sentence').innerHTML = gapHtml || sentence;
+
+        l3Strokes = [];
+        l3CurrentStroke = null;
+        initL3Canvas();
+        setTimeout(resizeL3Canvas, 50);
+
         speakText(wordData.sentence);
     },
     deactivate() {
+        cancelAutoAdvance('l3-countdown');
+        document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l3').style.display = 'none';
     }
 });
+
+function submitL3() {
+    const input = document.getElementById('l3-input');
+    const typed = input.value.trim().toLowerCase().replace(/[^\w]/g, '');
+    const target = currentWordData.word.toLowerCase().replace(/[^\w]/g, '');
+    if (!typed) return;
+    currentWordData.attempts++;
+    const fb = document.getElementById('l3-feedback');
+    if (typed === target) {
+        currentWordData.successes++;
+        fb.textContent = '正確！';
+        fb.className = 'feedback-correct';
+        document.getElementById('l3-actions').style.display = 'none';
+        startAutoAdvance('l3-countdown');
+    } else {
+        fb.textContent = `錯誤，正確拼寫：${currentWordData.word}`;
+        fb.className = 'feedback-wrong';
+        input.value = '';
+        if (currentWordData.attempts >= 5) {
+            document.getElementById('l3-actions').style.display = 'none';
+            startAutoAdvance('l3-countdown');
+        }
+    }
+    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+}
 
 // L4: 文法應用 (stub)
 registerQuestionModule(4, {

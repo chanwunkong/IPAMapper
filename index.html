@@ -50,6 +50,7 @@
 
             <div id="practice-modal">
                 <div class="practice-header">
+                    <button class="speed-btn" style="color:#ff3b30;" onclick="endPractice()">退出</button>
                     <div class="practice-title" id="practice-progress">進度: 0/0</div>
                     <button class="speed-btn" id="speed-toggle" onclick="toggleSpeed()">語速: 正常</button>
                 </div>
@@ -112,16 +113,23 @@
                         </div>
                     </div>
 
-                    <!-- L3: 句型重組 (stub) -->
-                    <div id="action-l3" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
+                    <!-- L3: 聽寫填空 -->
+                    <div id="action-l3" style="display:none; flex-direction:column; align-items:center; gap:12px; width:100%;">
                         <div class="tts-group">
-                            <button class="tts-btn" onclick="speakText(currentWordData.sentence)">聽例句</button>
+                            <button class="tts-btn" onclick="speakText(currentWordData.sentence)">再聽例句</button>
                         </div>
-                        <div style="font-size:14px; color:var(--text-secondary); text-align:center;">句型重組功能開發中</div>
-                        <div id="sentence-blocks" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; min-height:40px;"></div>
-                        <div id="sentence-feedback" style="font-size:16px; font-weight:bold; height:24px;"></div>
-                        <div class="mic-skip-group">
+                        <div id="l3-gap-sentence" class="l3-gap-sentence"></div>
+                        <canvas id="l3-canvas" style="width:100%; max-width:320px; height:110px; background:#f8f8f8; border-radius:12px; touch-action:none; display:block;"></canvas>
+                        <button class="tts-btn" onclick="clearL3Canvas()">清除畫布</button>
+                        <input type="text" id="l3-input" placeholder="填入缺少的單字..." autocomplete="off" autocorrect="off" spellcheck="false" style="padding:10px; border:1.5px solid #c7c7cc; border-radius:10px; font-size:16px; width:100%; max-width:280px; text-align:center; user-select:text; -webkit-user-select:text;">
+                        <div id="l3-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
+                        <div id="l3-actions" style="display:flex; align-items:center; gap:15px;">
+                            <button class="action-btn btn-unlock" onclick="submitL3()">確認</button>
                             <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
+                        </div>
+                        <div id="l3-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <div class="countdown-bar"></div>
+                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l3-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
