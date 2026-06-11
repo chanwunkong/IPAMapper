@@ -212,6 +212,27 @@
                 </div>
             </div>
 
+            <div id="reading-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:600; flex-direction:column; align-items:center; justify-content:center;">
+                <div class="reading-card">
+                    <div id="reading-view" style="display:flex; flex-direction:column; gap:14px;">
+                        <div class="reading-header">
+                            <span id="reading-progress"></span>
+                            <button class="action-btn" style="background:#f2f2f7; color:#ff3b30; padding:4px 12px; font-size:12px;" onclick="endReadingMode()">結束</button>
+                        </div>
+                        <div id="reading-sentence-display" class="reading-sentence"></div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="tts-btn" style="flex:0 0 auto;" onclick="readingSpeak()">聆聽</button>
+                            <button class="action-btn btn-unlock" style="flex:1;" onclick="readingNext()">下一句</button>
+                        </div>
+                    </div>
+                    <div id="reading-interstitial" style="display:none; flex-direction:column; gap:12px;">
+                        <div style="font-size:14px; font-weight:bold; color:var(--text-main);">遇到的陌生詞 <span style="font-size:12px; font-weight:normal; color:var(--text-secondary);">(點 + 加入地圖)</span></div>
+                        <div id="reading-interstitial-words" class="passage-word-area"></div>
+                        <button class="action-btn btn-unlock" style="width:100%;" onclick="continueReading()">繼續朗讀</button>
+                    </div>
+                </div>
+            </div>
+
             <div id="debug-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:600; align-items:center; justify-content:center;" onclick="closeDebugModal()">
                 <div style="background:var(--card-bg); border-radius:18px; padding:20px; width:88%; max-width:320px; display:flex; flex-direction:column; gap:10px;" onclick="event.stopPropagation()">
                     <div style="font-size:16px; font-weight:bold; color:var(--text-main);">題型測試</div>
@@ -313,6 +334,23 @@
                             <button id="importCsvBtn" class="action-btn btn-unlock" style="margin-top:10px;">上傳並匯入</button>
                         </div>
                     </div>
+
+                    <div class="settings-card">
+                        <div class="settings-title">文章輸入 (Passage Import)</div>
+                        <div class="settings-row">
+                            <div style="font-size:14px; color:var(--text-secondary); line-height:1.4;">貼入英文文章，系統比對已學詞彙，陌生詞可加入練習佇列。</div>
+                            <textarea id="passage-input" placeholder="Paste your English passage here..." autocomplete="off" autocorrect="off" spellcheck="false" style="padding:10px; border:1.5px solid #c7c7cc; border-radius:10px; font-size:14px; width:100%; height:120px; resize:vertical; user-select:text; -webkit-user-select:text; margin-top:8px;"></textarea>
+                            <button class="action-btn btn-unlock" style="width:100%; margin-top:8px;" onclick="analyzePassage()">分析文章</button>
+                        </div>
+                        <div id="passage-stats" style="display:none; font-size:13px; color:var(--text-secondary); padding:4px 0 8px;"></div>
+                        <div id="passage-result" style="display:none;">
+                            <div style="font-size:13px; font-weight:600; color:var(--text-main); margin-bottom:6px;">陌生詞 <span style="font-size:12px; font-weight:normal; color:var(--text-secondary);">(點 + 加入地圖)</span></div>
+                            <div id="passage-unknown-words" class="passage-word-area"></div>
+                            <div style="font-size:13px; font-weight:600; color:var(--text-main); margin:10px 0 6px;">已知詞</div>
+                            <div id="passage-known-words" class="passage-word-area"></div>
+                            <button class="action-btn btn-view" style="width:100%; margin-top:12px;" onclick="startReadingMode()">朗讀模式</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -337,6 +375,7 @@
     <script src="js/sentence-renderer.js"></script>
     <script src="js/dispatcher.js"></script>
     <script src="js/practice.js"></script>
+    <script src="js/passage.js"></script>
     <script src="js/questions/q-stub.js"></script>
     <script src="js/events.js"></script>
     <script src="js/firebase.js"></script>

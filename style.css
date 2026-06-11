@@ -396,6 +396,18 @@ body, html {
 #audio-disable-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid #c7c7cc; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
 #audio-disabled-notice { font-size: 12px; color: #ff9500; font-weight: 600; letter-spacing: 0.02em; }
 
+/* Route C: Passage Import */
+.passage-word-area { display: flex; flex-wrap: wrap; gap: 6px; }
+.passage-word-wrap { display: inline-flex; align-items: center; gap: 2px; }
+.passage-word-chip { font-size: 12px; font-family: monospace; border-radius: 6px; padding: 3px 8px; }
+.passage-unknown { background: #fff3e0; color: #e65100; }
+.passage-known { background: #f2f2f7; color: var(--text-secondary); }
+.passage-add-btn { font-size: 11px; background: var(--accent-color); color: white; border: none; border-radius: 4px; padding: 2px 5px; cursor: pointer; line-height: 1.4; }
+.reading-card { background: var(--card-bg); border-radius: 18px; padding: 20px; width: 92%; max-width: 400px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; }
+.reading-header { display: flex; justify-content: space-between; align-items: center; }
+.reading-sentence { font-size: 18px; line-height: 1.8; color: var(--text-main); min-height: 60px; }
+.reading-unknown { background: #ffe082; border-radius: 3px; font-style: normal; }
+
 /* TEST: debug entry button */
 #debug-btn { position: absolute; bottom: 15px; left: 15px; z-index: 50; background: rgba(0,0,0,0.12); color: #555; border: none; border-radius: 10px; padding: 5px 11px; font-size: 11px; font-weight: bold; cursor: pointer; letter-spacing: 0.05em; }
 

@@ -33,11 +33,19 @@
 
 目標：使用者貼入任意文章，系統自動比對已知詞彙，將陌生詞加入地圖練習佇列，並能逐句進行 TTS 朗讀練習。
 
-- [ ] [TEXT-1] `index.html` + `style.css` — 設定頁新增「文章輸入」區塊：多行文字貼入框 + 分析按鈕
-- [ ] [TEXT-2] `js/passage.js` — 新模組：`parsePassage(text)` 斷詞、去重、正規化（移除標點）；`classifyPassageWords(words)` 比對 storageData + grid + datasets，回傳 `{ known[], unknown[] }`
-- [ ] [TEXT-3] `index.html` + `style.css` — 分析結果區：已知詞灰底、陌生詞高亮 + 各別「加入地圖」按鈕；顯示統計（共 N 詞，已知 X，陌生 Y）
-- [ ] [TEXT-4] `js/passage.js` — `addPassageWordToMap(word)` 將選取的陌生詞建立基礎詞條（word 填入，其餘空白）加入 `storageData`，觸發 `updateStorageUI()`
-- [ ] [TEXT-5] `js/passage.js` + `index.html` — 文章朗讀模式：逐句 TTS 播放、句中標記陌生詞；每隔 3 句自動暫停插入一道陌生詞練習（呼叫 dispatcher）
+- [x] (2026-06-11) [TEXT-1] `index.html` + `style.css` — 設定頁「文章輸入」卡片：textarea + 分析按鈕 + 結果區
+- [x] (2026-06-11) [TEXT-2] `js/passage.js` — `parsePassage()` 斷詞去重；`classifyPassageWords()` 比對 storageData / grid / datasets
+- [x] (2026-06-11) [TEXT-3] `index.html` + `style.css` — 分析結果：已知詞灰底、陌生詞橙色 + 各別「+」加入按鈕；統計文字
+- [x] (2026-06-11) [TEXT-4] `js/passage.js` — `addPassageWordToMap()` 建立基礎詞條加入 storageData，加入後自動從 passageUnknownSet 移除
+- [x] (2026-06-11) [TEXT-5] `js/passage.js` + `index.html` — 朗讀模式：逐句 TTS + 陌生詞黃底高亮；每 3 句含陌生詞後插入「遇到的陌生詞」統整卡，繼續按鈕恢復朗讀
+
+### 文章引擎待解問題 (TEXT-6)
+
+- [ ] [TEXT-6-1] 詞形變化比對：文章中的 "running" 無法比對詞庫的 "run"，需定義是否要做詞根還原（stemming），或改以使用者手動確認
+- [ ] [TEXT-6-2] 功能詞污染："the"、"a"、"is"、"in" 等高頻功能詞顯示為陌生詞，需設計停用詞過濾清單或閾值機制
+- [ ] [TEXT-6-3] 大小寫與專有名詞：人名、地名出現為陌生詞，加入地圖無意義，需設計過濾或忽略機制
+- [ ] [TEXT-6-4] 詞庫已有但未練習的詞：目前歸類為「已知」（存在於 datasets），但使用者實際上可能還不熟悉，需重新定義「已知」的標準（已在 storageData/grid vs 僅在 datasets）
+- [ ] [TEXT-6-5] 多詞表達：詞庫中的 "good morning" 無法與文章中分開出現的 "good" / "morning" 匹配，需討論是否支援短語比對
 
 ### 規則定義待解 (Rule Ambiguity)
 
@@ -73,6 +81,7 @@
 
 ## 歷史紀錄 (Archive)
 
+- [x] (2026-06-11) [TEXT-1~5] 文章輸入引擎：js/passage.js 新模組；設定頁卡片；分析結果顯示；addPassageWordToMap；朗讀模式（逐句TTS + 陌生詞高亮 + 每3句插入統整卡）
 - [x] (2026-06-11) [SCORE-1~3] 文法計分強化：L3-V 即時代幣（satisfiedCount×2）、分層反饋、ruleHitCounts 存檔、規則卡片顯示觸發次數
 - [x] (2026-06-11) [TEST] 臨時測試工具：DEV 按鈕 + debug modal + `startDebugPractice(level, moduleIdx)` 直接進入任意題型
 - [x] (2026-06-11) [L1-V] L1-V 純視覺閃卡自評題型：`#action-l1v` 面板 + `registerQuestionModule(1,...)` 實作，「認識」/「不認識」雙路徑，無音訊無麥克風

@@ -22,6 +22,7 @@
 | `js/dispatcher.js` | 題型派發器：`registerQuestionModule(level, module)`、`dispatchQuestion(wordData)`（含音訊禁用過濾） |
 | `js/questions/q-stub.js` | 題型模組實作：L2-V（詞塊重組）、L2-A（填空）、L3-V（POS 造句）、L4 stub |
 | `js/sentence-renderer.js` | 例句動態渲染：比對 `buildWordPosMap()`，為例句中已知單字套用 POS 背景色 |
+| `js/passage.js` | 文章輸入引擎：`parsePassage()` 斷詞、`classifyPassageWords()` 比對已知詞、`addPassageWordToMap()` 加入詞庫、朗讀模式（逐句 TTS + 陌生詞高亮 + 每 3 句插入生字統整） |
 | `js/ui.js` | 通用 UI 工具：`showToast()`、modal 開關、打卡日曆 |
 | `js/voice.js` | 語音引擎設定 UI：列出 SpeechSynthesis 可用語音，讀寫 `voiceSettings` 至存檔 |
 | `js/events.js` | 全域事件監聽：鍵盤快捷鍵（Enter 送出等） |
