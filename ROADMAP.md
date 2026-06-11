@@ -46,8 +46,7 @@
 
 ### 待辦（低優先）
 
-- [ ] [L4-1] 開發 L4 自由造句題型：輸入完整句子，以 `buildWordPosMap()` + `checkWalsRule()` 驗證已解鎖規則，計分邏輯與 SCORE-1 相同（`satisfiedCount × 2` 代幣）
-- [ ] [L4-2] `js/grammar.js` — WALS 規則解鎖狀態 UI 確認與存檔完全同步
+- [ ] [L4] 開發 L4 自由造句題型：使用者輸入完整句子，以 `buildWordPosMap()` + `checkWalsRule()` 驗證，計分直接呼叫 `updateTokens(satisfiedCount * 2)`（共用現有 API，無需另行定義）
 - [ ] 優化 Web Speech API 語音辨識失敗時的提示與重試體驗
 - [ ] 執行 Firebase 登入同步 E2E 流程：登入 → 練習 → 退出 → 換裝置 → 驗證資料還原
 
