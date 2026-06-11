@@ -3,9 +3,21 @@
 ## 當前任務 (Current Focus)
 - [x] (2026-06-11) 加入練習頁面退出按鈕，呼叫 endPractice() 儲存部分結果並返回主畫面
 - [x] (2026-06-11) 開發 L3 聽寫填空題型 (拼寫精準度)：TTS 朗讀完整例句，帶空格例句顯示，手寫 Canvas 輔助練習，鍵盤填入目標單字驗證
-- [ ] 開發 L4 自由造句題型 (文法與初步應用)：顯示目標單字，驗證輸入之自創短句是否包含單字及已解鎖 WALS 規則，並啟動地圖路徑計分
-- [ ] 開發 L5 自由對話系統：無提示，整合 LLM 驗證上下文邏輯與 WALS 規則，並進行大範圍的地圖路徑連線計分
+
+### POS 規範系統重構（L4 前置依賴，須依序完成）
+- [ ] [POS-1] 建立 `POS_SPEC.md` — 定義標籤規範、CSV 格式、Morphological 欄位格式、WALS 對照（已完成文件，待後續步驟實作）
+- [ ] [POS-2] 更新 `js/state.js` 的 `getPosColor()` — 依 POS_SPEC 擴充為 9 色對應，改為精確前綴比對取代 `includes()` 模糊比對
+- [ ] [POS-3] 更新 `js/grammar.js` `rulesA1` — 為每條 WALS 規則加入 `posTypes[]` 與 `check(tokens)` 驗證函式，`tokens` 為 `[{word, pos, morphological}]` 陣列
+- [ ] [POS-4] 重寫 `defaultWords` (state.js) — POS 欄位改用新標籤，Morphological 欄位改用 `X/Y/Z` 格式
+- [ ] [POS-5] 更新 `Lesson1.csv` — 全欄位重新標注 POS 與 Morphological 格式
+- [ ] [POS-6] 更新 `js/datasets.js` CSV 匯入邏輯 — 加入 POS 標籤格式驗證，不符規範時給出明確錯誤提示
+
+### L4+ 功能（依賴 POS 系統完成後開發）
+- [ ] 開發 L4 自由造句題型 (文法與初步應用)：顯示目標單字，以 POS 序列驗證句子是否符合已解鎖 WALS 規則，並啟動地圖路徑計分
 - [ ] 將文法 (WALS) 解鎖狀態的 UI 呈現與存檔資料完全綁定
+- [ ] 開發 L5 自由對話系統：無提示，整合 LLM 驗證上下文邏輯與 WALS 規則，並進行大範圍的地圖路徑連線計分
+
+### 基礎優化
 - [ ] 優化 Web Speech API 語音辨識失敗時的提示與重試體驗
 - [ ] 測試 Firebase 登入狀態下的存檔同步功能
 - [ ] 實作讀取 CSV 題庫時的錯誤格式防呆機制
