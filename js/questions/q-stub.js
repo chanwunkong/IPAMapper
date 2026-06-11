@@ -391,9 +391,11 @@ function submitL3V() {
     currentWordData.attempts++;
     const fb = document.getElementById('l3v-feedback');
     const unlockedIds = rulesA1.filter(r => isRuleUnlocked(r.id)).map(r => r.id);
-    const satisfiedCount = unlockedIds.filter(id => checkWalsRule(id, l3vTokens)).length;
+    const satisfiedIds = unlockedIds.filter(id => checkWalsRule(id, l3vTokens));
+    const satisfiedCount = satisfiedIds.length;
     if (satisfiedCount > 0 || unlockedIds.length === 0) {
         currentWordData.successes++;
+        satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
         if (satisfiedCount >= 3) {
             const bonus = satisfiedCount * 2;
             fb.textContent = `完整句型 +${bonus}`;

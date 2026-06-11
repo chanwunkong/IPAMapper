@@ -132,7 +132,9 @@ function renderGrammarRules() {
     rulesA1.forEach(rule => {
         const unlocked = isRuleUnlocked(rule.id), canAfford = currentTokens >= UNLOCK_COST;
         const card = document.createElement('div'); card.className = `rule-card ${unlocked ? '' : 'locked'}`;
-        card.innerHTML = `<div class="rule-info"><div class="rule-id">WALS ${rule.id}</div><div class="rule-name">${rule.name}</div></div>`;
+        const hits = ruleHitCounts[rule.id] || 0;
+        const hitsHtml = unlocked && hits > 0 ? `<div class="rule-hits">已觸發 ${hits} 次</div>` : '';
+        card.innerHTML = `<div class="rule-info"><div class="rule-id">WALS ${rule.id}</div><div class="rule-name">${rule.name}</div>${hitsHtml}</div>`;
         const btnDiv = document.createElement('button');
         if (unlocked) { btnDiv.className = 'action-btn btn-view'; btnDiv.textContent = '查看'; btnDiv.onclick = () => showRuleDetail(rule); }
         else { btnDiv.className = canAfford ? 'action-btn btn-unlock' : 'action-btn btn-disabled'; btnDiv.textContent = `解鎖 (${UNLOCK_COST})`; btnDiv.onclick = () => canAfford ? unlockRule(rule.id, rule.name) : showToast('代幣不足'); }

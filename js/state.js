@@ -7,6 +7,7 @@ let activeDatasetId = '';
 let usedIndices = {};
 let checkInHistory = [];
 let unlockedRules = []; // 文法解鎖狀態改為存檔綁定
+let ruleHitCounts = {}; // 每條規則在練習中被滿足的累計次數
 let voiceSettings = { voiceURI: '', lang: 'en-US' };
 
 const storageData = [];

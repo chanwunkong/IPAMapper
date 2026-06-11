@@ -94,6 +94,7 @@ function exportGameData() {
         usedIndices: usedIndices,
         checkInHistory: checkInHistory,
         unlockedRules: unlockedRules,
+        ruleHitCounts: ruleHitCounts,
         voiceSettings: voiceSettings
     };
 }
@@ -105,6 +106,7 @@ function importGameData(data) {
     if (data.usedIndices) usedIndices = data.usedIndices;
     checkInHistory = data.checkInHistory || [];
     unlockedRules = data.unlockedRules || [];
+    ruleHitCounts = data.ruleHitCounts || {};
     voiceSettings = data.voiceSettings || { voiceURI: '', lang: 'en-US' };
 
     storageData.length = 0;

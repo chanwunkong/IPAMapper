@@ -26,8 +26,8 @@
 目標：讓 WALS 規則解鎖對練習產生即時、可感知的代幣回饋。同時滿足越多規則 → 代幣越多，鼓勵使用者主動造出更複雜的句子。
 
 - [x] (2026-06-11) [SCORE-1] `js/questions/q-stub.js` — `submitL3V()` 根據 `satisfiedCount` 給即時代幣：每滿足一條規則給 2 代幣（`updateTokens(satisfiedCount * 2)`）；反饋文字分層：0 條=「良好」、1 條=「基礎句型 +2」、2 條=「語法組合 +4」、3 條以上=「完整句型 +N」
-- [ ] [SCORE-2] `js/state.js` + `js/storage.js` — 存檔結構加入 `ruleHitCounts: {}` 記錄每條 WALS 規則在練習中被滿足的累計次數；`submitL3V()` 答題通過時更新對應規則計數並存檔
-- [ ] [SCORE-3] `js/grammar.js` — WALS 規則卡片（已解鎖狀態）顯示「已觸發 N 次」，讓解鎖規則有可見的使用記錄
+- [x] (2026-06-11) [SCORE-2] `js/state.js` + `js/storage.js` + `js/saves.js` — 存檔結構加入 `ruleHitCounts: {}`；`submitL3V()` 成功時逐一更新滿足規則的計數
+- [x] (2026-06-11) [SCORE-3] `js/grammar.js` + `style.css` — WALS 規則卡片（已解鎖）顯示「已觸發 N 次」小字，accent 色
 
 ### 路線 C：文章輸入引擎 (Passage Import Engine)
 
@@ -74,7 +74,7 @@
 
 ## 歷史紀錄 (Archive)
 
-- [x] (2026-06-11) [SCORE-1] `submitL3V()` 即時代幣計分：satisfiedCount × 2，反饋文字分四層（良好 / 基礎句型 / 語法組合 / 完整句型）
+- [x] (2026-06-11) [SCORE-1~3] 文法計分強化：L3-V 即時代幣（satisfiedCount×2）、分層反饋、ruleHitCounts 存檔、規則卡片顯示觸發次數
 - [x] (2026-06-11) [TEST] 臨時測試工具：DEV 按鈕 + debug modal + `startDebugPractice(level, moduleIdx)` 直接進入任意題型
 - [x] (2026-06-11) [L1-V] L1-V 純視覺閃卡自評題型：`#action-l1v` 面板 + `registerQuestionModule(1,...)` 實作，「認識」/「不認識」雙路徑，無音訊無麥克風
 - [x] (2026-06-11) [ARCH-1] 建立 `ARCHITECTURE.md` — 檔案職責、模組呼叫關係、SRS 資料流、Level-Module 現狀表
