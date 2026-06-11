@@ -95,7 +95,8 @@ function exportGameData() {
         checkInHistory: checkInHistory,
         unlockedRules: unlockedRules,
         ruleHitCounts: ruleHitCounts,
-        voiceSettings: voiceSettings
+        voiceSettings: voiceSettings,
+        passageText: passageText
     };
 }
 
@@ -108,6 +109,9 @@ function importGameData(data) {
     unlockedRules = data.unlockedRules || [];
     ruleHitCounts = data.ruleHitCounts || {};
     voiceSettings = data.voiceSettings || { voiceURI: '', lang: 'en-US' };
+    passageText = data.passageText || '';
+    const ta = document.getElementById('passage-input');
+    if (ta) ta.value = passageText;
 
     storageData.length = 0;
     if (data.storage) data.storage.forEach(item => storageData.push(item));

@@ -39,9 +39,15 @@
 - [x] (2026-06-11) [TEXT-4] `js/passage.js` — `addPassageWordToMap()` 建立基礎詞條加入 storageData，加入後自動從 passageUnknownSet 移除
 - [x] (2026-06-11) [TEXT-5] `js/passage.js` + `index.html` — 朗讀模式：逐句 TTS + 陌生詞黃底高亮；每 3 句含陌生詞後插入「遇到的陌生詞」統整卡，繼續按鈕恢復朗讀
 
-### 路線 D：文章 CSV 上傳 (Passage CSV Import)
+### 路線 D：文章朗讀支線 (Passage Reading Side Quest)
 
 - [x] (2026-06-11) [TEXT-7] `index.html` + `js/passage.js` — 文章輸入卡片加入上傳按鈕（接受 `.txt` / `.csv`）；CSV 格式為完整故事文本（每列一句或一段）；`loadPassageFile(file)` 解析後合併為段落，自動填入 textarea 並呼叫 `analyzePassage()`
+- [x] (2026-06-11) [TEXT-8] 文章朗讀 UX 全面重設計：
+  - `js/state.js` + `js/storage.js` + `js/saves.js` — 存檔加入 `passageText: ''`，隨存檔持久化
+  - `index.html` — 設定頁文章卡片只保留 textarea + 上傳 + 「儲存文章」按鈕；移除 `#passage-result`、`#passage-stats`、已知詞/陌生詞 chip 區；移除 `#reading-modal`；加入 `#reading-view`（`.view` 全螢幕）作為支線主視圖
+  - `index.html` + `style.css` — 主畫面 Play 旁加 Reading 按鈕，點擊切換至 `#reading-view`（地圖暫隱）
+  - `js/passage.js` — `savePassage()` 儲存文章並靜默分析；`startReadingMode()` 惰性解析並切換視圖；朗讀邏輯改操作 `#reading-view` 內元素
+  - 斷句修正（英語過渡方案）：縮寫黑名單（Mr、Mrs、Dr、Prof 等）保護縮寫後的句點不被誤切；TODO: 未來需找多語言通用的句子邊界偵測方案替換此硬編碼清單
 
 ### 文章引擎待解問題 (TEXT-6)
 

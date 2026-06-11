@@ -89,6 +89,7 @@ function resetBoardData() {
     unlockedRules = [];
     ruleHitCounts = {};
     voiceSettings = { voiceURI: '', lang: 'en-US' };
+    passageText = '';
 
     applyVoiceSettings();
     updateStorageUI();

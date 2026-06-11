@@ -4,10 +4,25 @@ let readingIndex = 0;
 let readingBatchCount = 0;
 let readingBatchUnknowns = new Set();
 
+// English-only interim abbreviation list — prevents sentence splits on e.g. "Mr. Smith"
+// TODO: replace with a multilingual sentence boundary detection approach
+const ABBREVS = [
+    'Mr', 'Mrs', 'Ms', 'Dr', 'Prof', 'Sr', 'Jr', 'St', 'Mt', 'Lt', 'Sgt', 'Cpl',
+    'vs', 'etc', 'No', 'Fig', 'Dept', 'Est',
+    'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
+];
+
 function parsePassage(text) {
-    const sentences = text.trim()
+    const PLACEHOLDER = '\x01';
+    let safe = text;
+    ABBREVS.forEach(a => {
+        safe = safe.replace(new RegExp(`\\b${a}\\.`, 'g'), `${a}${PLACEHOLDER}`);
+    });
+
+    const sentences = safe
         .split(/[.!?]+\s+(?=[A-Z"'])/)
-        .map(s => s.trim())
+        .map(s => s.replace(new RegExp(PLACEHOLDER, 'g'), '.').trim())
         .filter(s => s.length > 2);
     if (!sentences.length) sentences.push(text.trim());
 
@@ -36,6 +51,21 @@ function classifyPassageWords(words) {
     };
 }
 
+function savePassage() {
+    if (!currentSaveId) return showToast('請先選擇存檔');
+    const text = document.getElementById('passage-input').value.trim();
+    if (!text) return showToast('請先貼入文章');
+
+    passageText = text;
+    const { sentences, words } = parsePassage(text);
+    passageSentences = sentences;
+    const { unknown } = classifyPassageWords(words);
+    passageUnknownSet = new Set(unknown);
+
+    saveCurrentData();
+    showToast(`已儲存 ${sentences.length} 句，${unknown.length} 個陌生詞`);
+}
+
 function loadPassageFile(file) {
     if (!file) return;
     const reader = new FileReader();
@@ -53,55 +83,21 @@ function loadPassageFile(file) {
         }
         document.getElementById('passage-input').value = text;
         document.getElementById('passage-file-input').value = '';
-        analyzePassage();
+        savePassage();
     };
     reader.readAsText(file, 'UTF-8');
-}
-
-function analyzePassage() {
-    if (!currentSaveId) return showToast('請先選擇存檔');
-    const text = document.getElementById('passage-input').value.trim();
-    if (!text) return showToast('請先貼入文章');
-
-    const { sentences, words } = parsePassage(text);
-    const { known, unknown } = classifyPassageWords(words);
-
-    passageSentences = sentences;
-    passageUnknownSet = new Set(unknown);
-
-    document.getElementById('passage-stats').style.display = 'block';
-    document.getElementById('passage-stats').textContent =
-        `共 ${words.length} 個詞彙 · 已知 ${known.length} · 陌生 ${unknown.length}`;
-
-    const unknownEl = document.getElementById('passage-unknown-words');
-    unknownEl.innerHTML = '';
-    unknown.sort().forEach(w => unknownEl.appendChild(makePassageChip(w)));
-
-    const knownEl = document.getElementById('passage-known-words');
-    knownEl.innerHTML = '';
-    known.sort().forEach(w => {
-        const chip = document.createElement('span');
-        chip.className = 'passage-word-chip passage-known';
-        chip.textContent = w;
-        knownEl.appendChild(chip);
-    });
-
-    document.getElementById('passage-result').style.display = 'block';
 }
 
 function makePassageChip(word) {
     const wrap = document.createElement('span');
     wrap.className = 'passage-word-wrap';
-
     const chip = document.createElement('span');
     chip.className = 'passage-word-chip passage-unknown';
     chip.textContent = word;
-
     const btn = document.createElement('button');
     btn.className = 'passage-add-btn';
     btn.textContent = '+';
     btn.onclick = () => addPassageWordToMap(word, () => wrap.remove());
-
     wrap.appendChild(chip);
     wrap.appendChild(btn);
     return wrap;
@@ -135,13 +131,25 @@ function addPassageWordToMap(word, onSuccess) {
 // === 朗讀模式 ===
 
 function startReadingMode() {
-    if (!passageSentences.length) return showToast('請先分析文章');
+    if (!currentSaveId) return showToast('請先選擇存檔');
+    if (!passageSentences.length && passageText) {
+        const { sentences, words } = parsePassage(passageText);
+        passageSentences = sentences;
+        const { unknown } = classifyPassageWords(words);
+        passageUnknownSet = new Set(unknown);
+    }
+    if (!passageSentences.length) return showToast('請先在設定頁載入文章');
+
     readingIndex = 0;
     readingBatchCount = 0;
     readingBatchUnknowns = new Set();
-    document.getElementById('reading-modal').style.display = 'flex';
-    document.getElementById('reading-view').style.display = 'flex';
-    document.getElementById('reading-interstitial').style.display = 'none';
+
+    document.getElementById('view-vocabulary').classList.remove('active');
+    document.getElementById('reading-view').classList.add('active');
+    document.getElementById('rv-sentence-wrap').style.display = 'flex';
+    document.getElementById('rv-controls').style.display = 'flex';
+    document.getElementById('rv-interstitial').style.display = 'none';
+
     renderReadingSentence();
 }
 
@@ -158,8 +166,8 @@ function renderReadingSentence() {
     }
 
     const sentence = passageSentences[readingIndex];
-    document.getElementById('reading-progress').textContent =
-        `第 ${readingIndex + 1} / ${passageSentences.length} 句`;
+    document.getElementById('rv-progress').textContent =
+        `${readingIndex + 1} / ${passageSentences.length}`;
 
     const html = sentence.split(/(\s+)/).map(token => {
         const clean = token.toLowerCase().replace(/[^a-z']/g, '');
@@ -168,7 +176,7 @@ function renderReadingSentence() {
         }
         return token;
     }).join('');
-    document.getElementById('reading-sentence-display').innerHTML = html;
+    document.getElementById('rv-sentence').innerHTML = html;
 }
 
 function readingSpeak() {
@@ -200,21 +208,24 @@ function readingNext() {
 }
 
 function showReadingInterstitial(words) {
-    document.getElementById('reading-view').style.display = 'none';
-    const interstitial = document.getElementById('reading-interstitial');
+    document.getElementById('rv-sentence-wrap').style.display = 'none';
+    document.getElementById('rv-controls').style.display = 'none';
+    const interstitial = document.getElementById('rv-interstitial');
     interstitial.style.display = 'flex';
-    const container = document.getElementById('reading-interstitial-words');
+    const container = document.getElementById('rv-interstitial-words');
     container.innerHTML = '';
     words.forEach(w => container.appendChild(makePassageChip(w)));
 }
 
 function continueReading() {
-    document.getElementById('reading-view').style.display = 'flex';
-    document.getElementById('reading-interstitial').style.display = 'none';
+    document.getElementById('rv-sentence-wrap').style.display = 'flex';
+    document.getElementById('rv-controls').style.display = 'flex';
+    document.getElementById('rv-interstitial').style.display = 'none';
     renderReadingSentence();
 }
 
 function endReadingMode() {
     window.speechSynthesis.cancel();
-    document.getElementById('reading-modal').style.display = 'none';
+    document.getElementById('reading-view').classList.remove('active');
+    document.getElementById('view-vocabulary').classList.add('active');
 }
