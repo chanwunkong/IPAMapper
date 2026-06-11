@@ -23,6 +23,20 @@ function speakText(text) {
     window.speechSynthesis.speak(utterance);
 }
 
+function speakSequence(texts) {
+    window.speechSynthesis.cancel();
+    texts.filter(t => t).forEach(text => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = isSlowSpeed ? 0.6 : 1.0;
+        if (voiceSettings.voiceURI) {
+            const voice = window.speechSynthesis.getVoices().find(v => v.voiceURI === voiceSettings.voiceURI);
+            if (voice) utterance.voice = voice;
+        }
+        utterance.lang = voiceSettings.lang || 'en-US';
+        window.speechSynthesis.speak(utterance);
+    });
+}
+
 function shuffleAndTake(arr, n) {
     return arr.sort(() => 0.5 - Math.random()).slice(0, n);
 }
@@ -152,13 +166,13 @@ function toggleMic() {
             feedbackEl.textContent = `正確！辨識到: ${transcript}`;
             feedbackEl.className = "feedback-correct";
             document.getElementById('l1-result-actions').style.display = 'none';
-            startAutoAdvance();
+            startAutoAdvance('l1-countdown');
         } else {
             feedbackEl.textContent = `辨識到: ${transcript}`;
             feedbackEl.className = "feedback-wrong";
             if (currentWordData.attempts >= 5) {
                 document.getElementById('l1-result-actions').style.display = 'none';
-                startAutoAdvance();
+                startAutoAdvance('l1-countdown');
             } else {
                 document.getElementById('l1-result-actions').style.display = 'flex';
             }
@@ -176,9 +190,9 @@ function toggleMic() {
     recognition.start();
 }
 
-function startAutoAdvance() {
-    const countdown = document.getElementById('l1-countdown');
-    const bar = document.getElementById('l1-countdown-bar');
+function startAutoAdvance(countdownId) {
+    const countdown = document.getElementById(countdownId);
+    const bar = countdown.querySelector('.countdown-bar');
     countdown.style.display = 'flex';
     bar.style.transition = 'none';
     bar.style.width = '100%';
@@ -188,9 +202,10 @@ function startAutoAdvance() {
     autoAdvanceTimer = setTimeout(() => { moveToNextWord(); }, 1500);
 }
 
-function cancelAutoAdvance() {
+function cancelAutoAdvance(countdownId) {
     if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
-    const countdown = document.getElementById('l1-countdown');
+    if (!countdownId) return;
+    const countdown = document.getElementById(countdownId);
     if (countdown) countdown.style.display = 'none';
 }
 
@@ -274,10 +289,10 @@ registerQuestionModule(1, {
         document.getElementById('l1-result-actions').style.display = 'none';
         document.getElementById('l1-countdown').style.display = 'none';
         updateL1Dots(wordData.successes || 0);
-        speakText(wordData.word);
+        speakSequence([wordData.word, wordData.sentence]);
     },
     deactivate() {
-        cancelAutoAdvance();
+        cancelAutoAdvance('l1-countdown');
         document.getElementById('action-l1').style.display = 'none';
         if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
         isListening = false;

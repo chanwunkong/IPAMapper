@@ -88,21 +88,27 @@
                             <button class="l1-next-btn" onclick="cancelAutoAdvance(); moveToNextWord()">下一題</button>
                         </div>
                         <div id="l1-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
-                            <div id="l1-countdown-bar"></div>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance(); moveToNextWord()">立即繼續</button>
+                            <div id="l1-countdown-bar" class="countdown-bar"></div>
+                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l1-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
-                    <!-- L2: 聽寫題型 -->
-                    <div id="action-l2" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
+                    <!-- L2: 句型重組 -->
+                    <div id="action-l2" style="display:none; flex-direction:column; align-items:center; gap:12px; width:100%;">
                         <div class="tts-group">
-                            <button class="tts-btn" onclick="speakText(currentWordData.word)">再聽一次</button>
+                            <button class="tts-btn" onclick="speakSequence([currentWordData.word, currentWordData.sentence])">再聽一次</button>
                         </div>
-                        <input type="text" id="dictation-input" placeholder="輸入聽到的單字..." style="padding:10px; border:1px solid #ccc; border-radius:10px; font-size:16px; width:100%; max-width:280px; text-align:center; user-select:text; -webkit-user-select:text;">
-                        <div id="dictation-feedback" style="font-size:16px; font-weight:bold; height:24px;"></div>
-                        <div class="mic-skip-group">
-                            <button class="action-btn btn-unlock" onclick="submitDictation()">確認</button>
+                        <div id="l2-word-pool" class="l2-token-area"></div>
+                        <div style="font-size:12px; color:var(--text-secondary);">點選單字依序填入 / 點選已排入的單字取回</div>
+                        <div id="l2-answer-area" class="l2-token-area l2-answer"></div>
+                        <div id="l2-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
+                        <div id="l2-actions" style="display:flex; align-items:center; gap:15px;">
+                            <button class="action-btn btn-unlock" onclick="submitL2()">確認</button>
                             <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
+                        </div>
+                        <div id="l2-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <div id="l2-countdown-bar" class="countdown-bar"></div>
+                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l2-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 

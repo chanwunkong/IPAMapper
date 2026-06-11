@@ -231,7 +231,23 @@ body, html {
 .l1-dot { width: 14px; height: 14px; border-radius: 50%; background: #e5e5ea; border: 2px solid #c7c7cc; transition: background 0.3s, border-color 0.3s; }
 .l1-dot.filled { background: #34c759; border-color: #28a745; }
 
-#l1-countdown-bar { width: 100%; height: 4px; background: #34c759; border-radius: 2px; }
+.countdown-bar { width: 100%; height: 4px; background: #34c759; border-radius: 2px; }
+
+.l2-token-area {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    min-height: 48px; padding: 10px; width: 100%; border-radius: 12px;
+    background: #f2f2f7;
+}
+.l2-token-area.l2-answer {
+    background: #ffffff; border: 2px dashed #e5e5ea;
+}
+.l2-word-chip {
+    padding: 8px 14px; background: #ffffff; border: 1.5px solid #c7c7cc;
+    border-radius: 20px; font-size: 15px; font-weight: bold;
+    color: var(--text-main); cursor: pointer; transition: background 0.15s, border-color 0.15s;
+}
+.l2-word-chip:active { background: #e5e5ea; }
+.l2-word-chip.placed { background: #e6f2ff; border-color: var(--accent-color); color: var(--accent-color); }
 
 .l1-retry-btn {
     background-color: var(--accent-color); color: white; border: none; border-radius: 20px;
