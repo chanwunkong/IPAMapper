@@ -1,3 +1,35 @@
+// 常見英文單字的 POS 備援表（buildWordPosMap 不涵蓋未收錄的功能詞）
+const COMMON_WORD_POS = {
+    // 冠詞
+    the:'DT', a:'DT', an:'DT',
+    // 介系詞
+    in:'IN', on:'IN', at:'IN', of:'IN', to:'IN', for:'IN', with:'IN',
+    from:'IN', by:'IN', about:'IN', into:'IN', through:'IN', over:'IN',
+    under:'IN', between:'IN', after:'IN', before:'IN', during:'IN',
+    without:'IN', within:'IN', along:'IN', around:'IN', among:'IN',
+    // 代名詞
+    i:'PRP', you:'PRP', he:'PRP', she:'PRP', it:'PRP', we:'PRP', they:'PRP',
+    me:'PRP', him:'PRP', her:'PRP', us:'PRP', them:'PRP',
+    my:'PRP$', your:'PRP$', his:'PRP$', its:'PRP$', our:'PRP$', their:'PRP$',
+    this:'DT', that:'DT', these:'DT', those:'DT',
+    // 連接詞
+    and:'CC', or:'CC', but:'CC', nor:'CC', so:'CC', yet:'CC',
+    // 助動詞/be 動詞
+    is:'VBZ', are:'VBP', was:'VBD', were:'VBD', be:'VB', been:'VBN',
+    being:'VBG', am:'VBP',
+    can:'MD', could:'MD', will:'MD', would:'MD', shall:'MD', should:'MD',
+    may:'MD', might:'MD', must:'MD', do:'VB', does:'VBZ', did:'VBD',
+    have:'VB', has:'VBZ', had:'VBD', having:'VBG',
+    // 常見副詞
+    not:'RB', also:'RB', just:'RB', very:'RB', too:'RB', more:'RBR',
+    most:'RBS', then:'RB', now:'RB', here:'RB', there:'RB', when:'WRB',
+    where:'WRB', how:'WRB', why:'WRB',
+    // 疑問詞 / 關係詞
+    who:'WP', what:'WP', which:'WDT', whom:'WP',
+    // 數字詞
+    one:'CD', two:'CD', three:'CD', first:'JJ', second:'JJ',
+};
+
 // L2-V: 句型重組 — 點選詞塊依序還原例句
 let l2OriginalTokens = [];
 let l2AnswerTokens = [];
@@ -43,7 +75,7 @@ function renderL2Pool() {
         btn.className = 'l2-word-chip';
         btn.textContent = token;
         const clean = token.toLowerCase().replace(/[^a-z]/g, '');
-        const pos = wordMap.get(clean) || '';
+        const pos = wordMap.get(clean) || COMMON_WORD_POS[clean] || '';
         if (pos) btn.style.backgroundColor = getPosColor(pos);
         btn.onclick = () => l2PoolToAnswer(i);
         pool.appendChild(btn);
@@ -60,7 +92,7 @@ function renderL2Answer() {
         btn.className = 'l2-word-chip placed';
         btn.textContent = token;
         const clean = token.toLowerCase().replace(/[^a-z]/g, '');
-        const pos = wordMap.get(clean) || '';
+        const pos = wordMap.get(clean) || COMMON_WORD_POS[clean] || '';
         if (pos) btn.style.backgroundColor = getPosColor(pos);
         btn.onclick = () => l2AnswerToPool(i);
         area.appendChild(btn);
@@ -114,12 +146,22 @@ let l3Strokes = [], l3IsDrawing = false, l3CurrentStroke = null;
 let l3Recognizer = null;
 let l3Drawing = null;
 
-// 初始化 Handwriting Recognition API（Chrome 99+，不支援時靜默略過）
+// 初始化 Handwriting Recognition API（Chrome 99-127，Chrome 128+ 已移除）
 (async function initHWR() {
-    if (!('createHandwritingRecognizer' in navigator)) return;
+    const statusEl = () => document.getElementById('l3-hwr-status');
+    if (!('createHandwritingRecognizer' in navigator)) {
+        const el = statusEl();
+        if (el) el.textContent = '此瀏覽器不支援手寫辨識，請直接使用鍵盤輸入';
+        return;
+    }
     try {
         l3Recognizer = await navigator.createHandwritingRecognizer({ languages: ['en'] });
-    } catch(e) {}
+        const el = statusEl();
+        if (el) el.textContent = '手寫辨識已啟用';
+    } catch(e) {
+        const el = statusEl();
+        if (el) el.textContent = '手寫辨識載入失敗，請直接使用鍵盤輸入';
+    }
 })();
 
 function initL3Canvas() {

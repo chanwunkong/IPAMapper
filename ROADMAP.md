@@ -34,6 +34,10 @@
 - [x] (2026-06-12) [UX-P-10] `index.html` + `js/questions/q-stub.js` — 移除 L1-V 閃卡自評模組（題型過於被動，無助語形記憶）
 - [x] (2026-06-12) [UX-P-11] `index.html` + `js/practice.js` + `js/dispatcher.js` — 拆分音訊停用：`practiceListeningDisabled` / `practiceSpeakingDisabled`；「無法聆聽」只在 L1-A/L1-S 顯示；「無法說話」只在 L1-S 顯示；dispatcher 改用 `requiresListening` / `requiresSpeaking` 旗標過濾
 
+- [x] (2026-06-12) [UX-P-12] `index.html` — 移除 L1-A 中的「再聽單字/再聽例句」手動重播按鈕（activate() 已自動播放，按鈕為冗餘殘留）
+- [x] (2026-06-12) [UX-P-13] `js/questions/q-stub.js` — 新增 `COMMON_WORD_POS` 備援表（冠詞、介系詞、代名詞、助動詞等 ~60 詞）；L2-V/L2-A `renderL2Pool/Answer` 改用 `wordMap.get() || COMMON_WORD_POS[] || ''`，修正功能詞無色塊問題
+- [x] (2026-06-12) [UX-P-14] `js/questions/q-stub.js` — `initHWR()` 依 API 可用性更新 `#l3-hwr-status`：不支援時顯示「此瀏覽器不支援手寫辨識，請直接使用鍵盤輸入」；支援時顯示「手寫辨識已啟用」；初始化失敗顯示錯誤提示
+
 ### 題型待改進（掃描記錄）
 
 - [ ] [UX-P-6] L2-A：目前手寫辨識依賴 Chrome 99+ Handwriting Recognition API，未支援的瀏覽器只能手動輸入；考慮加入 Tesseract.js 作為廣域降級方案（但體積大，需評估）

@@ -114,10 +114,6 @@
 
                     <!-- L1-A: 聽音選字 -->
                     <div id="action-l1a" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
-                        <div class="tts-group">
-                            <button class="tts-btn" onclick="speakText(currentWordData.word)">再聽單字</button>
-                            <button class="tts-btn" onclick="speakText(currentWordData.sentence)">再聽例句</button>
-                        </div>
                         <div style="font-size:14px; color:var(--text-secondary); text-align:center;">選出正確的拼寫</div>
                         <div id="l1a-options" class="l1a-options-grid"></div>
                         <div id="l1a-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
@@ -155,8 +151,11 @@
                         </div>
                         <div id="l3-gap-sentence" class="l3-gap-sentence"></div>
                         <canvas id="l3-canvas" style="width:100%; max-width:340px; height:180px; background:#f8f8f8; border-radius:12px; touch-action:none; display:block;"></canvas>
-                        <button class="tts-btn" onclick="clearL3Canvas()">清除畫布</button>
-                        <input type="text" id="l3-input" placeholder="填入缺少的單字..." autocomplete="off" autocorrect="off" spellcheck="false" style="padding:10px; border:1.5px solid #c7c7cc; border-radius:10px; font-size:16px; width:100%; max-width:280px; text-align:center; user-select:text; -webkit-user-select:text;">
+                        <div id="l3-hwr-status" style="font-size:11px; color:var(--text-secondary); text-align:center;"></div>
+                        <div style="display:flex; gap:8px; width:100%; max-width:340px;">
+                            <button class="tts-btn" style="flex:1;" onclick="clearL3Canvas()">清除</button>
+                        </div>
+                        <input type="text" id="l3-input" placeholder="填入缺少的單字..." autocomplete="off" autocorrect="off" spellcheck="false" style="padding:10px; border:1.5px solid #c7c7cc; border-radius:10px; font-size:16px; width:100%; max-width:340px; text-align:center; user-select:text; -webkit-user-select:text;">
                         <div id="l3-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l3-actions" style="display:flex; align-items:center; gap:15px;">
                             <button class="action-btn btn-unlock" onclick="submitL3()">確認</button>
