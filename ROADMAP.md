@@ -1,30 +1,15 @@
 # 開發進度與目標
 
----
-
-## 題型架構 (Level-Module Map)
-
-> 互動類型：V = 純視覺、A = 可聆聽 TTS、S = 需麥克風語音
-
-| Level | 認知目標 | 模組 ID | 類型 | 狀態 |
-|-------|---------|---------|------|------|
-| L1 | 詞形認知 | L1-V：看卡片，自評認識/不認識 | V | 待開發 |
-| L1 | 詞形認知 | L1-A：TTS 朗讀，聽音選正確拼寫（母音/子音替換干擾項） | A | 完成 |
-| L1 | 詞形認知 | L1-S：麥克風覆誦單字 | S | 完成 |
-| L2 | 句型理解 | L2-V：點選詞塊依序重組例句 | V | 完成 |
-| L2 | 句型理解 | L2-A：TTS 朗讀例句，手寫/鍵盤填入缺字 | A | 完成（原 L3）|
-| L3 | 文法規則 | L3-V：POS 造句，即時驗證 WALS 規則 | V | 完成 |
-| L4 | 自由造句 | L4-V：輸入完整句子，驗證已解鎖 WALS 規則 | V | 待開發 |
-| L5 | 自由對話 | L5-S：口語對話，LLM 驗證（暫 mock） | S | 規劃中 |
-
-> Dispatcher 架構：`questionModules[level] = [moduleV, moduleA, moduleS, ...]`，已完成陣列 + 隨機選取。
+> 題型架構、模組呼叫關係、SRS 資料流見 [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ---
 
 ## 當前任務 (Current Focus)
 
 ### L1-V 題型
-- [ ] [L1-V] 開發 L1-V 純視覺閃卡自評題型：顯示單字、音標、例句，使用者點選「認識」（直接升級計分）或「不認識」（保留等級，等同 L1-S/L1-A 未過），無音訊無麥克風；在 `js/questions/q-stub.js` 新增模組並以 `registerQuestionModule(1, {...})` 加入 L1 題池
+- [x] (2026-06-11) [L1-V-1] `index.html` — 新增 `#action-l1v` 面板：提示文字、「認識」/「不認識」按鈕、`#l1v-countdown` 倒數容器
+- [x] (2026-06-11) [L1-V-2] `style.css` — 無需新增（全部沿用既有 `.action-btn`、`.countdown-bar`、`.feedback-correct/wrong` 等 class）
+- [x] (2026-06-11) [L1-V-3] `js/questions/q-stub.js` — `registerQuestionModule(1, {...})` 實作：`l1vKnow()` → `successes++`；`l1vDontKnow()` → `attempts++`；雙向皆 `startAutoAdvance('l1v-countdown')`；不設 `requiresAudio`
 
 ### L4+ 核心功能
 - [ ] [L4-1] 開發 L4 自由造句題型：顯示目標單字，使用者輸入完整句子，以 `buildWordPosMap()` 解析每詞 POS 後呼叫 `checkWalsRule()`，驗證至少一條已解鎖規則；通過升級給代幣，失敗提示缺少的 POS
@@ -54,6 +39,7 @@
 - 導入完整的跨裝置雲端資料庫架構與離線支援
 
 ## 歷史紀錄 (Archive)
+- [x] (2026-06-11) [L1-V] L1-V 純視覺閃卡自評題型：`#action-l1v` 面板 + `registerQuestionModule(1,...)` 實作，「認識」/「不認識」雙路徑，無音訊無麥克風
 - [x] (2026-06-11) [ARCH-1] 建立 `ARCHITECTURE.md` — 檔案職責、模組呼叫關係、SRS 資料流、Level-Module 現狀表
 - [x] (2026-06-11) [ARCH-2] `CLAUDE.md` 步驟 5 加入維護規則：新增模組或搬移功能後同步更新 `ARCHITECTURE.md`
 - [x] (2026-06-11) [BUG-4] `js/canvas.js` — 字體縮放改為 while 迴圈（20→8px），lineHeight/totalHeight 在縮放完成後計算

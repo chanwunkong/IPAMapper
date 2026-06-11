@@ -100,6 +100,21 @@
                         </div>
                     </div>
 
+                    <!-- L1-V: 閃卡自評 -->
+                    <div id="action-l1v" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
+                        <div style="font-size:14px; color:var(--text-secondary); text-align:center;">你認識這個單字嗎？</div>
+                        <div id="l1v-buttons" style="display:flex; gap:15px;">
+                            <button class="action-btn btn-unlock" onclick="l1vKnow()">認識</button>
+                            <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="l1vDontKnow()">不認識</button>
+                        </div>
+                        <div id="l1v-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
+                        <div id="l1v-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <span class="countdown-label">自動跳題中...</span>
+                            <div class="countdown-bar"></div>
+                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l1v-countdown'); moveToNextWord()">立即繼續</button>
+                        </div>
+                    </div>
+
                     <!-- L1-A: 聽音選字 -->
                     <div id="action-l1a" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
                         <div class="tts-group">
