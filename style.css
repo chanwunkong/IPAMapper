@@ -103,7 +103,7 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    padding-right: 180px;
+    padding-right: min(180px, 40%);
     z-index: 10;
 }
 
@@ -394,3 +394,22 @@ body, html {
 #audio-disable-bar { display: flex; justify-content: center; align-items: center; min-height: 26px; padding: 2px 0 4px; }
 #audio-disable-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid #c7c7cc; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
 #audio-disabled-notice { font-size: 12px; color: #ff9500; font-weight: 600; letter-spacing: 0.02em; }
+
+/* UX-4: countdown label */
+.countdown-label { font-size: 12px; color: var(--text-secondary); letter-spacing: 0.03em; }
+
+/* UX-6: checkin subtitle */
+#checkin-display { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.checkin-subtitle { font-size: 9px; color: var(--text-secondary); letter-spacing: 0.02em; line-height: 1.2; margin-top: 1px; }
+
+/* UX-7: rule detail modal */
+.rule-detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 500; display: flex; align-items: center; justify-content: center; }
+.rule-detail-card { background: var(--card-bg); border-radius: 18px; padding: 24px 20px 20px; width: 88%; max-width: 360px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+.rule-detail-header { display: flex; flex-direction: column; gap: 4px; }
+.rule-detail-wals-id { font-size: 12px; color: var(--text-secondary); font-family: monospace; }
+.rule-detail-name { font-size: 20px; font-weight: bold; color: var(--text-main); }
+.rule-detail-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+.rule-detail-pos-section { display: flex; flex-direction: column; gap: 8px; }
+.rule-detail-pos-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; letter-spacing: 0.04em; }
+.rule-detail-pos-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.rule-detail-pos-tag { font-size: 12px; font-family: monospace; background: #f2f2f7; color: #3a3a3c; border-radius: 6px; padding: 3px 8px; }

@@ -2,16 +2,6 @@
 
 ## 當前任務 (Current Focus)
 
-### Bug 修正
-- [x] (2026-06-11) [BUG-4] `js/canvas.js:181-193` — 地圖單字字體縮放改為 `while` 迴圈逐步縮小，直到 `measureText` 寬度符合邊界（現在只縮一次到 16px）
-- [x] (2026-06-11) [BUG-5] `js/questions/q-stub.js:207` — L3 Canvas 初始化的 `setTimeout(resizeL3Canvas, 50)` 改為 `requestAnimationFrame` 確保 layout 完成後才讀取尺寸
-
-### UX 改善（中優先）
-- [ ] [UX-4] 倒計時進度條區域補充靜態文字「自動跳題中...」，讓使用者知道計時器正在倒數
-- [ ] [UX-5] `style.css:106` — `#storage-area` 的 `padding-right: 180px` 改為響應式寫法，防止小螢幕截斷
-- [ ] [UX-6] `index.html:19-21` — 打卡連續天數顯示加入副標「連續天數，中斷後歸零」小字說明
-- [ ] [UX-7] `js/grammar.js:97` — WALS 規則「查看」按鈕改為彈出詳情卡片：顯示規則說明、`posTypes[]` 序列需求、對應例句
-
 ### L4+ 核心功能
 - [ ] [L4-1] 開發 L4 自由造句題型：顯示目標單字，使用者輸入完整句子，以 `buildWordPosMap()` 解析每詞 POS 後呼叫 `checkWalsRule()`，驗證至少一條已解鎖規則；通過升級給代幣，失敗提示缺少的 POS
 - [ ] [L4-2] `js/grammar.js` — WALS 規則解鎖狀態的 UI 標記與存檔資料完全綁定（現在 `unlockedRules` 已在存檔中，確認 UI 渲染與載入時同步）
@@ -40,6 +30,12 @@
 - 導入完整的跨裝置雲端資料庫架構與離線支援
 
 ## 歷史紀錄 (Archive)
+- [x] (2026-06-11) [BUG-4] `js/canvas.js` — 字體縮放改為 while 迴圈（20→8px），lineHeight/totalHeight 在縮放完成後計算
+- [x] (2026-06-11) [BUG-5] `js/questions/q-stub.js` — `setTimeout(50)` 改為雙重 requestAnimationFrame，確保 L3 canvas layout 完成後再讀取尺寸
+- [x] (2026-06-11) [UX-4] 5 處 countdown 容器加入 `.countdown-label`「自動跳題中...」靜態說明文字
+- [x] (2026-06-11) [UX-5] `style.css` — `#storage-area` padding-right 改為 `min(180px, 40%)` 響應式寫法
+- [x] (2026-06-11) [UX-6] `index.html` — 打卡連續天數下加 `.checkin-subtitle`「連續天數，中斷後歸零」小字
+- [x] (2026-06-11) [UX-7] `js/grammar.js` — `showRuleDetail(rule)` + `#rule-detail-modal` overlay；WALS「查看」按鈕改為彈出詳情卡片（規則說明 + posTypes 標籤）
 - [x] (2026-06-11) [BUG-1] `js/practice.js` — 新增 `fisherYatesShuffle()`，修正 `shuffleAndTake()` 與 `generateL1AOptions()` 的 sort 反模式
 - [x] (2026-06-11) [BUG-2] `js/practice.js` — `endPractice()` 失敗單字回塞前加重複檢查
 - [x] (2026-06-11) [BUG-3] `js/practice.js` — `startAutoAdvance()` 開頭先清除舊計時器

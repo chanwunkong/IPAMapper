@@ -87,6 +87,46 @@ function checkWalsRule(ruleId, tokens) {
     }
 }
 
+const ruleDescriptions = {
+    81:  'SVO 語序：句子依主詞 → 動詞 → 受詞排列，涵蓋人稱代詞、名詞、動詞與助動詞。',
+    87:  '形容詞位於名詞之前（ADJ + N），描述名詞性質。',
+    88:  '指示詞位於名詞之前（DEM + N），如 this / that 後接名詞。',
+    89:  '數詞位於名詞之前（NUM + N），如 two apples。',
+    26:  '以詞綴（前綴或後綴）標記語法關係，如複數、時態、格位。',
+    33:  '以詞綴標記名詞複數形式，形態欄需含斜線分隔的複數形。',
+    37:  '使用定冠詞（article.definite），如英語的 the。',
+    38:  '使用不定冠詞（article.indefinite），如英語的 a / an。',
+    66:  '包含過去式動詞（verb.past），表達已發生的事件。',
+    67:  '包含未來式助動詞或動詞（auxiliary.future / verb.future），表達將發生的事件。',
+    112: '句中含否定詞（negation），用以表達否定意涵。',
+    116: '是非問句以助動詞開頭（auxiliary 置於句首），如 Do / Is / Can 等起首。'
+};
+
+function showRuleDetail(rule) {
+    document.getElementById('rd-wals-id').textContent = `WALS ${rule.id}`;
+    document.getElementById('rd-name').textContent = rule.name;
+    document.getElementById('rd-desc').textContent = ruleDescriptions[rule.id] || '';
+    const tagsEl = document.getElementById('rd-pos-tags');
+    tagsEl.innerHTML = '';
+    if (rule.posTypes && rule.posTypes.length) {
+        rule.posTypes.forEach(p => {
+            const tag = document.createElement('span');
+            tag.className = 'rule-detail-pos-tag';
+            tag.textContent = p;
+            tagsEl.appendChild(tag);
+        });
+        document.getElementById('rd-pos-section').style.display = 'flex';
+    } else {
+        document.getElementById('rd-pos-section').style.display = 'none';
+    }
+    const modal = document.getElementById('rule-detail-modal');
+    modal.style.display = 'flex';
+}
+
+function closeRuleDetail() {
+    document.getElementById('rule-detail-modal').style.display = 'none';
+}
+
 function renderGrammarRules() {
     const container = document.getElementById('rule-list'); container.innerHTML = '';
     rulesA1.forEach(rule => {
@@ -94,7 +134,7 @@ function renderGrammarRules() {
         const card = document.createElement('div'); card.className = `rule-card ${unlocked ? '' : 'locked'}`;
         card.innerHTML = `<div class="rule-info"><div class="rule-id">WALS ${rule.id}</div><div class="rule-name">${rule.name}</div></div>`;
         const btnDiv = document.createElement('button');
-        if (unlocked) { btnDiv.className = 'action-btn btn-view'; btnDiv.textContent = '查看'; btnDiv.onclick = () => showToast(`查看規則：${rule.name}`); }
+        if (unlocked) { btnDiv.className = 'action-btn btn-view'; btnDiv.textContent = '查看'; btnDiv.onclick = () => showRuleDetail(rule); }
         else { btnDiv.className = canAfford ? 'action-btn btn-unlock' : 'action-btn btn-disabled'; btnDiv.textContent = `解鎖 (${UNLOCK_COST})`; btnDiv.onclick = () => canAfford ? unlockRule(rule.id, rule.name) : showToast('代幣不足'); }
         card.appendChild(btnDiv); container.appendChild(card);
     });

@@ -19,6 +19,7 @@
             <div id="checkin-display" onclick="openCalendarModal()">
                 <span>🔥 打卡</span>
                 <span id="streak-count">0</span>
+                <span class="checkin-subtitle">連續天數，中斷後歸零</span>
             </div>
             <div id="global-token-display">
                 <span>代幣</span>
@@ -93,6 +94,7 @@
                             <button class="l1-next-btn" onclick="cancelAutoAdvance(); moveToNextWord()">下一題</button>
                         </div>
                         <div id="l1-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <span class="countdown-label">自動跳題中...</span>
                             <div id="l1-countdown-bar" class="countdown-bar"></div>
                             <button class="l1-next-btn" onclick="cancelAutoAdvance('l1-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
@@ -108,6 +110,7 @@
                         <div id="l1a-options" class="l1a-options-grid"></div>
                         <div id="l1a-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l1a-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <span class="countdown-label">自動跳題中...</span>
                             <div class="countdown-bar"></div>
                             <button class="l1-next-btn" onclick="cancelAutoAdvance('l1a-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
@@ -127,6 +130,7 @@
                             <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
                         </div>
                         <div id="l2-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <span class="countdown-label">自動跳題中...</span>
                             <div id="l2-countdown-bar" class="countdown-bar"></div>
                             <button class="l1-next-btn" onclick="cancelAutoAdvance('l2-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
@@ -147,6 +151,7 @@
                             <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
                         </div>
                         <div id="l3-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <span class="countdown-label">自動跳題中...</span>
                             <div class="countdown-bar"></div>
                             <button class="l1-next-btn" onclick="cancelAutoAdvance('l3-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
@@ -167,6 +172,7 @@
                             <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
                         </div>
                         <div id="l3v-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
+                            <span class="countdown-label">自動跳題中...</span>
                             <div class="countdown-bar"></div>
                             <button class="l1-next-btn" onclick="cancelAutoAdvance('l3v-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
@@ -197,6 +203,21 @@
                         <span class="close-cal" onclick="closeCalendarModal()">×</span>
                     </div>
                     <div class="calendar-grid" id="calendar-grid"></div>
+                </div>
+            </div>
+
+            <div id="rule-detail-modal" class="rule-detail-overlay" style="display:none;" onclick="closeRuleDetail()">
+                <div class="rule-detail-card" onclick="event.stopPropagation()">
+                    <div class="rule-detail-header">
+                        <span class="rule-detail-wals-id" id="rd-wals-id"></span>
+                        <span class="rule-detail-name" id="rd-name"></span>
+                    </div>
+                    <div class="rule-detail-desc" id="rd-desc"></div>
+                    <div class="rule-detail-pos-section" id="rd-pos-section">
+                        <div class="rule-detail-pos-label">需要的 POS 標籤</div>
+                        <div class="rule-detail-pos-tags" id="rd-pos-tags"></div>
+                    </div>
+                    <button class="action-btn btn-view" style="width:100%;" onclick="closeRuleDetail()">關閉</button>
                 </div>
             </div>
 
