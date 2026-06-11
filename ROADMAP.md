@@ -3,8 +3,8 @@
 ## 當前任務 (Current Focus)
 
 ### Bug 修正
-- [ ] [BUG-4] `js/canvas.js:181-193` — 地圖單字字體縮放改為 `while` 迴圈逐步縮小，直到 `measureText` 寬度符合邊界（現在只縮一次到 16px）
-- [ ] [BUG-5] `js/questions/q-stub.js:207` — L3 Canvas 初始化的 `setTimeout(resizeL3Canvas, 50)` 改為 `requestAnimationFrame` 確保 layout 完成後才讀取尺寸
+- [x] (2026-06-11) [BUG-4] `js/canvas.js:181-193` — 地圖單字字體縮放改為 `while` 迴圈逐步縮小，直到 `measureText` 寬度符合邊界（現在只縮一次到 16px）
+- [x] (2026-06-11) [BUG-5] `js/questions/q-stub.js:207` — L3 Canvas 初始化的 `setTimeout(resizeL3Canvas, 50)` 改為 `requestAnimationFrame` 確保 layout 完成後才讀取尺寸
 
 ### UX 改善（中優先）
 - [ ] [UX-4] 倒計時進度條區域補充靜態文字「自動跳題中...」，讓使用者知道計時器正在倒數
@@ -20,7 +20,7 @@
 ### 基礎優化
 - [ ] 優化 Web Speech API 語音辨識失敗時的提示與重試體驗
 - [ ] 執行 Firebase 登入同步 E2E 流程：登入 → 練習 → 退出 → 換裝置 → 驗證資料還原
-- [ ] 新增 Lesson2.csv：動詞 30 個 + 形容詞 30 個，補充 WALS 87（形容詞與名詞）等規則的練習素材
+
 
 ### QA 測試清單（新功能驗收）
 - [ ] [QA-1] TEMP-1：無存檔按「載入 Lesson1」→ 提示；有存檔載入 → 成功；重複載入 → 提示「已載入」

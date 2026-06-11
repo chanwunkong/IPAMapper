@@ -204,7 +204,7 @@ registerQuestionModule(2, {
         l3Strokes = [];
         l3CurrentStroke = null;
         initL3Canvas();
-        setTimeout(resizeL3Canvas, 50);
+        requestAnimationFrame(() => requestAnimationFrame(resizeL3Canvas));
 
         speakText(wordData.sentence);
     },

@@ -179,15 +179,17 @@ function drawCanvas() {
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
 
         const words = item.word.split(' ');
+        const maxWidth = HEX_SIZE * sqrt3 * 0.8;
         let fontSize = 20;
         ctx.font = `bold ${fontSize}px sans-serif`;
+        while (fontSize > 8 && words.some(w => ctx.measureText(w).width > maxWidth)) {
+            fontSize--;
+            ctx.font = `bold ${fontSize}px sans-serif`;
+        }
         const lineHeight = fontSize + 2;
         const totalHeight = words.length * lineHeight;
 
         words.forEach((line, i) => {
-            if (ctx.measureText(line).width > (HEX_SIZE * sqrt3 * 0.8)) {
-                fontSize = 16; ctx.font = `bold ${fontSize}px sans-serif`;
-            }
             const yOffset = pos.y - (totalHeight / 2) + (i * lineHeight) + (lineHeight / 2);
             ctx.fillText(line, pos.x, yOffset);
         });
