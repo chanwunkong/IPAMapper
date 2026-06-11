@@ -109,7 +109,7 @@ function renderPracticeWord() {
     document.getElementById('p-phonetic').textContent = currentWordData.phonetic;
     document.getElementById('p-pos').textContent = currentWordData.pos || 'N/A';
     document.getElementById('p-morph').textContent = currentWordData.morphological;
-    document.getElementById('p-sentence').textContent = currentWordData.sentence;
+    document.getElementById('p-sentence').innerHTML = renderHighlightedSentence(currentWordData.sentence);
     document.getElementById('p-etymology').textContent = currentWordData.etymology;
 
     dispatchQuestion(currentWordData);
