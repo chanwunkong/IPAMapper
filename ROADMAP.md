@@ -11,6 +11,10 @@
 - [x] (2026-06-11) [L1-V-2] `style.css` — 無需新增（全部沿用既有 `.action-btn`、`.countdown-bar`、`.feedback-correct/wrong` 等 class）
 - [x] (2026-06-11) [L1-V-3] `js/questions/q-stub.js` — `registerQuestionModule(1, {...})` 實作：`l1vKnow()` → `successes++`；`l1vDontKnow()` → `attempts++`；雙向皆 `startAutoAdvance('l1v-countdown')`；不設 `requiresAudio`
 
+### 臨時測試工具 [TEST]
+- [x] (2026-06-11) [TEST-1] `index.html` + `style.css` — 浮動 DEV 按鈕（左下角）+ `#debug-modal` overlay（7 個題型快捷按鈕）
+- [x] (2026-06-11) [TEST-2] `js/practice.js` — `startDebugPractice(level, moduleIdx)` + `closeDebugModal()`：直接啟動指定模組，progress bar 顯示 [DEV] 標記
+
 ### L4+ 核心功能
 - [ ] [L4-1] 開發 L4 自由造句題型：顯示目標單字，使用者輸入完整句子，以 `buildWordPosMap()` 解析每詞 POS 後呼叫 `checkWalsRule()`，驗證至少一條已解鎖規則；通過升級給代幣，失敗提示缺少的 POS
 - [ ] [L4-2] `js/grammar.js` — WALS 規則解鎖狀態的 UI 標記與存檔資料完全綁定（現在 `unlockedRules` 已在存檔中，確認 UI 渲染與載入時同步）
@@ -39,6 +43,7 @@
 - 導入完整的跨裝置雲端資料庫架構與離線支援
 
 ## 歷史紀錄 (Archive)
+- [x] (2026-06-11) [TEST] 臨時測試工具：DEV 按鈕 + debug modal + `startDebugPractice(level, moduleIdx)` 直接進入任意題型
 - [x] (2026-06-11) [L1-V] L1-V 純視覺閃卡自評題型：`#action-l1v` 面板 + `registerQuestionModule(1,...)` 實作，「認識」/「不認識」雙路徑，無音訊無麥克風
 - [x] (2026-06-11) [ARCH-1] 建立 `ARCHITECTURE.md` — 檔案職責、模組呼叫關係、SRS 資料流、Level-Module 現狀表
 - [x] (2026-06-11) [ARCH-2] `CLAUDE.md` 步驟 5 加入維護規則：新增模組或搬移功能後同步更新 `ARCHITECTURE.md`

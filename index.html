@@ -31,6 +31,7 @@
             <div id="view-vocabulary" class="view active">
                 <div id="storage-area"></div>
                 <canvas id="hex-canvas"></canvas>
+                <button id="debug-btn" onclick="document.getElementById('debug-modal').style.display='flex'">DEV</button>
                 <div id="hex-word-panel">
                     <div id="hwp-word"></div>
                     <div id="hwp-phonetic"></div>
@@ -208,6 +209,21 @@
                     </div>
 
                     <button id="next-word-btn" onclick="moveToNextWord()">下一題</button>
+                </div>
+            </div>
+
+            <div id="debug-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:600; align-items:center; justify-content:center;" onclick="closeDebugModal()">
+                <div style="background:var(--card-bg); border-radius:18px; padding:20px; width:88%; max-width:320px; display:flex; flex-direction:column; gap:10px;" onclick="event.stopPropagation()">
+                    <div style="font-size:16px; font-weight:bold; color:var(--text-main);">題型測試</div>
+                    <div style="font-size:12px; color:var(--text-secondary);">直接進入指定題型，使用存檔第一個單字（或預設詞）</div>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(1,2)">L1-V 閃卡自評</button>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(1,1)">L1-A 聽音選字</button>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(1,0)">L1-S 麥克風覆誦</button>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(2,0)">L2-V 詞塊重組</button>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(2,1)">L2-A 填空</button>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(3,0)">L3-V POS 造句</button>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(4,0)">L4 (stub)</button>
+                    <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="closeDebugModal()">取消</button>
                 </div>
             </div>
 

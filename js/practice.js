@@ -362,6 +362,41 @@ function l1aSelectOption(btn, selected) {
     document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
 }
 
+function closeDebugModal() {
+    document.getElementById('debug-modal').style.display = 'none';
+}
+
+function startDebugPractice(level, moduleIdx) {
+    const baseWord = storageData.length > 0 ? storageData[0] : defaultWords[0];
+    const testWord = { ...baseWord, level, source: 'debug', attempts: 0, successes: 0 };
+    practiceQueue = [testWord];
+    currentPracticeIndex = 0;
+    practiceAudioDisabled = false;
+    document.getElementById('audio-disable-btn').style.display = '';
+    document.getElementById('audio-disabled-notice').style.display = 'none';
+    document.getElementById('practice-modal').classList.add('active');
+
+    currentWordData = testWord;
+    document.getElementById('practice-word-card').style.backgroundColor = getPosColor(testWord.pos);
+    document.getElementById('practice-progress').textContent = `[DEV] L${level}-mod${moduleIdx} | ${testWord.word}`;
+    document.getElementById('p-word').textContent = testWord.word;
+    document.getElementById('p-phonetic').textContent = testWord.phonetic || '';
+    document.getElementById('p-pos').textContent = testWord.pos || 'N/A';
+    document.getElementById('p-morph').textContent = testWord.morphological || '';
+    document.getElementById('p-sentence').innerHTML = renderHighlightedSentence(testWord.sentence);
+    document.getElementById('p-etymology').textContent = testWord.etymology || '';
+
+    if (activeDispatchModule) activeDispatchModule.deactivate();
+    const pool = questionModules[level];
+    if (pool && moduleIdx < pool.length) {
+        activeDispatchModule = pool[moduleIdx];
+        activeDispatchModule.activate(testWord);
+    } else {
+        showToast(`找不到模組 L${level}[${moduleIdx}]`);
+    }
+    closeDebugModal();
+}
+
 // L1-S: 語音辨識題型模組
 registerQuestionModule(1, {
     requiresAudio: true,
