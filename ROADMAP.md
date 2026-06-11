@@ -3,9 +3,9 @@
 ## 當前任務 (Current Focus)
 
 ### Bug 修正（建議優先執行）
-- [ ] [BUG-1] `js/practice.js:49,306` — `shuffleAndTake()` 與 `generateL1AOptions()` 的 `sort(() => 0.5 - Math.random())` 改為 Fisher-Yates 演算法，修正選項分佈不均問題
-- [ ] [BUG-2] `js/practice.js:271-281` — `endPractice()` 失敗單字回塞前加重複檢查：`if (!activeDs.words.find(w => w.word === item.word))`
-- [ ] [BUG-3] `js/practice.js:203` — `startAutoAdvance()` 開頭先呼叫 `cancelAutoAdvance()` 清除舊計時器，防止快速點擊產生多個並行計時器
+- [x] (2026-06-11) [BUG-1] `js/practice.js` — 新增 `fisherYatesShuffle()`，取代 `shuffleAndTake()` 與 `generateL1AOptions()` 的 `sort(() => 0.5 - Math.random())` 反模式
+- [x] (2026-06-11) [BUG-2] `js/practice.js` — `endPractice()` 失敗單字回塞前加 `find()` 重複檢查，防止同一單字多次寫入 dataset
+- [x] (2026-06-11) [BUG-3] `js/practice.js` — `startAutoAdvance()` 開頭先清除 `autoAdvanceTimer`，防止快速點擊產生多個並行計時器
 - [ ] [BUG-4] `js/canvas.js:181-193` — 地圖單字字體縮放改為 `while` 迴圈逐步縮小，直到 `measureText` 寬度符合邊界（現在只縮一次到 16px）
 - [ ] [BUG-5] `js/questions/q-stub.js:207` — L3 Canvas 初始化的 `setTimeout(resizeL3Canvas, 50)` 改為 `requestAnimationFrame` 確保 layout 完成後才讀取尺寸
 

@@ -45,8 +45,16 @@ function speakSequence(texts) {
     });
 }
 
+function fisherYatesShuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
 function shuffleAndTake(arr, n) {
-    return arr.sort(() => 0.5 - Math.random()).slice(0, n);
+    return fisherYatesShuffle([...arr]).slice(0, n);
 }
 
 function takeOldest(arr, n) {
@@ -210,6 +218,7 @@ function toggleMic() {
 }
 
 function startAutoAdvance(countdownId) {
+    if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
     const countdown = document.getElementById(countdownId);
     const bar = countdown.querySelector('.countdown-bar');
     countdown.style.display = 'flex';
@@ -280,10 +289,12 @@ function endPractice() {
                 }
             } else if (item.source === 'csv') {
                 const activeDs = getActiveDataset();
-                activeDs.words.push({
-                    word: item.word, phonetic: item.phonetic, pos: item.pos,
-                    morphological: item.morphological, sentence: item.sentence, etymology: item.etymology
-                });
+                if (!activeDs.words.find(w => w.word.toLowerCase() === item.word.toLowerCase())) {
+                    activeDs.words.push({
+                        word: item.word, phonetic: item.phonetic, pos: item.pos,
+                        morphological: item.morphological, sentence: item.sentence, etymology: item.etymology
+                    });
+                }
             }
         }
     });
@@ -314,7 +325,7 @@ function generateL1AOptions(word) {
         const distractor = letters.map((c, i) => (i === idx ? replacement : c)).join('');
         if (distractor !== lower) distractors.add(distractor);
     }
-    return [lower, ...[...distractors].slice(0, 3)].sort(() => 0.5 - Math.random());
+    return fisherYatesShuffle([lower, ...[...distractors].slice(0, 3)]);
 }
 
 function l1aSelectOption(btn, selected) {
