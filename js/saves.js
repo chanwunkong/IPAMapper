@@ -87,7 +87,9 @@ function resetBoardData() {
     currentTokens = 0;
     checkInHistory = [];
     unlockedRules = [];
+    voiceSettings = { voiceURI: '', lang: 'en-US' };
 
+    applyVoiceSettings();
     updateStorageUI();
     drawCanvas();
     globalTokenCount.textContent = currentTokens;

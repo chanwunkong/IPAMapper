@@ -7,6 +7,7 @@ let activeDatasetId = '';
 let usedIndices = {};
 let checkInHistory = [];
 let unlockedRules = []; // 文法解鎖狀態改為存檔綁定
+let voiceSettings = { voiceURI: '', lang: 'en-US' };
 
 const storageData = [];
 const grid = new Map();

@@ -93,7 +93,8 @@ function exportGameData() {
         activeDatasetId: activeDatasetId,
         usedIndices: usedIndices,
         checkInHistory: checkInHistory,
-        unlockedRules: unlockedRules
+        unlockedRules: unlockedRules,
+        voiceSettings: voiceSettings
     };
 }
 
@@ -104,6 +105,7 @@ function importGameData(data) {
     if (data.usedIndices) usedIndices = data.usedIndices;
     checkInHistory = data.checkInHistory || [];
     unlockedRules = data.unlockedRules || [];
+    voiceSettings = data.voiceSettings || { voiceURI: '', lang: 'en-US' };
 
     storageData.length = 0;
     if (data.storage) data.storage.forEach(item => storageData.push(item));
@@ -124,4 +126,5 @@ function importGameData(data) {
     renderGrammarRules();
     updateStorageUI();
     drawCanvas();
+    applyVoiceSettings();
 }

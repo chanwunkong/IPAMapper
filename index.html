@@ -119,6 +119,14 @@
                     </div>
 
                     <div class="settings-card">
+                        <div class="settings-title">語音設定 (Voice)</div>
+                        <div class="settings-row">
+                            <div style="font-size:14px; color:var(--text-secondary); line-height:1.4;">選擇朗讀單字時使用的語音引擎，設定會隨存檔儲存。</div>
+                            <select id="voice-select" style="padding: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; width: 100%; margin-top: 8px;"></select>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
                         <div class="settings-title">我的單字庫 (Datasets)</div>
                         <div class="settings-row" id="dataset-list"></div>
                     </div>
@@ -155,6 +163,7 @@
     <script src="js/ui.js"></script>
     <script src="js/grammar.js"></script>
     <script src="js/datasets.js"></script>
+    <script src="js/voice.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/saves.js"></script>
     <script src="js/practice.js"></script>

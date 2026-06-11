@@ -13,7 +13,12 @@ function toggleSpeed() {
 function speakText(text) {
     if (!text) return; window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; utterance.rate = isSlowSpeed ? 0.6 : 1.0;
+    utterance.rate = isSlowSpeed ? 0.6 : 1.0;
+    if (voiceSettings.voiceURI) {
+        const voice = window.speechSynthesis.getVoices().find(v => v.voiceURI === voiceSettings.voiceURI);
+        if (voice) utterance.voice = voice;
+    }
+    utterance.lang = voiceSettings.lang || 'en-US';
     window.speechSynthesis.speak(utterance);
 }
 
