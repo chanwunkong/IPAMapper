@@ -62,6 +62,14 @@ document.getElementById('play-btn').addEventListener('click', () => {
 
     storageData.forEach(item => existingWords.add(item.word.toLowerCase().trim()));
 
+    // DUP-2: 將所有單字庫已消耗的詞加入 existingWords，防止跨單字庫重複出題
+    datasets.forEach(ds => {
+        const consumed = usedIndices[ds.id] || 0;
+        for (let i = 0; i < Math.min(consumed, ds.words.length); i++) {
+            existingWords.add(ds.words[i].word.toLowerCase().trim());
+        }
+    });
+
     for (let [key, item] of grid.entries()) {
         existingWords.add(item.word.toLowerCase().trim());
         let pItem = { ...item, source: 'map', key: key, attempts: 0, successes: 0 };

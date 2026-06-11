@@ -99,12 +99,9 @@ csvUpload.addEventListener('change', (e) => {
     }
 });
 
-document.getElementById('importCsvBtn').addEventListener('click', () => {
-    if (!currentSaveId) return showToast('請先新增並選擇一個存檔');
-    if (!pendingCSVText) return showToast('請先選擇 CSV 檔案');
-
-    const lines = pendingCSVText.split(/\r?\n/).filter(l => l.trim() !== '');
-    if (lines.length < 2) return showToast('CSV 格式錯誤');
+function importCSVText(text, filename) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+    if (lines.length < 2) { showToast('CSV 格式錯誤'); return; }
 
     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
     const wordIdx = headers.findIndex(h => h === 'word');
@@ -114,8 +111,8 @@ document.getElementById('importCsvBtn').addEventListener('click', () => {
     const sentIdx = headers.findIndex(h => h.includes('sentence'));
     const etymIdx = headers.findIndex(h => h.includes('etymology'));
 
-    if (wordIdx === -1) return showToast('缺少 Word 欄位');
-    if (posIdx === -1) return showToast('缺少 POS 欄位，請確認 CSV 標頭含有 "POS" 欄位');
+    if (wordIdx === -1) { showToast('缺少 Word 欄位'); return; }
+    if (posIdx === -1) { showToast('缺少 POS 欄位，請確認 CSV 標頭含有 "POS" 欄位'); return; }
 
     const newWords = [];
     const invalidPosWords = [];
@@ -140,14 +137,32 @@ document.getElementById('importCsvBtn').addEventListener('click', () => {
 
     if (newWords.length > 0) {
         const dsId = 'ds_' + Date.now();
-        datasets.push({ id: dsId, name: pendingFileName, words: newWords });
+        datasets.push({ id: dsId, name: filename, words: newWords });
         activeDatasetId = dsId;
         usedIndices[dsId] = 0;
-
         saveCurrentData();
         renderDatasets();
-        pendingCSVText = ''; csvUpload.value = '';
-        document.getElementById('csv-filename').textContent = '尚未選擇檔案';
         showToast(`成功匯入 ${newWords.length} 個單字！`);
     }
+}
+
+document.getElementById('importCsvBtn').addEventListener('click', () => {
+    if (!currentSaveId) return showToast('請先新增並選擇一個存檔');
+    if (!pendingCSVText) return showToast('請先選擇 CSV 檔案');
+    importCSVText(pendingCSVText, pendingFileName);
+    pendingCSVText = ''; csvUpload.value = '';
+    document.getElementById('csv-filename').textContent = '尚未選擇檔案';
 });
+
+async function loadLesson1CSV() {
+    if (!currentSaveId) return showToast('請先建立並選擇存檔');
+    if (datasets.find(d => d.name === 'Lesson1.csv')) return showToast('預設題庫已載入');
+    try {
+        const resp = await fetch('./Lesson1.csv');
+        if (!resp.ok) throw new Error('not found');
+        const text = await resp.text();
+        importCSVText(text, 'Lesson1.csv');
+    } catch (e) {
+        showToast('載入失敗，請確認 Lesson1.csv 存在於相同目錄');
+    }
+}

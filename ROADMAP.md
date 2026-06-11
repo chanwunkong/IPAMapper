@@ -23,6 +23,8 @@
 - 導入完整的跨裝置雲端資料庫架構與離線支援
 
 ## 歷史紀錄 (Archive)
+- [x] (2026-06-11) [TEMP-1] 題庫管理區塊加入「載入預設題庫 Lesson1」按鈕，`fetch('./Lesson1.csv')` 讀取後呼叫 `importCSVText()` 匯入，適用 GitHub Pages 環境
+- [x] (2026-06-11) [DUP-1/2] 確認並補強單字去重：現有 `existingWords`(storageData+grid) 機制；新增跨單字庫去重，所有已消耗詞（usedIndices 範圍）一律排除
 - [x] (2026-06-11) [POS-1] 建立 `POS_SPEC.md` — 定義標籤規範、CSV 格式、Morphological 欄位格式、WALS 對照
 - [x] (2026-06-11) [POS-2] 更新 `js/state.js` 的 `getPosColor()` — 依 POS_SPEC 擴充為 9 色對應，改為精確前綴比對取代 `includes()` 模糊比對
 - [x] (2026-06-11) [POS-3] 更新 `js/grammar.js` `rulesA1` — 為每條 WALS 規則加入 `posTypes[]`
