@@ -1,81 +1,81 @@
-Word,Phonetic,Lexical Category,Primary POS,Internal Components,Morphological Variations,Example Sentence,Etymology
-hello,/həˈloʊ/,Formulaic,Interjection,[Int] hello,None,"Hello, how are you?","From 'holla' (to shout or call)."
-goodbye,/ˌɡʊdˈbaɪ/,Formulaic,Interjection,[Int] goodbye,None,"Goodbye, see you tomorrow.","Short for 'God be with ye' (God be with you)."
-hi,/haɪ/,Formulaic,Interjection,[Int] hi,None,"Hi, I am Tom.","From 'hey' (a call to look or listen)."
-bye,/baɪ/,Formulaic,Interjection,[Int] bye,None,"Bye, have a good day.","Shortened form of 'goodbye'."
-good morning,/ɡʊd ˈmɔːrnɪŋ/,Formulaic,Phrase,[Adj] good + [Noun] morning,None,"Good morning, mom.","From 'good' and 'morning' (early day)."
-good afternoon,/ɡʊd ˌæftərˈnuːn/,Formulaic,Phrase,[Adj] good + [Prep] after + [Noun] noon,None,"Good afternoon, teacher.","From 'good', 'after' (later), and 'noon' (midday)."
-good evening,/ɡʊd ˈiːvnɪŋ/,Formulaic,Phrase,[Adj] good + [Noun] evening,None,"Good evening, everyone.","From 'good' and 'evening' (late day)."
-good night,/ɡʊd ˈnaɪt/,Formulaic,Phrase,[Adj] good + [Noun] night,None,"Good night, go to sleep.","From 'good' and 'night' (dark time)."
-thank you,/θæŋk juː/,Formulaic,Phrase,[Verb] thank + [Pron] you,None,Thank you for the apple.,"From 'thank' (good thought) and 'you'."
-thanks,/θæŋks/,Formulaic,Interjection/Noun,[Noun] thank + [Suffix] s,None,Thanks for your help.,"From 'thank' (good thought) and suffix '-s'."
-please,/pliːz/,Formulaic,Adverb/Interjection,[Adv] please,None,Please sit down.,"Short for 'if it please you' (to make happy)."
-OK,/oʊˈkeɪ/,Formulaic,Interjection,[Int] OK,None,"OK, I understand.","From 'oll korrect' (all correct)."
-yes,/jɛs/,Formulaic,Particle,[Part] yes,None,"Yes, it is a dog.","From Old English 'gea' (so) and 'si' (be it)."
-no,/noʊ/,Lexical,Negator/Determiner,[Part/Det] no,None,"No, I am not tired.","From Old English 'ne' (not) and 'a' (ever)."
-sorry,/ˈsɔːri/,Lexical,Adjective,[Adj] sorry,"sorrier, sorriest","I am sorry, I am late.","From Old English 'sarig' (sore or sad)."
-welcome,/ˈwɛlkəm/,Lexical,Adjective/Verb,[Adj/Verb] welcome,"welcomed, welcoming",Welcome to our school.,"From Old English 'wil' (desired) and 'cuma' (guest)."
-man,/mæn/,Lexical,Noun,[Noun] man,men,That man is my father.,"From Old English 'mann' (human or adult male)."
-woman,/ˈwʊmən/,Lexical,Noun,[Noun] woman,women,The woman is reading a book.,"From Old English 'wif' (female) and 'mann' (human)."
-boy,/bɔɪ/,Lexical,Noun,[Noun] boy,boys,The boy likes to play games.,"From Middle English 'boie' (servant or young male)."
-girl,/ɡɜːrl/,Lexical,Noun,[Noun] girl,girls,The girl has a red bag.,"From Middle English 'gerle' (child of any sex)."
-friend,/frɛnd/,Lexical,Noun,[Noun] friend,friends,He is my good friend.,"From Old English 'freogan' (to love)."
-boyfriend,/ˈbɔɪˌfrɛnd/,Lexical,Noun,[Noun] boy + [Noun] friend,boyfriends,Her boyfriend is very tall.,"From 'boy' and 'friend'."
-girlfriend,/ˈɡɜːrlˌfrɛnd/,Lexical,Noun,[Noun] girl + [Noun] friend,girlfriends,His girlfriend has long hair.,"From 'girl' and 'friend'."
-person,/ˈpɜːrsən/,Lexical,Noun,[Noun] person,"persons, people",She is a very nice person.,"From Latin 'per-' (through) and 'sonare' (to sound), meaning an actor's mask."
-people,/ˈpiːpəl/,Lexical,Noun,[Noun] people,None,Many people are in the park.,"From Latin 'populus' (a nation or group)."
-adult,/ˈædʌlt/,Lexical,Noun,[Noun] adult,adults,This book is for adults.,"From Latin 'ad-' (to) and 'alere' (to grow)."
-baby,/ˈbeɪbi/,Lexical,Noun,[Noun] baby,babies,The baby is sleeping now.,"From 'baba' (infant babbling sounds)."
-Mr,/ˈmɪstər/,Lexical,Noun,[Noun] Mr,Messrs,"Mr. Smith is my teacher.","Short for 'master'."
-Mrs,/ˈmɪsɪz/,Lexical,Noun,[Noun] Mrs,Mmes,"Mrs. Jones has a cat.","Short for 'mistress'."
-miss,/mɪs/,Lexical,Noun,[Noun] miss,"misses, missed, missing","Excuse me, miss.","Shortened form of 'mistress'."
-zero,/ˈzɪroʊ/,Lexical,Number,[Num] zero,"zeros, zeroes","I have zero apples.","From Arabic 'sifr' (empty)."
-one,/wʌn/,Lexical,Number/Pronoun,[Num] one,ones,"I have one dog.","From Old English 'an' (single)."
-two,/tuː/,Lexical,Number,[Num] two,twos,"She has two cats.","From Old English 'twa' (two)."
-three,/θriː/,Lexical,Number,[Num] three,threes,"I see three birds.","From Old English 'threo' (three)."
-four,/fɔːr/,Lexical,Number,[Num] four,fours,"The car has four doors.","From Old English 'feower' (four)."
-five,/faɪv/,Lexical,Number,[Num] five,fives,"I have five fingers on my hand.","From Old English 'fif' (five)."
-six,/sɪks/,Lexical,Number,[Num] six,sixes,"There are six eggs in the box.","From Old English 'siex' (six)."
-seven,/ˈsɛvən/,Lexical,Number,[Num] seven,sevens,"A week has seven days.","From Old English 'seofon' (seven)."
-eight,/eɪt/,Lexical,Number,[Num] eight,eights,"A spider has eight legs.","From Old English 'eahta' (eight)."
-nine,/naɪn/,Lexical,Number,[Num] nine,nines,"I sleep for nine hours.","From Old English 'nigon' (nine)."
-ten,/tɛn/,Lexical,Number,[Num] ten,tens,"I have ten toes.","From Old English 'tien' (ten)."
-eleven,/ɪˈlɛvən/,Lexical,Number,[Num] eleven,elevens,"He is eleven years old.","From Old English 'ain' (one) and 'lif' (left over)."
-twelve,/twɛlv/,Lexical,Number,[Num] twelve,twelves,"A year has twelve months.","From Old English 'twa' (two) and 'lif' (left over)."
-thirteen,/θɜːrˈtiːn/,Lexical,Number,[Num] three + [Suffix] teen,thirteens,"The book has thirteen pages.","From Old English 'threo' (three) and 'tiene' (ten)."
-fourteen,/fɔːrˈtiːn/,Lexical,Number,[Num] four + [Suffix] teen,fourteens,"I need fourteen cups.","From Old English 'feower' (four) and 'tiene' (ten)."
-fifteen,/fɪfˈtiːn/,Lexical,Number,[Num] five + [Suffix] teen,fifteens,"She is fifteen today.","From Old English 'fif' (five) and 'tiene' (ten)."
-sixteen,/sɪkˈstiːn/,Lexical,Number,[Num] six + [Suffix] teen,sixteens,"We have sixteen apples.","From Old English 'siex' (six) and 'tiene' (ten)."
-seventeen,/ˌsɛvənˈtiːn/,Lexical,Number,[Num] seven + [Suffix] teen,seventeens,"There are seventeen chairs.","From Old English 'seofon' (seven) and 'tiene' (ten)."
-eighteen,/eɪˈtiːn/,Lexical,Number,[Num] eight + [Suffix] teen,eighteens,"The boy is eighteen years old.","From Old English 'eahta' (eight) and 'tiene' (ten)."
-nineteen,/naɪnˈtiːn/,Lexical,Number,[Num] nine + [Suffix] teen,nineteens,"I see nineteen cars.","From Old English 'nigon' (nine) and 'tiene' (ten)."
-twenty,/ˈtwɛnti/,Lexical,Number,[Num] two + [Suffix] ty,twenties,"There are twenty students in the room.","From Old English 'twa' (two) and '-tig' (group of ten)."
-thirty,/ˈθɜːrti/,Lexical,Number,[Num] three + [Suffix] ty,thirties,"A month has about thirty days.","From Old English 'threo' (three) and '-tig' (group of ten)."
-forty,/ˈfɔːrti/,Lexical,Number,[Num] four + [Suffix] ty,forties,"My dad is forty years old.","From Old English 'feower' (four) and '-tig' (group of ten)."
-fifty,/ˈfɪfti/,Lexical,Number,[Num] five + [Suffix] ty,fifties,"I have fifty dollars.","From Old English 'fif' (five) and '-tig' (group of ten)."
-sixty,/ˈsɪksti/,Lexical,Number,[Num] six + [Suffix] ty,sixties,"An hour has sixty minutes.","From Old English 'siex' (six) and '-tig' (group of ten)."
-seventy,/ˈsɛvənti/,Lexical,Number,[Num] seven + [Suffix] ty,seventies,"My grandma is seventy.","From Old English 'seofon' (seven) and '-tig' (group of ten)."
-eighty,/ˈeɪti/,Lexical,Number,[Num] eight + [Suffix] ty,eighties,"The book costs eighty cents.","From Old English 'eahta' (eight) and '-tig' (group of ten)."
-ninety,/ˈnaɪnti/,Lexical,Number,[Num] nine + [Suffix] ty,nineties,"It is ninety degrees outside.","From Old English 'nigon' (nine) and '-tig' (group of ten)."
-hundred,/ˈhʌndrəd/,Lexical,Number,[Num] hundred,hundreds,"That toy costs one hundred dollars.","From Old English 'hund' (hundred) and 'red' (reckoning)."
-parent,/ˈpɛrənt/,Lexical,Noun,[Noun] parent,parents,"My parent is at work.","From Latin 'parere' (to bring forth)."
-father,/ˈfɑːðər/,Lexical,Noun,[Noun] father,fathers,"My father is a tall man.","From Old English 'fæder'."
-mother,/ˈmʌðər/,Lexical,Noun,[Noun] mother,mothers,"His mother cooks good food.","From Old English 'modor'."
-dad,/dæd/,Lexical,Noun,[Noun] dad,dads,"My dad drives a red car.","From baby noises ('da-da')."
-mom,/mɑm/,Lexical,Noun,[Noun] mom,moms,"I love my mom.","From baby noises ('ma-ma')."
-wife,/waɪf/,Lexical,Noun,[Noun] wife,wives,"He loves his wife.","From Old English 'wif' (woman)."
-husband,/ˈhʌzbənd/,Lexical,Noun,[Noun] husband,husbands,"Her husband is very nice.","From Old Norse 'hus' (house) and 'bondi' (dweller)."
-child,/tʃaɪld/,Lexical,Noun,[Noun] child,children,"The child plays with a ball.","From Old English 'cild' (young person)."
-son,/sʌn/,Lexical,Noun,[Noun] son,sons,"Their son is five years old.","From Old English 'sunu'."
-daughter,/ˈdɔːtər/,Lexical,Noun,[Noun] daughter,daughters,"She is my lovely daughter.","From Old English 'dohtor'."
-sister,/ˈsɪstər/,Lexical,Noun,[Noun] sister,sisters,"My sister likes to sing.","From Old English 'sweostor'."
-brother,/ˈbrʌðər/,Lexical,Noun,[Noun] brother,brothers,"I have one brother.","From Old English 'brothor'."
-family,/ˈfæməli/,Lexical,Noun,[Noun] family,families,"My family is big.","From Latin 'familia' (household servants)."
-grandmother,/ˈɡrændˌmʌðər/,Lexical,Noun,[Adj] grand + [Noun] mother,grandmothers,"My grandmother tells good stories.","From French 'grand' (big or old) and 'mother'."
-grandfather,/ˈɡrændˌfɑːðər/,Lexical,Noun,[Adj] grand + [Noun] father,grandfathers,"My grandfather walks in the park.","From French 'grand' (big or old) and 'father'."
-grandchild,/ˈɡrændˌtʃaɪld/,Lexical,Noun,[Adj] grand + [Noun] child,grandchildren,"The grandchild loves her.","From French 'grand' (big or old) and 'child'."
-aunt,/ænt/,Lexical,Noun,[Noun] aunt,aunts,"My aunt gives me a book.","From Latin 'amita' (father's sister)."
-uncle,/ˈʌŋkəl/,Lexical,Noun,[Noun] uncle,uncles,"His uncle is a funny man.","From Latin 'avus' (grandfather), meaning mother's brother."
-niece,/niːs/,Lexical,Noun,[Noun] niece,nieces,"My niece is a happy baby.","From Latin 'neptis' (granddaughter)."
-nephew,/ˈnɛfjuː/,Lexical,Noun,[Noun] nephew,nephews,"He plays with his nephew.","From Latin 'nepos' (grandson)."
-cousin,/ˈkʌzən/,Lexical,Noun,[Noun] cousin,cousins,My cousin and I are friends.,"From Latin 'con-' (together) and 'soror' (sister), meaning a mother's sister's child."
+﻿Word,Phonetic,POS,Morphological,Sentence,Etymology
+hello,/h@lou/,interjection,hello,"Hello, how are you?",From holla (shout or call).
+goodbye,/gudbaI/,interjection,goodbye,"Goodbye, see you tomorrow.",Short for God be with ye.
+hi,/haI/,interjection,hi,"Hi, I am Tom.",From hy or hey.
+bye,/baI/,interjection,bye,"Bye, have a good day.",Shortened form of goodbye.
+good morning,/gud mornIN/,interjection,good morning,"Good morning, mom.",From good and morning.
+good afternoon,/gud afternuun/,interjection,good afternoon,"Good afternoon, teacher.",From good and afternoon.
+good evening,/gud iivnIN/,interjection,good evening,"Good evening, everyone.",From good and evening.
+good night,/gud naIt/,interjection,good night,"Good night, go to sleep.",From good and night.
+thank you,/THaNk yuu/,interjection,thank you,Thank you for the apple.,From thank and you.
+thanks,/THaNks/,interjection,thanks,Thanks for your help.,From thank and suffix -s.
+please,/pliiz/,adverb,please,Please sit down.,Short for if it please you.
+OK,/ou keI/,interjection,OK,"OK, I understand.",From oll korrect (all correct).
+yes,/jEs/,particle,yes,"Yes, it is a dog.",From Old English gea and si.
+no,/nou/,negation,no,"No, I am not tired.",From Old English ne and a.
+sorry,/soori/,adjective,sorry/sorrier/sorriest,"I am sorry, I am late.",From Old English sarig (sad).
+welcome,/wElk@m/,adjective,welcome/more welcome/most welcome,Welcome to our school.,From Old English wil and cuma.
+man,/mæn/,noun,man/men,That man is my father.,From Old English mann.
+woman,/wUm@n/,noun,woman/women,The woman is reading a book.,From Old English wif and mann.
+boy,/bOI/,noun,boy/boys,The boy likes to play games.,From Middle English boie.
+girl,/g3rl/,noun,girl/girls,The girl has a red bag.,From Middle English gerle.
+friend,/frEnd/,noun,friend/friends,He is my good friend.,From Old English freogan (to love).
+boyfriend,/bOIfr End/,noun,boyfriend/boyfriends,Her boyfriend is very tall.,From boy and friend.
+girlfriend,/g3rlfrEnd/,noun,girlfriend/girlfriends,His girlfriend has long hair.,From girl and friend.
+person,/p3rs@n/,noun,person/people,She is a very nice person.,From Latin per- and sonare.
+people,/piip@l/,noun,people,Many people are in the park.,From Latin populus.
+adult,/æd^lt/,noun,adult/adults,This book is for adults.,From Latin ad- and alere.
+baby,/beIbi/,noun,baby/babies,The baby is sleeping now.,From baba (infant babbling).
+Mr,/mIst@r/,noun,Mr/Messrs,Mr. Smith is my teacher.,Short for master.
+Mrs,/mIsIz/,noun,Mrs/Mmes,Mrs. Jones has a cat.,Short for mistress.
+miss,/mIs/,noun,miss/misses,"Excuse me, miss.",Shortened form of mistress.
+zero,/zIrou/,numeral,zero/zeros,I have zero apples.,From Arabic sifr (empty).
+one,/w^n/,numeral,one/ones,I have one dog.,From Old English an (single).
+two,/tuu/,numeral,two/twos,She has two cats.,From Old English twa.
+three,/THrii/,numeral,three/threes,I see three birds.,From Old English threo.
+four,/foor/,numeral,four/fours,The car has four doors.,From Old English feower.
+five,/faIv/,numeral,five/fives,I have five fingers on my hand.,From Old English fif.
+six,/sIks/,numeral,six/sixes,There are six eggs in the box.,From Old English siex.
+seven,/sEv@n/,numeral,seven/sevens,A week has seven days.,From Old English seofon.
+eight,/eIt/,numeral,eight/eights,A spider has eight legs.,From Old English eahta.
+nine,/naIn/,numeral,nine/nines,I sleep for nine hours.,From Old English nigon.
+ten,/tEn/,numeral,ten/tens,I have ten toes.,From Old English tien.
+eleven,/IlEv@n/,numeral,eleven/elevens,He is eleven years old.,From Old English ain and lif.
+twelve,/twElv/,numeral,twelve/twelves,A year has twelve months.,From Old English twa and lif.
+thirteen,/TH3rtiIn/,numeral,thirteen/thirteens,The book has thirteen pages.,From Old English threo and tiene.
+fourteen,/foortiin/,numeral,fourteen/fourteens,I need fourteen cups.,From Old English feower and tiene.
+fifteen,/fIftiIn/,numeral,fifteen/fifteens,She is fifteen today.,From Old English fif and tiene.
+sixteen,/sIkstiin/,numeral,sixteen/sixteens,We have sixteen apples.,From Old English siex and tiene.
+seventeen,/sEv@ntiin/,numeral,seventeen/seventeens,There are seventeen chairs.,From Old English seofon and tiene.
+eighteen,/eItiin/,numeral,eighteen/eighteens,The boy is eighteen years old.,From Old English eahta and tiene.
+nineteen,/naIntiin/,numeral,nineteen/nineteens,I see nineteen cars.,From Old English nigon and tiene.
+twenty,/twEnti/,numeral,twenty/twenties,There are twenty students in the room.,From Old English twa and -tig.
+thirty,/TH3rti/,numeral,thirty/thirties,A month has about thirty days.,From Old English threo and -tig.
+forty,/foorti/,numeral,forty/forties,My dad is forty years old.,From Old English feower and -tig.
+fifty,/fIfti/,numeral,fifty/fifties,I have fifty dollars.,From Old English fif and -tig.
+sixty,/sIksti/,numeral,sixty/sixties,An hour has sixty minutes.,From Old English siex and -tig.
+seventy,/sEv@nti/,numeral,seventy/seventies,My grandma is seventy.,From Old English seofon and -tig.
+eighty,/eIti/,numeral,eighty/eighties,The book costs eighty cents.,From Old English eahta and -tig.
+ninety,/naInti/,numeral,ninety/nineties,It is ninety degrees outside.,From Old English nigon and -tig.
+hundred,/h^ndr@d/,numeral,hundred/hundreds,That toy costs one hundred dollars.,From Old English hund and red.
+parent,/pEr@nt/,noun,parent/parents,My parent is at work.,From Latin parere.
+father,/faaD@r/,noun,father/fathers,My father is a tall man.,From Old English faeder.
+mother,/m^D@r/,noun,mother/mothers,His mother cooks good food.,From Old English modor.
+dad,/dæd/,noun,dad/dads,My dad drives a red car.,From baby noises da-da.
+mom,/mɑm/,noun,mom/moms,I love my mom.,From baby noises ma-ma.
+wife,/waIf/,noun,wife/wives,He loves his wife.,From Old English wif.
+husband,/h^zb@nd/,noun,husband/husbands,Her husband is very nice.,From Old Norse hus and bondi.
+child,/tSaIld/,noun,child/children,The child plays with a ball.,From Old English cild.
+son,/s^n/,noun,son/sons,Their son is five years old.,From Old English sunu.
+daughter,/doot@r/,noun,daughter/daughters,She is my lovely daughter.,From Old English dohtor.
+sister,/sIst@r/,noun,sister/sisters,My sister likes to sing.,From Old English sweostor.
+brother,/br^D@r/,noun,brother/brothers,I have one brother.,From Old English brothor.
+family,/fæm@li/,noun,family/families,My family is big.,From Latin familia.
+grandmother,/grænm^D@r/,noun,grandmother/grandmothers,My grandmother tells good stories.,From French grand and mother.
+grandfather,/grænfaaD@r/,noun,grandfather/grandfathers,My grandfather walks in the park.,From French grand and father.
+grandchild,/græntSaIld/,noun,grandchild/grandchildren,The grandchild loves her.,From French grand and child.
+aunt,/ænt/,noun,aunt/aunts,My aunt gives me a book.,From Latin amita.
+uncle,/^Nk@l/,noun,uncle/uncles,His uncle is a funny man.,From Latin avus.
+niece,/niis/,noun,niece/nieces,My niece is a happy baby.,From Latin neptis.
+nephew,/nEfjuu/,noun,nephew/nephews,He plays with his nephew.,From Latin nepos.
+cousin,/k^z@n/,noun,cousin/cousins,My cousin and I are friends.,From Latin con- and soror.

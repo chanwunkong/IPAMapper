@@ -15,21 +15,26 @@ const grid = new Map();
 const globalTokenCount = document.getElementById('global-token-count');
 
 const defaultWords = [
-    { word: "hello", phonetic: "/həˈloʊ/", pos: "Interjection", morphological: "None", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call)." },
-    { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", pos: "Interjection", morphological: "None", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye'." },
-    { word: "hi", phonetic: "/haɪ/", pos: "Interjection", morphological: "None", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'." },
-    { word: "bye", phonetic: "/baɪ/", pos: "Interjection", morphological: "None", sentence: "Bye, have a good day.", etymology: "A short form of 'goodbye'." },
-    { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", pos: "Phrase", morphological: "None", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning'." },
-    { word: "please", phonetic: "/pliːz/", pos: "Adverb", morphological: "None", sentence: "Please sit down.", etymology: "Short for 'if it please you'." }
+    { word: "hello", phonetic: "/həˈloʊ/", pos: "interjection", morphological: "hello", sentence: "Hello, how are you?", etymology: "From 'holla' (shout or call)." },
+    { word: "goodbye", phonetic: "/ˌɡʊdˈbaɪ/", pos: "interjection", morphological: "goodbye", sentence: "Goodbye, see you tomorrow.", etymology: "Short for 'God be with ye'." },
+    { word: "hi", phonetic: "/haɪ/", pos: "interjection", morphological: "hi", sentence: "Hi, I am Tom.", etymology: "From 'hy' or 'hey'." },
+    { word: "bye", phonetic: "/baɪ/", pos: "interjection", morphological: "bye", sentence: "Bye, have a good day.", etymology: "A short form of 'goodbye'." },
+    { word: "good morning", phonetic: "/ɡʊd ˈmɔːrnɪŋ/", pos: "interjection", morphological: "good morning", sentence: "Good morning, mom.", etymology: "From 'good' and 'morning'." },
+    { word: "please", phonetic: "/pliːz/", pos: "adverb", morphological: "please", sentence: "Please sit down.", etymology: "Short for 'if it please you'." }
 ];
 
 function getPosColor(posString) {
     if (!posString) return '#f2f2f2';
-    const lower = posString.toLowerCase();
-    if (lower.includes('verb') && !lower.includes('adverb')) return '#ffe6e6';
-    if (lower.includes('adverb') || lower.includes('phrase')) return '#ffecd9';
-    if (lower.includes('noun')) return '#e6f2ff';
-    if (lower.includes('adj')) return '#e6ffe6';
-    if (lower.includes('interjection') || lower.includes('particle')) return '#ffffe6';
+    const p = posString.toLowerCase();
+    const sw = prefix => p === prefix || p.startsWith(prefix + '.');
+    if (sw('noun')) return '#e6f2ff';
+    if (sw('pronoun')) return '#dce8ff';
+    if (sw('verb') || sw('auxiliary')) return '#ffe6e6';
+    if (sw('adjective')) return '#e6ffe6';
+    if (sw('adverb')) return '#ffecd9';
+    if (sw('article') || sw('numeral')) return '#f0e6ff';
+    if (sw('negation')) return '#ffe6f0';
+    if (sw('preposition') || sw('conjunction')) return '#e8f5e9';
+    if (sw('particle') || sw('interjection')) return '#ffffe6';
     return '#f2f2f2';
 }

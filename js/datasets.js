@@ -1,3 +1,11 @@
+const VALID_POS_PREFIXES = ['noun', 'pronoun', 'verb', 'auxiliary', 'adjective', 'adverb', 'article', 'numeral', 'negation', 'preposition', 'conjunction', 'interjection', 'particle'];
+
+function isValidPos(pos) {
+    if (!pos) return false;
+    const lower = pos.toLowerCase();
+    return VALID_POS_PREFIXES.some(p => lower === p || lower.startsWith(p + '.'));
+}
+
 function getActiveDataset() {
     return datasets.find(d => d.id === activeDatasetId);
 }
@@ -101,26 +109,33 @@ document.getElementById('importCsvBtn').addEventListener('click', () => {
     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
     const wordIdx = headers.findIndex(h => h === 'word');
     const phoneticIdx = headers.findIndex(h => h === 'phonetic');
-    const posIdx = headers.findIndex(h => h.includes('pos') || h.includes('lexical'));
+    const posIdx = headers.findIndex(h => h === 'pos');
     const morphIdx = headers.findIndex(h => h.includes('morphological'));
     const sentIdx = headers.findIndex(h => h.includes('sentence'));
     const etymIdx = headers.findIndex(h => h.includes('etymology'));
 
     if (wordIdx === -1) return showToast('缺少 Word 欄位');
+    if (posIdx === -1) return showToast('缺少 POS 欄位，請確認 CSV 標頭含有 "POS" 欄位');
 
     const newWords = [];
+    const invalidPosWords = [];
     for (let i = 1; i < lines.length; i++) {
         const cols = parseCSVLine(lines[i]);
         if (cols.length > wordIdx && cols[wordIdx]) {
+            const posVal = posIdx !== -1 ? cols[posIdx] : '';
+            if (!isValidPos(posVal)) invalidPosWords.push(`${cols[wordIdx]}(${posVal || '空白'})`);
             newWords.push({
                 word: cols[wordIdx],
                 phonetic: phoneticIdx !== -1 ? cols[phoneticIdx] : '',
-                pos: posIdx !== -1 ? cols[posIdx] : 'Other',
+                pos: posVal || 'noun',
                 morphological: morphIdx !== -1 ? cols[morphIdx] : '',
                 sentence: sentIdx !== -1 ? cols[sentIdx] : '',
                 etymology: etymIdx !== -1 ? cols[etymIdx] : ''
             });
         }
+    }
+    if (invalidPosWords.length > 0) {
+        showToast(`警告：${invalidPosWords.length} 筆 POS 不符規範：${invalidPosWords.slice(0, 3).join('、')}${invalidPosWords.length > 3 ? '...' : ''}`);
     }
 
     if (newWords.length > 0) {

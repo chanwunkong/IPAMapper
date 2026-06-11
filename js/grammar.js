@@ -1,9 +1,17 @@
 const UNLOCK_COST = 10;
 const rulesA1 = [
-    { id: 81, name: '核心語序' }, { id: 87, name: '形容詞與名詞' }, { id: 88, name: '指示詞與名詞' },
-    { id: 89, name: '數詞與名詞' }, { id: 26, name: '綴詞傾向' }, { id: 33, name: '複數標記' },
-    { id: 37, name: '定冠詞' }, { id: 38, name: '不定冠詞' }, { id: 66, name: '過去式' },
-    { id: 67, name: '未來式' }, { id: 112, name: '否定詞' }, { id: 116, name: '是非問句' }
+    { id: 81,  name: '核心語序',   posTypes: ['pronoun.personal', 'noun', 'verb', 'auxiliary'] },
+    { id: 87,  name: '形容詞與名詞', posTypes: ['adjective', 'noun'] },
+    { id: 88,  name: '指示詞與名詞', posTypes: ['pronoun.demonstrative', 'noun'] },
+    { id: 89,  name: '數詞與名詞',  posTypes: ['numeral', 'noun'] },
+    { id: 26,  name: '綴詞傾向',   posTypes: [] },
+    { id: 33,  name: '複數標記',   posTypes: ['noun'] },
+    { id: 37,  name: '定冠詞',     posTypes: ['article.definite'] },
+    { id: 38,  name: '不定冠詞',   posTypes: ['article.indefinite'] },
+    { id: 66,  name: '過去式',     posTypes: ['verb.past'] },
+    { id: 67,  name: '未來式',     posTypes: ['auxiliary.future', 'verb.future'] },
+    { id: 112, name: '否定詞',     posTypes: ['negation'] },
+    { id: 116, name: '是非問句',   posTypes: ['auxiliary'] }
 ];
 
 function isRuleUnlocked(ruleId) { return unlockedRules.includes(ruleId); }

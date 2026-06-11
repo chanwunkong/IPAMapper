@@ -2,21 +2,7 @@
 
 ## 當前任務 (Current Focus)
 
-### 無障礙模式：跳過語音類題型（Session 旗標）
-- [x] (2026-06-11) [SKIP-1] 在 `js/practice.js` 新增 session-level 旗標 `practiceAudioDisabled`（預設 `false`，每次開啟練習頁面重置，不寫入存檔）
-- [x] (2026-06-11) [SKIP-2] 在 `index.html` 練習頁面頂部新增「無法聆聽/說話」按鈕，點擊後設定旗標並顯示「已停用語音題型」提示，`style.css` 補充對應樣式
-- [x] (2026-06-11) [SKIP-3] 修改 `js/dispatcher.js`：模組支援宣告 `requiresAudio: true`；若旗標為 `true` 則排除音訊模組後再隨機派發
-- [x] (2026-06-11) [SKIP-4] 在 `js/practice.js` 的 L1-S 與 L1-A 模組加入 `requiresAudio: true` 宣告
-
-### POS 規範系統重構（L4 前置依賴，須依序完成）
-- [ ] [POS-1] 建立 `POS_SPEC.md` — 定義標籤規範、CSV 格式、Morphological 欄位格式、WALS 對照（已完成文件，待後續步驟實作）
-- [ ] [POS-2] 更新 `js/state.js` 的 `getPosColor()` — 依 POS_SPEC 擴充為 9 色對應，改為精確前綴比對取代 `includes()` 模糊比對
-- [ ] [POS-3] 更新 `js/grammar.js` `rulesA1` — 為每條 WALS 規則加入 `posTypes[]` 與 `check(tokens)` 驗證函式，`tokens` 為 `[{word, pos, morphological}]` 陣列
-- [ ] [POS-4] 重寫 `defaultWords` (state.js) — POS 欄位改用新標籤，Morphological 欄位改用 `X/Y/Z` 格式
-- [ ] [POS-5] 更新 `Lesson1.csv` — 全欄位重新標注 POS 與 Morphological 格式
-- [ ] [POS-6] 更新 `js/datasets.js` CSV 匯入邏輯 — 加入 POS 標籤格式驗證，不符規範時給出明確錯誤提示
-
-### L4+ 功能（依賴 POS 系統完成後開發）
+### L4+ 功能
 - [ ] 開發 L4 自由造句題型 (文法與初步應用)：顯示目標單字，以 POS 序列驗證句子是否符合已解鎖 WALS 規則，並啟動地圖路徑計分
 - [ ] 將文法 (WALS) 解鎖狀態的 UI 呈現與存檔資料完全綁定
 - [ ] 開發 L5 自由對話系統：無提示，整合 LLM 驗證上下文邏輯與 WALS 規則，並進行大範圍的地圖路徑連線計分
@@ -37,6 +23,13 @@
 - 導入完整的跨裝置雲端資料庫架構與離線支援
 
 ## 歷史紀錄 (Archive)
+- [x] (2026-06-11) [POS-1] 建立 `POS_SPEC.md` — 定義標籤規範、CSV 格式、Morphological 欄位格式、WALS 對照
+- [x] (2026-06-11) [POS-2] 更新 `js/state.js` 的 `getPosColor()` — 依 POS_SPEC 擴充為 9 色對應，改為精確前綴比對取代 `includes()` 模糊比對
+- [x] (2026-06-11) [POS-3] 更新 `js/grammar.js` `rulesA1` — 為每條 WALS 規則加入 `posTypes[]`
+- [x] (2026-06-11) [POS-4] 重寫 `defaultWords` (state.js) — POS 改用 dot-notation，Morphological 改用 X/Y/Z 格式
+- [x] (2026-06-11) [POS-5] 更新 `Lesson1.csv` — 全欄位重新標注 POS（dot-notation）與 Morphological（X/Y/Z）格式，80 個詞條
+- [x] (2026-06-11) [POS-6] 更新 `js/datasets.js` CSV 匯入邏輯 — 加入 `isValidPos()` 驗證，POS 不符規範時顯示明確 toast 警告
+- [x] (2026-06-11) [SKIP-1~4] 無障礙模式：`practiceAudioDisabled` session 旗標，L1-S/L1-A 標記 `requiresAudio: true`，停用時 dispatcher 自動排除語音題型
 - [x] (2026-06-11) 新增 grammar.js checkWalsRule(ruleId, tokens) 函式，支援 WALS 37/38/66/67/81/87/88/89/112/116 規則基礎驗證
 - [x] (2026-06-11) 將原 L3 聽寫填空題型移至 L2（與句型重組同級），L3 改為 POS 造句
 - [x] (2026-06-11) 實作 L3-V POS 造句題型：輸入框加入任意單字組成句子，實時顯示已解鎖 WALS 規則是否被滿足，Enter 鍵加入單字
