@@ -145,22 +145,48 @@ let l3Canvas = null, l3Ctx = null;
 let l3Strokes = [], l3IsDrawing = false, l3CurrentStroke = null;
 let l3Recognizer = null;
 let l3Drawing = null;
+let l3TesseractWorker = null;
+let l3OcrDebounceTimer = null;
+let l3OcrRunning = false;
 
-// 初始化 Handwriting Recognition API（Chrome 99-127，Chrome 128+ 已移除）
+// 初始化手寫辨識：優先 Chrome HWR API（Chrome 99-127），不支援時以 Tesseract.js OCR 備援
 (async function initHWR() {
-    const statusEl = () => document.getElementById('l3-hwr-status');
-    if (!('createHandwritingRecognizer' in navigator)) {
-        const el = statusEl();
-        if (el) el.textContent = '此瀏覽器不支援手寫辨識，請直接使用鍵盤輸入';
-        return;
+    const getStatus = () => document.getElementById('l3-hwr-status');
+
+    if ('createHandwritingRecognizer' in navigator) {
+        try {
+            l3Recognizer = await navigator.createHandwritingRecognizer({ languages: ['en'] });
+            const el = getStatus();
+            if (el) el.textContent = '手寫辨識已啟用';
+            return;
+        } catch(e) {}
     }
+
+    // Tesseract.js OCR fallback — 動態載入，避免增加初始頁面體積
+    const el = getStatus();
+    if (el) el.textContent = 'OCR 載入中...';
     try {
-        l3Recognizer = await navigator.createHandwritingRecognizer({ languages: ['en'] });
-        const el = statusEl();
-        if (el) el.textContent = '手寫辨識已啟用';
+        await new Promise((resolve, reject) => {
+            if (window.Tesseract) { resolve(); return; }
+            const s = document.createElement('script');
+            s.src = 'https://unpkg.com/tesseract.js@4/dist/tesseract.min.js';
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
+        });
+        l3TesseractWorker = await Tesseract.createWorker('eng', 1, {
+            logger: m => {
+                if (m.status === 'loading tesseract core' || m.status === 'initializing tesseract') {
+                    const s = getStatus();
+                    if (s) s.textContent = `OCR 載入中 ${Math.round((m.progress || 0) * 100)}%`;
+                }
+            }
+        });
+        const el2 = getStatus();
+        if (el2) el2.textContent = 'OCR 手寫辨識已就緒（停筆後自動辨識）';
     } catch(e) {
-        const el = statusEl();
-        if (el) el.textContent = '手寫辨識載入失敗，請直接使用鍵盤輸入';
+        const el2 = getStatus();
+        if (el2) el2.textContent = '手寫辨識不可用，請直接使用鍵盤輸入';
     }
 })();
 
@@ -197,6 +223,10 @@ function initL3Canvas() {
                         }
                     }).catch(() => {});
                 } catch(e) {}
+            }
+            if (l3TesseractWorker) {
+                clearTimeout(l3OcrDebounceTimer);
+                l3OcrDebounceTimer = setTimeout(runTesseractOCR, 800);
             }
             l3CurrentStroke = null;
             redrawL3Canvas();
@@ -242,6 +272,8 @@ function redrawL3Canvas() {
 }
 
 function clearL3Canvas() {
+    clearTimeout(l3OcrDebounceTimer);
+    l3OcrDebounceTimer = null;
     l3Strokes = [];
     l3CurrentStroke = null;
     if (l3Drawing) {
@@ -252,6 +284,43 @@ function clearL3Canvas() {
     }
     document.getElementById('l3-input').value = '';
     redrawL3Canvas();
+}
+
+async function runTesseractOCR() {
+    if (!l3TesseractWorker || !l3Canvas || !l3Strokes.length || l3OcrRunning) return;
+    l3OcrRunning = true;
+    const statusEl = document.getElementById('l3-hwr-status');
+    if (statusEl) statusEl.textContent = '辨識中...';
+    // 建立黑字白底臨時 canvas，提高 OCR 辨識率
+    const tmp = document.createElement('canvas');
+    tmp.width = l3Canvas.width;
+    tmp.height = l3Canvas.height;
+    const ctx = tmp.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, tmp.width, tmp.height);
+    ctx.save();
+    ctx.scale(L3_DPR, L3_DPR);
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    l3Strokes.forEach(s => {
+        if (!s || s.length < 2) return;
+        ctx.beginPath();
+        ctx.moveTo(s[0].x, s[0].y);
+        for (let i = 1; i < s.length; i++) ctx.lineTo(s[i].x, s[i].y);
+        ctx.stroke();
+    });
+    ctx.restore();
+    try {
+        const { data: { text } } = await l3TesseractWorker.recognize(tmp);
+        const cleaned = text.trim().replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ');
+        if (cleaned) document.getElementById('l3-input').value = cleaned;
+        if (statusEl) statusEl.textContent = 'OCR 手寫辨識已就緒（停筆後自動辨識）';
+    } catch(e) {
+        if (statusEl) statusEl.textContent = 'OCR 辨識失敗，請使用鍵盤輸入';
+    }
+    l3OcrRunning = false;
 }
 
 registerQuestionModule(2, {

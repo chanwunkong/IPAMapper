@@ -40,7 +40,7 @@
 
 ### 題型待改進（掃描記錄）
 
-- [ ] [UX-P-6] L2-A：目前手寫辨識依賴 Chrome 99+ Handwriting Recognition API，未支援的瀏覽器只能手動輸入；考慮加入 Tesseract.js 作為廣域降級方案（但體積大，需評估）
+- [x] (2026-06-12) [UX-P-6] `js/questions/q-stub.js` — Tesseract.js v4 OCR 備援：`initHWR()` 在原生 HWR API 不可用時動態載入 Tesseract（unpkg CDN）、建立持久 worker；stroke 結束後 debounce 800ms 觸發 `runTesseractOCR()`；辨識時以黑字白底臨時 canvas 提高準確率；`#l3-hwr-status` 全程顯示載入/辨識/錯誤狀態
 - [ ] [UX-P-7] L3-V：WALS hints 區塊 + input row 在小螢幕可能仍超出一屏；考慮 hints 改為可折疊
 - [ ] [UX-P-8] L1-A 選項按鈕：選項字型偏小、按鈕尺寸偏窄，觸控易誤按；建議放大至最小 44px 觸控目標
 - [ ] [UX-P-9] 練習進度列（`practice-progress`）目前顯示「目標進度: N/3 | 剩餘機會: N」，措辭對非熟悉 SRS 的使用者不直觀；考慮改為圖示化（進度圓點 + 心形機會）
