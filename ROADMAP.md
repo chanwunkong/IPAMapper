@@ -54,6 +54,8 @@
 - 導入完整的跨裝置雲端資料庫架構與離線支援
 
 ## 歷史紀錄 (Archive)
+- [x] (2026-06-11) [ARCH-1] 建立 `ARCHITECTURE.md` — 檔案職責、模組呼叫關係、SRS 資料流、Level-Module 現狀表
+- [x] (2026-06-11) [ARCH-2] `CLAUDE.md` 步驟 5 加入維護規則：新增模組或搬移功能後同步更新 `ARCHITECTURE.md`
 - [x] (2026-06-11) [BUG-4] `js/canvas.js` — 字體縮放改為 while 迴圈（20→8px），lineHeight/totalHeight 在縮放完成後計算
 - [x] (2026-06-11) [BUG-5] `js/questions/q-stub.js` — `setTimeout(50)` 改為雙重 requestAnimationFrame，確保 L3 canvas layout 完成後再讀取尺寸
 - [x] (2026-06-11) [UX-4] 5 處 countdown 容器加入 `.countdown-label`「自動跳題中...」靜態說明文字
