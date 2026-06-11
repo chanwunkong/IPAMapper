@@ -11,24 +11,23 @@
 | 柱子 | 比喻 | 目標 |
 |------|------|------|
 | 詞彙版圖 | 城市建設 | 每個單字是領土，版圖越大越壯觀，掌握度一眼可見 |
-| 文法技能樹 | 弓箭傳說技能合成 | WALS 規則可以組合成更高階規則，觸發連鎖效果與代幣獎勵 |
+| 文法計分 | 弓箭傳說傷害倍率 | 同時滿足越多已解鎖 WALS 規則，代幣獎勵越高；複雜句子自然值更多 |
 | 文章輸入引擎 | 自備內容驅動 | 貼入任意文章，系統比對生字，轉化為練習佇列 |
 
 > 地圖美術（格子視覺升華 L1→L5）列為最後階段，先建立程式邏輯。
+> 無預定義「組合技」—— 計分系統自動感知句子複雜度，不需要額外資料結構。
 
 ---
 
 ## 當前任務 (Current Focus)
 
-### 路線 B：文法技能樹 (Grammar Combo System)
+### 路線 B：文法計分強化 (Grammar Scoring)
 
-目標：讓 WALS 規則從「靜態提示」變成可以互相組合的主動技能，解鎖組合規則並在造句時觸發連鎖效果。
+目標：讓 WALS 規則解鎖對練習產生即時、可感知的代幣回饋。同時滿足越多規則 → 代幣越多，鼓勵使用者主動造出更複雜的句子。
 
-- [ ] [COMBO-1] `js/grammar.js` — 定義 `comboRules[]` 資料結構：每條含 `id`、`name`、`requires[]`（前置 WALS 規則 ID）、`description`、`unlockCost`、`check(tokens)` 函式；初始設計 4～6 條組合規則（如 SVO + 過去式 → 「敘事句型」；定冠詞 + 形容詞 + 名詞 → 「修飾名詞組」）
-- [ ] [COMBO-2] `js/grammar.js` — 新增 `isComboUnlockable(comboId)`、`unlockCombo(comboId)`、`checkAllCombos(tokens)` 函式
-- [ ] [COMBO-3] `js/grammar.js` — `renderGrammarRules()` 加入組合規則區塊：顯示前置條件達成狀態（哪幾條父規則已解鎖）、解鎖按鈕（代幣成本更高）
-- [ ] [COMBO-4] `js/questions/q-stub.js` — L3-V 答題時呼叫 `checkAllCombos()`，觸發的組合規則顯示「組合觸發！+N 代幣」，額外呼叫 `updateTokens()`
-- [ ] [COMBO-5] `js/storage.js` + `js/state.js` — 存檔結構加入 `unlockedCombos[]`，`exportGameData()` / `importGameData()` 處理新欄位
+- [ ] [SCORE-1] `js/questions/q-stub.js` — `submitL3V()` 根據 `satisfiedCount` 給即時代幣：每滿足一條規則給 2 代幣（`updateTokens(satisfiedCount * 2)`）；反饋文字分層：0 條=「良好」、1 條=「基礎句型 +2」、2 條=「語法組合 +4」、3 條以上=「完整句型 +N」
+- [ ] [SCORE-2] `js/state.js` + `js/storage.js` — 存檔結構加入 `ruleHitCounts: {}` 記錄每條 WALS 規則在練習中被滿足的累計次數；`submitL3V()` 答題通過時更新對應規則計數並存檔
+- [ ] [SCORE-3] `js/grammar.js` — WALS 規則卡片（已解鎖狀態）顯示「已觸發 N 次」，讓解鎖規則有可見的使用記錄
 
 ### 路線 C：文章輸入引擎 (Passage Import Engine)
 
@@ -36,24 +35,25 @@
 
 - [ ] [TEXT-1] `index.html` + `style.css` — 設定頁新增「文章輸入」區塊：多行文字貼入框 + 分析按鈕
 - [ ] [TEXT-2] `js/passage.js` — 新模組：`parsePassage(text)` 斷詞、去重、正規化（移除標點）；`classifyPassageWords(words)` 比對 storageData + grid + datasets，回傳 `{ known[], unknown[] }`
-- [ ] [TEXT-3] `index.html` + `style.css` — 分析結果區：已知詞灰底顯示、陌生詞高亮 + 各別「加入地圖」按鈕；顯示統計（共 N 詞，已知 X，陌生 Y）
+- [ ] [TEXT-3] `index.html` + `style.css` — 分析結果區：已知詞灰底、陌生詞高亮 + 各別「加入地圖」按鈕；顯示統計（共 N 詞，已知 X，陌生 Y）
 - [ ] [TEXT-4] `js/passage.js` — `addPassageWordToMap(word)` 將選取的陌生詞建立基礎詞條（word 填入，其餘空白）加入 `storageData`，觸發 `updateStorageUI()`
-- [ ] [TEXT-5] `js/passage.js` + `index.html` — 文章朗讀模式：逐句 TTS 播放、句中標記陌生詞；每隔 3 句自動暫停插入一道陌生詞練習（呼叫 `startDebugPractice` 或新的練習入口）
+- [ ] [TEXT-5] `js/passage.js` + `index.html` — 文章朗讀模式：逐句 TTS 播放、句中標記陌生詞；每隔 3 句自動暫停插入一道陌生詞練習（呼叫 dispatcher）
 
 ### 待辦（低優先）
 
-- [ ] [L4-1] 開發 L4 自由造句題型：輸入完整句子，以 `buildWordPosMap()` + `checkWalsRule()` 驗證已解鎖規則，通過升級給代幣
+- [ ] [L4-1] 開發 L4 自由造句題型：輸入完整句子，以 `buildWordPosMap()` + `checkWalsRule()` 驗證已解鎖規則，計分邏輯與 SCORE-1 相同（`satisfiedCount × 2` 代幣）
 - [ ] [L4-2] `js/grammar.js` — WALS 規則解鎖狀態 UI 確認與存檔完全同步
 - [ ] 優化 Web Speech API 語音辨識失敗時的提示與重試體驗
 - [ ] 執行 Firebase 登入同步 E2E 流程：登入 → 練習 → 退出 → 換裝置 → 驗證資料還原
 
-### QA 測試清單（新功能驗收）
+### QA 測試清單
 
 - [ ] [QA-1] 無存檔按「載入 Lesson1」→ 提示；有存檔 → 成功；重複載入 → 提示「已載入」
 - [ ] [QA-2] 練習中啟用無障礙 → L1-S / L1-A 不再出現；退出後重進 → 按鈕恢復
 - [ ] [QA-3] 兩個含相同單字的 CSV 練習後切換 → 相同單字不重複出現
 - [ ] [QA-4] SRS 升降級回歸：答對 3 次升級並更新時間戳；L5 失敗降 L4；L1-L4 失敗等級與時間戳不變
 - [ ] [QA-5] 邊界條件：全 L5 無新詞 → 提示完畢不當機；儲存區滿 → 提示不進入練習；POS 不合規 CSV → 警告但仍匯入
+- [ ] [QA-6] 計分回歸（SCORE-1）：L3-V 滿足 0 條（有解鎖規則）→ 不給計分代幣；滿足 1 條 → +2 代幣；滿足 3 條 → +6 代幣；代幣數字即時更新
 
 ---
 
@@ -61,7 +61,7 @@
 
 - 地圖格子視覺升華：L1 = 荒地、L5 = 首都，使用者一眼看出帝國規模（最後處理）
 - 詞彙空間關係：相鄰格子同詞性或語義相關時產生加成效果
-- L5 口語對話：不依賴 LLM，改以 WALS 組合規則純邏輯驗證造句結構
+- L5 口語對話：純規則驗證（WALS 規則計分 + 造句結構檢測），不依賴 LLM
 - 空間路徑計分：地圖上相鄰單字的可行路徑廣度決定積分
 - 跨裝置雲端同步與離線支援
 
