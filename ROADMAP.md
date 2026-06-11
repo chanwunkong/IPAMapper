@@ -39,10 +39,14 @@
 - [x] (2026-06-11) [TEXT-4] `js/passage.js` — `addPassageWordToMap()` 建立基礎詞條加入 storageData，加入後自動從 passageUnknownSet 移除
 - [x] (2026-06-11) [TEXT-5] `js/passage.js` + `index.html` — 朗讀模式：逐句 TTS + 陌生詞黃底高亮；每 3 句含陌生詞後插入「遇到的陌生詞」統整卡，繼續按鈕恢復朗讀
 
+### 路線 D：文章 CSV 上傳 (Passage CSV Import)
+
+- [x] (2026-06-11) [TEXT-7] `index.html` + `js/passage.js` — 文章輸入卡片加入上傳按鈕（接受 `.txt` / `.csv`）；CSV 格式為完整故事文本（每列一句或一段）；`loadPassageFile(file)` 解析後合併為段落，自動填入 textarea 並呼叫 `analyzePassage()`
+
 ### 文章引擎待解問題 (TEXT-6)
 
 - [ ] [TEXT-6-1] 詞形變化比對：文章中的 "running" 無法比對詞庫的 "run"，需定義是否要做詞根還原（stemming），或改以使用者手動確認
-- [ ] [TEXT-6-2] 功能詞污染："the"、"a"、"is"、"in" 等高頻功能詞顯示為陌生詞，需設計停用詞過濾清單或閾值機制
+- [x] (2026-06-11) [TEXT-6-2] 功能詞（冠詞、指示詞、介系詞）屬詞彙學習範疇，本應涵蓋在基礎詞庫中；使用者載入詞庫後自動歸類為「已知」，無需程式碼層的停用詞過濾。待辦轉為詞庫內容：確認 Lesson1.csv 完整收錄 A1 級冠詞、指示詞、介系詞
 - [ ] [TEXT-6-3] 大小寫與專有名詞：人名、地名出現為陌生詞，加入地圖無意義，需設計過濾或忽略機制
 - [ ] [TEXT-6-4] 詞庫已有但未練習的詞：目前歸類為「已知」（存在於 datasets），但使用者實際上可能還不熟悉，需重新定義「已知」的標準（已在 storageData/grid vs 僅在 datasets）
 - [ ] [TEXT-6-5] 多詞表達：詞庫中的 "good morning" 無法與文章中分開出現的 "good" / "morning" 匹配，需討論是否支援短語比對

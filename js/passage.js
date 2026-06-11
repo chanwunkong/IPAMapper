@@ -36,6 +36,28 @@ function classifyPassageWords(words) {
     };
 }
 
+function loadPassageFile(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const raw = e.target.result;
+        let text;
+        if (file.name.toLowerCase().endsWith('.csv')) {
+            text = raw
+                .split(/\r?\n/)
+                .map(line => line.replace(/^"|"$/g, '').replace(/""/g, '"'))
+                .filter(line => line.trim().length > 0)
+                .join(' ');
+        } else {
+            text = raw;
+        }
+        document.getElementById('passage-input').value = text;
+        document.getElementById('passage-file-input').value = '';
+        analyzePassage();
+    };
+    reader.readAsText(file, 'UTF-8');
+}
+
 function analyzePassage() {
     if (!currentSaveId) return showToast('請先選擇存檔');
     const text = document.getElementById('passage-input').value.trim();
