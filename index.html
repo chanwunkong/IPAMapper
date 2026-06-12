@@ -99,16 +99,16 @@
                         <div id="recognition-feedback">請點擊麥克風發音</div>
                         <div id="l1-mic-area" style="display:flex; align-items:center; gap:20px;">
                             <button id="mic-btn" onclick="toggleMic()">收音</button>
-                            <button id="skip-btn" onclick="skipWord()">跳過</button>
+                            <button class="action-btn btn-skip" onclick="skipWord()">跳過</button>
                         </div>
                         <div id="l1-result-actions" style="display:none; align-items:center; gap:15px;">
-                            <button class="l1-retry-btn" onclick="l1RetryMic()">再試</button>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance(); moveToNextWord()">下一題</button>
+                            <button class="btn-retry" onclick="l1RetryMic()">再試</button>
+                            <button class="btn-continue" onclick="cancelAutoAdvance(); moveToNextWord()">下一題</button>
                         </div>
                         <div id="l1-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
                             <span class="countdown-label">自動跳題中...</span>
                             <div id="l1-countdown-bar" class="countdown-bar"></div>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l1-countdown'); moveToNextWord()">立即繼續</button>
+                            <button class="btn-continue" onclick="cancelAutoAdvance('l1-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
@@ -120,7 +120,7 @@
                         <div id="l1a-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
                             <span class="countdown-label">自動跳題中...</span>
                             <div class="countdown-bar"></div>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l1a-countdown'); moveToNextWord()">立即繼續</button>
+                            <button class="btn-continue" onclick="cancelAutoAdvance('l1a-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
@@ -135,12 +135,12 @@
                         <div id="l2-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l2-actions" style="display:flex; align-items:center; gap:15px;">
                             <button class="action-btn btn-unlock" onclick="submitL2()">確認</button>
-                            <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
+                            <button class="action-btn btn-skip" onclick="skipWord()">跳過</button>
                         </div>
                         <div id="l2-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
                             <span class="countdown-label">自動跳題中...</span>
                             <div id="l2-countdown-bar" class="countdown-bar"></div>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l2-countdown'); moveToNextWord()">立即繼續</button>
+                            <button class="btn-continue" onclick="cancelAutoAdvance('l2-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
@@ -153,18 +153,18 @@
                         <canvas id="l3-canvas" style="width:100%; max-width:340px; height:180px; background:#f8f8f8; border-radius:12px; touch-action:none; display:block;"></canvas>
                         <div id="l3-hwr-status" style="font-size:11px; color:var(--text-secondary); text-align:center;"></div>
                         <div style="display:flex; gap:8px; width:100%; max-width:340px;">
-                            <button class="tts-btn" style="flex:1;" onclick="clearL3Canvas()">清除</button>
+                            <button class="btn-canvas-clear" style="flex:1;" onclick="clearL3Canvas()">清除</button>
                         </div>
                         <input type="text" id="l3-input" placeholder="填入缺少的單字..." autocomplete="off" autocorrect="off" spellcheck="false" style="padding:10px; border:1.5px solid #c7c7cc; border-radius:10px; font-size:16px; width:100%; max-width:340px; text-align:center; user-select:text; -webkit-user-select:text;">
                         <div id="l3-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l3-actions" style="display:flex; align-items:center; gap:15px;">
                             <button class="action-btn btn-unlock" onclick="submitL3()">確認</button>
-                            <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
+                            <button class="action-btn btn-skip" onclick="skipWord()">跳過</button>
                         </div>
                         <div id="l3-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
                             <span class="countdown-label">自動跳題中...</span>
                             <div class="countdown-bar"></div>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l3-countdown'); moveToNextWord()">立即繼續</button>
+                            <button class="btn-continue" onclick="cancelAutoAdvance('l3-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
@@ -180,12 +180,12 @@
                         <div id="l3v-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l3v-actions" style="display:flex; align-items:center; gap:15px;">
                             <button class="action-btn btn-unlock" onclick="submitL3V()">確認</button>
-                            <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
+                            <button class="action-btn btn-skip" onclick="skipWord()">跳過</button>
                         </div>
                         <div id="l3v-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
                             <span class="countdown-label">自動跳題中...</span>
                             <div class="countdown-bar"></div>
-                            <button class="l1-next-btn" onclick="cancelAutoAdvance('l3v-countdown'); moveToNextWord()">立即繼續</button>
+                            <button class="btn-continue" onclick="cancelAutoAdvance('l3v-countdown'); moveToNextWord()">立即繼續</button>
                         </div>
                     </div>
 
@@ -199,7 +199,7 @@
                         <div id="grammar-feedback" style="font-size:16px; font-weight:bold; height:24px;"></div>
                         <div class="mic-skip-group">
                             <button class="action-btn btn-unlock" onclick="submitGrammar()">確認</button>
-                            <button class="action-btn" style="background:#f2f2f7; color:#ff3b30;" onclick="skipWord()">跳過</button>
+                            <button class="action-btn btn-skip" onclick="skipWord()">跳過</button>
                         </div>
                     </div>
 
