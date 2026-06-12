@@ -37,29 +37,6 @@
 
 ## 當前任務 (Current Focus)
 
-### 路線 H：題型模組重建 + 跨題型 UX 一致性
-
-> 掃描結論：L1 合體模組需拆分、L3-A 從未接入 dispatcher、L2-S 尚未實作、各題型 TTS 不一致、L4 無規則死鎖、dev modal 過時。
-
-**目標模組清單（dispatcher 最終狀態）**
-- Level 1：L1-A（requiresListening）、L1-S（requiresSpeaking）
-- Level 2：L2-V、L2-A（requiresListening）、L2-S（requiresSpeaking）
-- Level 3：L3-A、L3-V
-- Level 4：L4
-- Level 5：L5
-
-**實作子項目**
-
-- [x] (2026-06-12) [H1] `practice.js` + `index.html` + `style.css` — L1-A 重構為獨立模組（`requiresListening: true`）：移除合體兩段式；干擾詞改純字母變換；圓形送出鈕；選錯立即失敗
-- [x] (2026-06-12) [H2] `practice.js` + `index.html` — L1-S 新增獨立模組（`requiresSpeaking: true`）：TTS 播單字；SpeechRecognition 比對目標詞
-- [x] (2026-06-12) [H3] `q-stub.js` + `index.html` — L2-S 新增模組（`requiresSpeaking: true`）：TTS 播例句；SpeechRecognition 比對目標詞
-- [x] (2026-06-12) [H4] `q-stub.js` — L3-A 補模組註冊，接入 dispatcher
-- [x] (2026-06-12) [H5] `index.html` — L3-V / L5 補「聽單字」TTS 按鈕
-- [x] (2026-06-12) [H6] `q-stub.js` — L4 無規則備援：`unlockedIds.length === 0` 時直接過關
-- [x] (2026-06-12) [H7] `index.html` — dev modal 全面更新：9 個題型按正確索引排列
-- [ ] [H8] `index.html` — bug 修正：`cancelAutoAdvance()` 缺少 `'l1a-countdown'` 參數
-
----
 
 ### 文章引擎待解問題 (TEXT-6)
 
@@ -79,15 +56,6 @@
 - [ ] 優化 Web Speech API 語音辨識失敗時的提示與重試體驗
 - [ ] 執行 Firebase 登入同步 E2E 流程：登入 → 練習 → 退出 → 換裝置 → 驗證資料還原
 
-### QA 測試清單
-
-- [ ] [QA-1] 無存檔按「載入 Lesson1」→ 提示；有存檔 → 成功；重複載入 → 提示「已載入」
-- [ ] [QA-2] 練習中停用聆聽 → L1（詞塊填空音訊版）不再出現；停用說話 → L1-S 覆誦步驟跳過；退出後重進 → 按鈕恢復（待 REDESIGN-1/2 完成後更新此測試）
-- [ ] [QA-3] 兩個含相同單字的 CSV 練習後切換 → 相同單字不重複出現
-- [ ] [QA-4] SRS 升降級回歸：答對 3 次升級並更新時間戳；L5 失敗降 L4；L1-L4 失敗等級與時間戳不變
-- [ ] [QA-5] 邊界條件：全 L5 無新詞 → 提示完畢不當機；儲存區滿 → 提示不進入練習；POS 不合規 CSV → 警告但仍匯入
-- [ ] [QA-6] 計分回歸（SCORE-1）：L3-V 滿足 0 條（有解鎖規則）→ 不給計分代幣；滿足 1 條 → +2 代幣；滿足 3 條 → +6 代幣；代幣數字即時更新
-
 ---
 
 ## 長期願景 (Long-term Vision)
@@ -102,6 +70,8 @@
 
 ## 歷史紀錄 (Archive)
 
+- [x] (2026-06-12) [路線I] QA-1~6 程式碼審查：全數通過，無邏輯錯誤（CSV去重、dispatcher旗標、existingWords、SRS升降級、佇列邊界、L3-V計分）
+- [x] (2026-06-12) [路線H] 題型模組重建：L1-A/L1-S 拆分、L2-S 新增、L3-A 補接 dispatcher、L4 無規則備援、TTS 補齊、dev modal 9 題型
 - [x] (2026-06-12) [路線G] REDESIGN-1~5 + UX-P-7/9/15 + UX-L-1~5：L1 詞塊填空+覆誦二段式、L2-A 聽後重組、L4 限制造句、L5 情境造句全實作；跨題型按鈕視覺統一；進度列圖示化；WALS hints 摺疊；版面一致性修正
 - [x] (2026-06-12) [路線E] UX-P-1~5 練習面板整改：不捲動版面、word card row wrapper、per-type 欄位顯隱、L2 POS 色塊、L2-A canvas 放大
 - [x] (2026-06-12) [路線F] UX-P-10~14 音訊控制重構：移除 L1-V 閃卡、拆分聆聽/說話停用旗標、移除 L1-A 冗餘按鈕、COMMON_WORD_POS 備援表、HWR 狀態提示
