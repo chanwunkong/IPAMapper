@@ -50,6 +50,16 @@
 - [ ] [UX-P-7] L3-V：WALS hints 區塊 + input row 在小螢幕可能仍超出一屏；考慮 hints 改為可折疊
 - [ ] [UX-P-9] 練習進度列（`practice-progress`）目前顯示「目標進度: N/3 | 剩餘機會: N」，措辭對非熟悉 SRS 的使用者不直觀；考慮改為圖示化（進度圓點 + 心形機會）
 
+### 版面佈局一致性修正 (UX-Layout)
+
+> UX 設計師審視後發現跨題型版面有以下不一致，按優先度排列：
+
+- [ ] [UX-L-1] `index.html` — **L1 圓點順序錯誤**：L1 fill phase 目前為「chips → feedback → dots」，其他題型均為「dots → feedback → actions」；需將 `#l1a-dots` 移至 `#l1a-feedback` 之前，統一視覺掃描路徑
+- [ ] [UX-L-2] `index.html` — **L1 缺少重播 TTS 鈕**：填空階段頂部加入「再聽例句」按鈕（`speakText(currentWordData.sentence)`），與 L2/L3/L4 保持一致；覆誦階段不需要
+- [ ] [UX-L-3] `index.html` — **L2 指示文字錯位**：將「點選單字依序填入 / 點選已排入的單字取回」從 pool 與 answer 之間移至 pool 上方（互動前提示優於互動中提示）
+- [ ] [UX-L-4] `style.css` + `index.html` — **統一 max-width 為 340px**：L1 chips（`l1a-options-grid`）現為 320px，L3V sentence/input/hints 現為 320px，統一改為 340px，與 L3 canvas/input 對齊
+- [ ] [UX-L-5] `style.css` — **feedback 固定高度改為最小高度**：所有題型 `height:24px` → `min-height:24px`，防止長反饋文字（如「錯誤，正確拼寫：anthropological」）被截斷
+
 ### 文章引擎待解問題 (TEXT-6)
 
 - [ ] [TEXT-6-1] 詞形變化比對：文章中的 "running" 無法比對詞庫的 "run"，需定義是否要做詞根還原（stemming），或改以使用者手動確認
