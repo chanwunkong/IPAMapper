@@ -89,34 +89,31 @@
                 </div>
 
                 <div class="action-area">
-                    <!-- L1 / L5: 語音辨識 -->
-                    <div id="action-l1" style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%;">
-                        <div class="tts-group">
-                            <button class="tts-btn" onclick="speakText(currentWordData.word)">聽單字</button>
-                            <button class="tts-btn" onclick="speakText(currentWordData.sentence)">聽例句</button>
-                        </div>
-                        <div id="l1-dots"></div>
-                        <div id="recognition-feedback">請點擊麥克風發音</div>
-                        <div id="l1-mic-area" style="display:flex; align-items:center; gap:20px;">
-                            <button id="mic-btn" onclick="toggleMic()">收音</button>
-                            <button class="action-btn btn-skip" onclick="skipWord()">跳過</button>
-                        </div>
-                        <div id="l1-result-actions" style="display:none; align-items:center; gap:15px;">
-                            <button class="btn-retry" onclick="l1RetryMic()">再試</button>
-                            <button class="btn-continue" onclick="cancelAutoAdvance(); moveToNextWord()">下一題</button>
-                        </div>
-                        <div id="l1-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
-                            <span class="countdown-label">自動跳題中...</span>
-                            <div id="l1-countdown-bar" class="countdown-bar"></div>
-                            <button class="btn-continue" onclick="cancelAutoAdvance('l1-countdown'); moveToNextWord()">立即繼續</button>
-                        </div>
-                    </div>
-
-                    <!-- L1-A: 聽音選字 -->
+                    <!-- L1: 詞塊填空 + 填空正確後覆誦整句 (REDESIGN-1/2) -->
                     <div id="action-l1a" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
-                        <div style="font-size:14px; color:var(--text-secondary); text-align:center;">選出正確的拼寫</div>
-                        <div id="l1a-options" class="l1a-options-grid"></div>
-                        <div id="l1a-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
+                        <!-- 填空階段 -->
+                        <div id="l1a-fill-phase" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:15px;">
+                            <div style="font-size:14px; color:var(--text-secondary); text-align:center;">聽例句，點選正確詞塊填入空格</div>
+                            <div id="l1a-blank-sentence" class="l1a-blank-sentence"></div>
+                            <div id="l1a-chips" class="l1a-options-grid"></div>
+                            <div id="l1a-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
+                            <div id="l1a-dots" class="progress-dots"></div>
+                        </div>
+                        <!-- 覆誦階段（填空正確後顯示） -->
+                        <div id="l1a-speak-phase" style="display:none; flex-direction:column; align-items:center; gap:15px; width:100%;">
+                            <div style="font-size:14px; color:var(--text-secondary); text-align:center;">朗讀整句話</div>
+                            <div id="l1a-full-sentence" class="l1a-blank-sentence"></div>
+                            <div id="l1a-speak-feedback" class="l1a-speak-feedback">請點擊麥克風發音</div>
+                            <div id="l1a-speak-mic-area" style="display:flex; align-items:center; gap:20px;">
+                                <button id="l1a-mic-btn" onclick="l1aSpeakToggleMic()">收音</button>
+                                <button class="action-btn btn-skip" onclick="skipWord()">跳過</button>
+                            </div>
+                            <div id="l1a-speak-result-actions" style="display:none; align-items:center; gap:15px;">
+                                <button class="btn-retry" onclick="l1aSpeakRetry()">再試</button>
+                                <button class="btn-continue" onclick="cancelAutoAdvance(); moveToNextWord()">下一題</button>
+                            </div>
+                        </div>
+                        <!-- 倒數 -->
                         <div id="l1a-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
                             <span class="countdown-label">自動跳題中...</span>
                             <div class="countdown-bar"></div>
@@ -132,6 +129,7 @@
                         <div id="l2-word-pool" class="l2-token-area"></div>
                         <div style="font-size:12px; color:var(--text-secondary);">點選單字依序填入 / 點選已排入的單字取回</div>
                         <div id="l2-answer-area" class="l2-token-area l2-answer"></div>
+                        <div id="l2-dots" class="progress-dots"></div>
                         <div id="l2-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l2-actions" style="display:flex; align-items:center; gap:15px;">
                             <button class="action-btn btn-unlock" onclick="submitL2()">確認</button>
@@ -156,6 +154,7 @@
                             <button class="btn-canvas-clear" style="flex:1;" onclick="clearL3Canvas()">清除</button>
                         </div>
                         <input type="text" id="l3-input" placeholder="填入缺少的單字..." autocomplete="off" autocorrect="off" spellcheck="false" style="padding:10px; border:1.5px solid #c7c7cc; border-radius:10px; font-size:16px; width:100%; max-width:340px; text-align:center; user-select:text; -webkit-user-select:text;">
+                        <div id="l3-dots" class="progress-dots"></div>
                         <div id="l3-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l3-actions" style="display:flex; align-items:center; gap:15px;">
                             <button class="action-btn btn-unlock" onclick="submitL3()">確認</button>
@@ -177,6 +176,7 @@
                             <button class="action-btn btn-unlock" onclick="l3vAddWord()">加入</button>
                         </div>
                         <div id="l3v-wals-hints" class="l3v-wals-hints"></div>
+                        <div id="l3v-dots" class="progress-dots"></div>
                         <div id="l3v-feedback" style="font-size:16px; font-weight:bold; height:24px; text-align:center;"></div>
                         <div id="l3v-actions" style="display:flex; align-items:center; gap:15px;">
                             <button class="action-btn btn-unlock" onclick="submitL3V()">確認</button>
@@ -196,6 +196,7 @@
                         </div>
                         <div style="font-size:14px; color:var(--text-secondary); text-align:center;">文法應用功能開發中</div>
                         <textarea id="grammar-input" placeholder="根據文法規則造句..." style="padding:10px; border:1px solid #ccc; border-radius:10px; font-size:14px; width:100%; max-width:320px; height:80px; resize:none; user-select:text; -webkit-user-select:text;"></textarea>
+                        <div id="l4-dots" class="progress-dots"></div>
                         <div id="grammar-feedback" style="font-size:16px; font-weight:bold; height:24px;"></div>
                         <div class="mic-skip-group">
                             <button class="action-btn btn-unlock" onclick="submitGrammar()">確認</button>
@@ -231,8 +232,7 @@
                 <div style="background:var(--card-bg); border-radius:18px; padding:20px; width:88%; max-width:320px; display:flex; flex-direction:column; gap:10px;" onclick="event.stopPropagation()">
                     <div style="font-size:16px; font-weight:bold; color:var(--text-main);">題型測試</div>
                     <div style="font-size:12px; color:var(--text-secondary);">直接進入指定題型，使用存檔第一個單字（或預設詞）</div>
-                    <button class="action-btn btn-view" onclick="startDebugPractice(1,1)">L1-A 聽音選字</button>
-                    <button class="action-btn btn-view" onclick="startDebugPractice(1,0)">L1-S 麥克風覆誦</button>
+                    <button class="action-btn btn-view" onclick="startDebugPractice(1,0)">L1 詞塊填空</button>
                     <button class="action-btn btn-view" onclick="startDebugPractice(2,0)">L2-V 詞塊重組</button>
                     <button class="action-btn btn-view" onclick="startDebugPractice(2,1)">L2-A 填空</button>
                     <button class="action-btn btn-view" onclick="startDebugPractice(3,0)">L3-V POS 造句</button>

@@ -189,57 +189,142 @@ function skipWord() {
     moveToNextWord();
 }
 
-function toggleMic() {
-    if (isListening) return;
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return alert("抱歉，您的瀏覽器不支援語音辨識功能。");
+// ===== L1 詞塊填空 + 覆誦整句 (REDESIGN-1/2) =====
+let l1aSpeakRecognition = null;
+let l1aSpeakListening = false;
 
-    recognition = new SpeechRecognition();
-    recognition.lang = 'en-US'; recognition.interimResults = false;
+function l1aGenerateChips(wordData) {
+    const targetWord = wordData.word.toLowerCase();
+    const targetPos = wordData.pos || '';
+    const candidates = new Set();
+    if (targetPos) {
+        storageData.forEach(item => {
+            if (item.word.toLowerCase() !== targetWord && item.pos === targetPos)
+                candidates.add(item.word.toLowerCase());
+        });
+        for (const [, item] of grid.entries()) {
+            if (item.word.toLowerCase() !== targetWord && item.pos === targetPos)
+                candidates.add(item.word.toLowerCase());
+        }
+        datasets.forEach(ds => ds.words.forEach(w => {
+            if (w.word.toLowerCase() !== targetWord && w.pos === targetPos)
+                candidates.add(w.word.toLowerCase());
+        }));
+    }
+    let distractors = fisherYatesShuffle([...candidates]).slice(0, 3);
+    if (distractors.length < 3) {
+        const mutated = generateL1AOptions(wordData.word).filter(w => w !== targetWord);
+        for (const m of mutated) {
+            if (distractors.length >= 3) break;
+            if (!distractors.includes(m)) distractors.push(m);
+        }
+    }
+    return fisherYatesShuffle([targetWord, ...distractors.slice(0, 3)]);
+}
 
-    recognition.onstart = () => {
-        isListening = true; document.getElementById('mic-btn').classList.add('listening');
-        const fb = document.getElementById('recognition-feedback');
-        fb.textContent = "聆聽中..."; fb.className = "";
+function l1aSelectChip(btn, selected) {
+    if (btn.disabled) return;
+    const correct = currentWordData.word.toLowerCase();
+    const fb = document.getElementById('l1a-feedback');
+    if (selected === correct) {
+        document.querySelectorAll('.l1a-chip-btn').forEach(b => { b.disabled = true; });
+        btn.classList.add('correct');
+        fb.textContent = '正確！';
+        fb.className = 'feedback-correct';
+        currentWordData.successes++;
+        updateProgressDots('l1a-dots', currentWordData.successes);
+        document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+        document.getElementById('l1a-blank-sentence').textContent = currentWordData.sentence || '';
+        speakText(currentWordData.sentence);
+        setTimeout(() => {
+            fb.textContent = '';
+            if (!practiceSpeakingDisabled) {
+                l1aShowSpeakPhase();
+            } else {
+                startAutoAdvance('l1a-countdown');
+            }
+        }, 1200);
+    } else {
+        btn.disabled = true;
+        btn.classList.add('wrong');
+        fb.textContent = '不對，再試試';
+        fb.className = 'feedback-wrong';
+        setTimeout(() => {
+            btn.classList.remove('wrong');
+            btn.disabled = false;
+            fb.textContent = '';
+            fb.className = '';
+        }, 800);
+    }
+}
+
+function l1aShowSpeakPhase() {
+    document.getElementById('l1a-fill-phase').style.display = 'none';
+    const sp = document.getElementById('l1a-speak-phase');
+    sp.style.display = 'flex';
+    document.getElementById('l1a-full-sentence').textContent = currentWordData.sentence || '';
+    document.getElementById('l1a-speak-feedback').textContent = '請點擊麥克風發音';
+    document.getElementById('l1a-speak-feedback').className = 'l1a-speak-feedback';
+    document.getElementById('l1a-speak-mic-area').style.display = 'flex';
+    document.getElementById('l1a-speak-result-actions').style.display = 'none';
+}
+
+function l1aSpeakToggleMic() {
+    if (l1aSpeakListening) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return alert('抱歉，您的瀏覽器不支援語音辨識功能。');
+    l1aSpeakRecognition = new SR();
+    l1aSpeakRecognition.lang = 'en-US';
+    l1aSpeakRecognition.interimResults = false;
+    l1aSpeakRecognition.onstart = () => {
+        l1aSpeakListening = true;
+        document.getElementById('l1a-mic-btn').classList.add('listening');
+        const fb = document.getElementById('l1a-speak-feedback');
+        fb.textContent = '聆聽中...'; fb.className = 'l1a-speak-feedback';
     };
-
-    recognition.onresult = (event) => {
+    l1aSpeakRecognition.onresult = (event) => {
         currentWordData.attempts++;
         const transcript = event.results[0][0].transcript;
-        const spokenText = transcript.toLowerCase().replace(/[^\w\s]|_/g, "");
-        const targetWord = currentWordData.word.toLowerCase().replace(/[^\w\s]|_/g, "");
-
-        const feedbackEl = document.getElementById('recognition-feedback');
-        document.getElementById('l1-mic-area').style.display = 'none';
-
+        const spokenText = transcript.toLowerCase().replace(/[^\w\s]|_/g, '');
+        const targetWord = currentWordData.word.toLowerCase().replace(/[^\w\s]|_/g, '');
+        const fb = document.getElementById('l1a-speak-feedback');
+        document.getElementById('l1a-speak-mic-area').style.display = 'none';
         if (spokenText.includes(targetWord)) {
             currentWordData.successes++;
-            updateL1Dots(currentWordData.successes);
-            feedbackEl.textContent = `正確！辨識到: ${transcript}`;
-            feedbackEl.className = "feedback-correct";
-            document.getElementById('l1-result-actions').style.display = 'none';
-            startAutoAdvance('l1-countdown');
+            updateProgressDots('l1a-dots', currentWordData.successes);
+            fb.textContent = `正確！辨識到: ${transcript}`;
+            fb.className = 'l1a-speak-feedback feedback-correct';
+            document.getElementById('l1a-speak-result-actions').style.display = 'none';
+            startAutoAdvance('l1a-countdown');
         } else {
-            feedbackEl.textContent = `辨識到: ${transcript}`;
-            feedbackEl.className = "feedback-wrong";
+            fb.textContent = `辨識到: ${transcript}`;
+            fb.className = 'l1a-speak-feedback feedback-wrong';
             if (currentWordData.attempts >= 5) {
-                document.getElementById('l1-result-actions').style.display = 'none';
-                startAutoAdvance('l1-countdown');
+                startAutoAdvance('l1a-countdown');
             } else {
-                document.getElementById('l1-result-actions').style.display = 'flex';
+                document.getElementById('l1a-speak-result-actions').style.display = 'flex';
             }
         }
-
         document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
     };
-
-    recognition.onerror = () => {
-        const fb = document.getElementById('recognition-feedback');
-        fb.textContent = "未接收到語音，請重試"; fb.className = "feedback-wrong";
+    l1aSpeakRecognition.onerror = () => {
+        const fb = document.getElementById('l1a-speak-feedback');
+        fb.textContent = '未接收到語音，請重試';
+        fb.className = 'l1a-speak-feedback feedback-wrong';
     };
+    l1aSpeakRecognition.onend = () => {
+        l1aSpeakListening = false;
+        document.getElementById('l1a-mic-btn').classList.remove('listening');
+    };
+    l1aSpeakRecognition.start();
+}
 
-    recognition.onend = () => { isListening = false; document.getElementById('mic-btn').classList.remove('listening'); };
-    recognition.start();
+function l1aSpeakRetry() {
+    document.getElementById('l1a-speak-result-actions').style.display = 'none';
+    document.getElementById('l1a-speak-mic-area').style.display = 'flex';
+    document.getElementById('l1a-speak-feedback').textContent = '請點擊麥克風發音';
+    document.getElementById('l1a-speak-feedback').className = 'l1a-speak-feedback';
+    l1aSpeakToggleMic();
 }
 
 function startAutoAdvance(countdownId) {
@@ -262,8 +347,8 @@ function cancelAutoAdvance(countdownId) {
     if (countdown) countdown.style.display = 'none';
 }
 
-function updateL1Dots(successes) {
-    const container = document.getElementById('l1-dots');
+function updateProgressDots(containerId, successes) {
+    const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
     for (let i = 0; i < 3; i++) {
@@ -271,15 +356,6 @@ function updateL1Dots(successes) {
         dot.className = 'l1-dot' + (i < successes ? ' filled' : '');
         container.appendChild(dot);
     }
-}
-
-function l1RetryMic() {
-    document.getElementById('l1-result-actions').style.display = 'none';
-    document.getElementById('l1-mic-area').style.display = 'flex';
-    const fb = document.getElementById('recognition-feedback');
-    fb.textContent = '請點擊麥克風發音';
-    fb.className = '';
-    toggleMic();
 }
 
 function moveToNextWord() { currentPracticeIndex = (currentPracticeIndex + 1) % practiceQueue.length; renderPracticeWord(); }
@@ -353,40 +429,6 @@ function generateL1AOptions(word) {
     return fisherYatesShuffle([lower, ...[...distractors].slice(0, 3)]);
 }
 
-function l1aSelectOption(btn, selected) {
-    const correct = currentWordData.word.toLowerCase();
-    currentWordData.attempts++;
-    document.querySelectorAll('.l1a-option-btn').forEach(b => (b.disabled = true));
-    const fb = document.getElementById('l1a-feedback');
-    if (selected === correct) {
-        currentWordData.successes++;
-        btn.classList.add('correct');
-        fb.textContent = '正確！';
-        fb.className = 'feedback-correct';
-        startAutoAdvance('l1a-countdown');
-    } else {
-        btn.classList.add('wrong');
-        document.querySelectorAll('.l1a-option-btn').forEach(b => {
-            if (b.dataset.word === correct) b.classList.add('correct');
-        });
-        fb.textContent = `正確拼寫：${currentWordData.word}`;
-        fb.className = 'feedback-wrong';
-        if (currentWordData.attempts >= 5) {
-            startAutoAdvance('l1a-countdown');
-        } else {
-            setTimeout(() => {
-                document.querySelectorAll('.l1a-option-btn').forEach(b => {
-                    b.classList.remove('correct', 'wrong');
-                    b.disabled = false;
-                });
-                fb.textContent = '';
-                fb.className = '';
-            }, 1500);
-        }
-    }
-    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
-}
-
 function closeDebugModal() {
     document.getElementById('debug-modal').style.display = 'none';
 }
@@ -423,62 +465,50 @@ function startDebugPractice(level, moduleIdx) {
     closeDebugModal();
 }
 
-// L1-S: 語音辨識題型模組
+// L1: 詞塊填空 + 填空正確後覆誦整句 (REDESIGN-1/2)
 registerQuestionModule(1, {
-    requiresListening: true,
-    requiresSpeaking: true,
-    activate(wordData) {
-        document.getElementById('p-etymology-row').style.display = 'none';
-        showAudioButtons(true, true);
-        document.getElementById('p-word').style.visibility = 'visible';
-        document.getElementById('action-l1').style.display = 'flex';
-        const fb = document.getElementById('recognition-feedback');
-        fb.textContent = "請點擊麥克風發音"; fb.className = "";
-        document.getElementById('next-word-btn').style.display = 'none';
-        document.getElementById('l1-mic-area').style.display = 'flex';
-        document.getElementById('l1-result-actions').style.display = 'none';
-        document.getElementById('l1-countdown').style.display = 'none';
-        updateL1Dots(wordData.successes || 0);
-        speakSequence([wordData.word, wordData.sentence]);
-    },
-    deactivate() {
-        cancelAutoAdvance('l1-countdown');
-        document.getElementById('action-l1').style.display = 'none';
-        if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
-        isListening = false;
-        document.getElementById('mic-btn').classList.remove('listening');
-    }
-});
-
-// L1-A: 聽音選字題型模組
-registerQuestionModule(1, {
-    requiresListening: true,
     activate(wordData) {
         document.getElementById('p-sentence-row').style.display = 'none';
         document.getElementById('p-etymology-row').style.display = 'none';
-        showAudioButtons(true, false);
+        showAudioButtons(false, false);
         document.getElementById('p-word').style.visibility = 'hidden';
         document.getElementById('action-l1a').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
+        document.getElementById('l1a-countdown').style.display = 'none';
+        document.getElementById('l1a-fill-phase').style.display = 'flex';
+        document.getElementById('l1a-speak-phase').style.display = 'none';
         document.getElementById('l1a-feedback').textContent = '';
         document.getElementById('l1a-feedback').className = '';
-        document.getElementById('l1a-countdown').style.display = 'none';
+        updateProgressDots('l1a-dots', wordData.successes || 0);
 
-        const opts = generateL1AOptions(wordData.word);
-        const container = document.getElementById('l1a-options');
+        const sentence = wordData.sentence || '';
+        const escapedWord = wordData.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const blankHtml = escapeHtml(sentence).replace(
+            new RegExp(`(?<![\\w])${escapedWord}(?![\\w])`, 'gi'),
+            '<span class="l1a-blank">___</span>'
+        );
+        document.getElementById('l1a-blank-sentence').innerHTML = blankHtml || escapeHtml(sentence);
+
+        const chips = l1aGenerateChips(wordData);
+        const container = document.getElementById('l1a-chips');
         container.innerHTML = '';
-        opts.forEach(w => {
+        chips.forEach(w => {
             const btn = document.createElement('button');
-            btn.className = 'l1a-option-btn';
+            btn.className = 'l1a-option-btn l1a-chip-btn';
             btn.textContent = w;
             btn.dataset.word = w;
-            btn.onclick = () => l1aSelectOption(btn, w);
+            btn.onclick = () => l1aSelectChip(btn, w);
             container.appendChild(btn);
         });
-        speakSequence([wordData.word, wordData.sentence]);
+
+        speakText(sentence);
     },
     deactivate() {
         cancelAutoAdvance('l1a-countdown');
+        if (l1aSpeakRecognition) { try { l1aSpeakRecognition.abort(); } catch(e) {} l1aSpeakRecognition = null; }
+        l1aSpeakListening = false;
+        const micBtn = document.getElementById('l1a-mic-btn');
+        if (micBtn) micBtn.classList.remove('listening');
         document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l1a').style.display = 'none';
     }

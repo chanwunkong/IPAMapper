@@ -47,6 +47,7 @@ registerQuestionModule(2, {
         document.getElementById('l2-feedback').className = '';
         document.getElementById('l2-actions').style.display = 'flex';
         document.getElementById('l2-countdown').style.display = 'none';
+        updateProgressDots('l2-dots', wordData.successes || 0);
 
         l2OriginalTokens = (wordData.sentence || '').split(/\s+/).filter(t => t);
         l2AnswerTokens = [];
@@ -124,6 +125,7 @@ function submitL2() {
     const fb = document.getElementById('l2-feedback');
     if (l2AnswerTokens.join(' ') === l2OriginalTokens.join(' ')) {
         currentWordData.successes++;
+        updateProgressDots('l2-dots', currentWordData.successes);
         fb.textContent = '正確！';
         fb.className = 'feedback-correct';
         document.getElementById('l2-actions').style.display = 'none';
@@ -336,6 +338,7 @@ registerQuestionModule(2, {
         document.getElementById('l3-feedback').className = '';
         document.getElementById('l3-actions').style.display = 'flex';
         document.getElementById('l3-countdown').style.display = 'none';
+        updateProgressDots('l3-dots', wordData.successes || 0);
 
         const sentence = escapeHtml(wordData.sentence || '');
         const escapedWord = wordData.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -371,6 +374,7 @@ function submitL3() {
     const fb = document.getElementById('l3-feedback');
     if (typed === target) {
         currentWordData.successes++;
+        updateProgressDots('l3-dots', currentWordData.successes);
         fb.textContent = '正確！';
         fb.className = 'feedback-correct';
         document.getElementById('l3-actions').style.display = 'none';
@@ -402,6 +406,7 @@ registerQuestionModule(3, {
         document.getElementById('l3v-countdown').style.display = 'none';
         document.getElementById('l3v-input').value = '';
         l3vTokens = [];
+        updateProgressDots('l3v-dots', wordData.successes || 0);
         renderL3VSentence();
         updateL3VWalsHints();
         speakText(wordData.word);
@@ -504,6 +509,7 @@ function submitL3V() {
     const satisfiedCount = satisfiedIds.length;
     if (satisfiedCount > 0 || unlockedIds.length === 0) {
         currentWordData.successes++;
+        updateProgressDots('l3v-dots', currentWordData.successes);
         satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
         if (satisfiedCount >= 3) {
             const bonus = satisfiedCount * 2;
@@ -547,6 +553,7 @@ registerQuestionModule(4, {
         document.getElementById('grammar-input').value = '';
         document.getElementById('grammar-feedback').textContent = '';
         document.getElementById('grammar-feedback').className = '';
+        updateProgressDots('l4-dots', wordData.successes || 0);
         speakText(wordData.word);
     },
     deactivate() {
