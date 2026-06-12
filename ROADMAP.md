@@ -33,32 +33,6 @@
 
 ## 當前任務 (Current Focus)
 
-### 路線 G：題型統一造句軸重構 (Unified Composition Redesign)
-
-> 依據統一造句軸設計原則，重構現有 L1/L2 題型，開發缺失的 L4/L5。
-
-- [x] (2026-06-12) [REDESIGN-1] L1 重構 — 改為詞塊填空：例句挖空，詞塊池目標詞 + 3 同 POS 干擾詞（同 POS 不足則字母變換備援），TTS 播放例句，點選填入，正確後全句 TTS 朗讀；無麥克風按鈕
-- [x] (2026-06-12) [REDESIGN-2] L1-S 重構 — 填空正確後進入覆誦整句階段（說話停用時跳過）；移除舊獨立 L1-S 模組；SpeechRecognition 比對目標詞
-- [x] (2026-06-12) [UX-綠燈] 所有題型（L1/L2/L3/L3V/L4）統一加入 `.progress-dots` 圓點進度顯示；`updateProgressDots(id, n)` 統一函式
-- [ ] [REDESIGN-3] L2-A 重構 — 由「手寫填空」改為「聽後重組」：TTS 播放打亂前的原句，使用者依記憶從詞塊池重組語序，機制沿用 L2-V，增加音訊觸發層
-- [ ] [REDESIGN-4] L4 開發 — 「限制造句」：自由詞塊組句，但必須同時滿足至少 ceil(已解鎖規則數 / 2) 條規則（最少 2 條）才算過關；不達標可繼續修改，不扣機會次數，直到達標或主動跳過
-- [ ] [REDESIGN-5] L5 開發 — 「情境造句」：畫面顯示語境提示句（由當前詞條的例句改寫或人工標注），使用者以目標詞組句作為語境回應，WALS 計分 + 若語境相關詞出現於回應中給予加成
-
-### 題型細節待改進
-
-- [x] (2026-06-12) [UX-P-15] `style.css` + `index.html` — 跨題型按鈕視覺統一：新增 `.btn-skip`（跳過）、`.btn-canvas-clear`（清除）class；移除 `#skip-btn` CSS；替換所有 inline `color:#ff3b30` skip 樣式；重新命名 `.l1-retry-btn` → `.btn-retry`、`.l1-next-btn` → `.btn-continue`
-- [ ] [UX-P-7] L3-V：WALS hints 區塊 + input row 在小螢幕可能仍超出一屏；考慮 hints 改為可折疊
-- [ ] [UX-P-9] 練習進度列（`practice-progress`）目前顯示「目標進度: N/3 | 剩餘機會: N」，措辭對非熟悉 SRS 的使用者不直觀；考慮改為圖示化（進度圓點 + 心形機會）
-
-### 版面佈局一致性修正 (UX-Layout)
-
-> UX 設計師審視後發現跨題型版面有以下不一致，按優先度排列：
-
-- [ ] [UX-L-1] `index.html` — **L1 圓點順序錯誤**：L1 fill phase 目前為「chips → feedback → dots」，其他題型均為「dots → feedback → actions」；需將 `#l1a-dots` 移至 `#l1a-feedback` 之前，統一視覺掃描路徑
-- [ ] [UX-L-2] `index.html` — **L1 缺少重播 TTS 鈕**：填空階段頂部加入「再聽例句」按鈕（`speakText(currentWordData.sentence)`），與 L2/L3/L4 保持一致；覆誦階段不需要
-- [ ] [UX-L-3] `index.html` — **L2 指示文字錯位**：將「點選單字依序填入 / 點選已排入的單字取回」從 pool 與 answer 之間移至 pool 上方（互動前提示優於互動中提示）
-- [ ] [UX-L-4] `style.css` + `index.html` — **統一 max-width 為 340px**：L1 chips（`l1a-options-grid`）現為 320px，L3V sentence/input/hints 現為 320px，統一改為 340px，與 L3 canvas/input 對齊
-- [ ] [UX-L-5] `style.css` — **feedback 固定高度改為最小高度**：所有題型 `height:24px` → `min-height:24px`，防止長反饋文字（如「錯誤，正確拼寫：anthropological」）被截斷
 
 ### 文章引擎待解問題 (TEXT-6)
 
@@ -101,6 +75,7 @@
 
 ## 歷史紀錄 (Archive)
 
+- [x] (2026-06-12) [路線G] REDESIGN-1~5 + UX-P-7/9/15 + UX-L-1~5：L1 詞塊填空+覆誦二段式、L2-A 聽後重組、L4 限制造句、L5 情境造句全實作；跨題型按鈕視覺統一；進度列圖示化；WALS hints 摺疊；版面一致性修正
 - [x] (2026-06-12) [路線E] UX-P-1~5 練習面板整改：不捲動版面、word card row wrapper、per-type 欄位顯隱、L2 POS 色塊、L2-A canvas 放大
 - [x] (2026-06-12) [路線F] UX-P-10~14 音訊控制重構：移除 L1-V 閃卡、拆分聆聽/說話停用旗標、移除 L1-A 冗餘按鈕、COMMON_WORD_POS 備援表、HWR 狀態提示
 - [x] (2026-06-12) [UX-P-6] Tesseract.js v4 OCR 備援：動態載入、debounce 800ms、黑字白底臨時 canvas 提高辨識率、全程狀態提示

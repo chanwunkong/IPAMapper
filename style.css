@@ -223,7 +223,12 @@ body, html {
     flex-shrink: 0;
 }
 
-.practice-title { font-size: 15px; font-weight: bold; color: var(--text-secondary); }
+.practice-title { font-size: 15px; font-weight: bold; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+.pp-dot { width: 9px; height: 9px; border-radius: 50%; background: #e5e5ea; border: 1.5px solid #c7c7cc; display: inline-block; }
+.pp-dot.filled { background: #34c759; border-color: #28a745; }
+.pp-heart { font-size: 11px; color: #e5e5ea; line-height: 1; }
+.pp-heart.filled { color: #ff3b30; }
+.pp-sep { color: #c7c7cc; font-size: 12px; margin: 0 2px; }
 
 .speed-btn {
     padding: 6px 12px; border-radius: 15px; background: #e5e5ea; border: none;
@@ -432,7 +437,7 @@ body, html {
 #hwp-pos, #hwp-level { font-size: 12px; color: #555; background: #f2f2f7; border-radius: 6px; padding: 2px 8px; }
 .hwp-btn-row { display: flex; gap: 10px; margin-top: 12px; justify-content: center; }
 
-.l1a-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 320px; }
+.l1a-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 340px; }
 .l1a-option-btn {
     padding: 14px 10px; border: 2px solid #c7c7cc; border-radius: 12px;
     background: #fff; font-size: 17px; font-weight: 600; font-family: 'Courier New', monospace;
@@ -444,7 +449,7 @@ body, html {
 
 .l3v-sentence-area {
     display: flex; flex-wrap: wrap; gap: 6px; min-height: 48px;
-    width: 100%; max-width: 320px; padding: 10px; border-radius: 12px;
+    width: 100%; max-width: 340px; padding: 10px; border-radius: 12px;
     border: 2px dashed #c7c7cc; background: #f9f9f9; align-items: center;
 }
 .l3v-word-chip {
@@ -453,19 +458,39 @@ body, html {
     user-select: none; -webkit-user-select: none;
 }
 .l3v-word-chip:active { opacity: 0.6; }
-.l3v-input-row { display: flex; gap: 8px; width: 100%; max-width: 320px; align-items: center; }
+.l3v-input-row { display: flex; gap: 8px; width: 100%; max-width: 340px; align-items: center; }
 .l3v-input-row input {
     flex: 1; padding: 10px; border: 1.5px solid #c7c7cc; border-radius: 10px;
     font-size: 16px; user-select: text; -webkit-user-select: text;
 }
 .l3v-wals-hints {
-    width: 100%; max-width: 320px; padding: 10px 14px; border-radius: 10px;
+    width: 100%; max-width: 340px; padding: 10px 14px; border-radius: 10px;
     background: #f2f2f7; font-size: 13px; line-height: 1.9; color: var(--text-secondary);
-    min-height: 40px;
+    min-height: 40px; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.l3v-wals-hints.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; min-height: 0; }
+.l3v-hints-toggle {
+    width: 100%; max-width: 340px; background: none; border: none; cursor: pointer;
+    font-size: 12px; color: var(--text-secondary); text-align: left; padding: 2px 0;
+    display: flex; align-items: center; gap: 4px;
 }
 .l3v-hint-item { display: flex; align-items: center; gap: 6px; }
 .l3v-hint-satisfied { color: #34c759; }
 .l3v-hint-unsatisfied { color: #c7c7cc; }
+/* L4 規則需求 */
+.l4-requirement-bar {
+    width: 100%; max-width: 340px; background: #f2f2f7; border-radius: 10px;
+    padding: 10px 14px; font-size: 13px; color: var(--text-secondary);
+}
+.l4-req-count { font-weight: bold; color: var(--accent-color); }
+/* L5 語境提示 */
+.l5-context-label { font-size: 11px; font-weight: bold; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.05em; }
+.l5-context-sentence {
+    width: 100%; max-width: 340px; background: #fff7e6; border-left: 3px solid #ff9500;
+    border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 15px;
+    line-height: 1.6; color: var(--text-main); font-style: italic;
+}
+.l5-context-bonus { font-size: 12px; color: #ff9500; font-weight: bold; }
 #audio-disable-bar { display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 26px; padding: 2px 0 4px; flex-wrap: wrap; flex-shrink: 0; }
 #disable-listening-btn, #disable-speaking-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid #c7c7cc; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
 #listening-disabled-notice, #speaking-disabled-notice { font-size: 12px; color: #ff9500; font-weight: 600; }

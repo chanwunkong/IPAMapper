@@ -138,7 +138,7 @@ function submitL2() {
             startAutoAdvance('l2-countdown');
         }
     }
-    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+    updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
 }
 
 // === L2-A: 聽寫填空 + 手寫辨識 ===
@@ -325,43 +325,36 @@ async function runTesseractOCR() {
     l3OcrRunning = false;
 }
 
+// L2-A: 聽後重組 (REDESIGN-3) — 聽例句，依記憶從詞塊池重組語序
 registerQuestionModule(2, {
+    requiresListening: true,
     activate(wordData) {
         document.getElementById('p-sentence-row').style.display = 'none';
         document.getElementById('p-etymology-row').style.display = 'none';
-        showAudioButtons(false, false);
+        showAudioButtons(true, false);
         document.getElementById('p-word').style.visibility = 'hidden';
-        document.getElementById('action-l3').style.display = 'flex';
+        document.getElementById('action-l2').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
-        document.getElementById('l3-input').value = '';
-        document.getElementById('l3-feedback').textContent = '';
-        document.getElementById('l3-feedback').className = '';
-        document.getElementById('l3-actions').style.display = 'flex';
-        document.getElementById('l3-countdown').style.display = 'none';
-        updateProgressDots('l3-dots', wordData.successes || 0);
+        document.getElementById('l2-feedback').textContent = '';
+        document.getElementById('l2-feedback').className = '';
+        document.getElementById('l2-actions').style.display = 'flex';
+        document.getElementById('l2-countdown').style.display = 'none';
+        updateProgressDots('l2-dots', wordData.successes || 0);
 
-        const sentence = escapeHtml(wordData.sentence || '');
-        const escapedWord = wordData.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const gapHtml = sentence.replace(
-            new RegExp(`(?<![\\w])${escapedWord}(?![\\w])`, 'gi'),
-            '<span class="l3-blank">___</span>'
-        );
-        document.getElementById('l3-gap-sentence').innerHTML = gapHtml || sentence;
-
-        l3Strokes = [];
-        l3CurrentStroke = null;
-        if (l3Recognizer) {
-            try { l3Drawing = l3Recognizer.startDrawing({ hints: { recognitionType: 'text' } }); } catch(e) {}
+        l2OriginalTokens = (wordData.sentence || '').split(/\s+/).filter(t => t);
+        l2AnswerTokens = [];
+        l2PoolTokens = [...l2OriginalTokens].sort(() => 0.5 - Math.random());
+        while (l2PoolTokens.length > 1 && l2PoolTokens.join(' ') === l2OriginalTokens.join(' ')) {
+            l2PoolTokens.sort(() => 0.5 - Math.random());
         }
-        initL3Canvas();
-        requestAnimationFrame(() => requestAnimationFrame(resizeL3Canvas));
-
+        renderL2Pool();
+        renderL2Answer();
         speakText(wordData.sentence);
     },
     deactivate() {
-        cancelAutoAdvance('l3-countdown');
+        cancelAutoAdvance('l2-countdown');
         document.getElementById('p-word').style.visibility = 'visible';
-        document.getElementById('action-l3').style.display = 'none';
+        document.getElementById('action-l2').style.display = 'none';
     }
 });
 
@@ -388,7 +381,7 @@ function submitL3() {
             startAutoAdvance('l3-countdown');
         }
     }
-    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+    updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
 }
 
 // === L3-V: POS 造句 ===
@@ -418,26 +411,29 @@ registerQuestionModule(3, {
     }
 });
 
+function getWordMeta(raw) {
+    const wordMap = buildWordPosMap();
+    const lower = raw.toLowerCase();
+    const pos = wordMap.get(lower) || COMMON_WORD_POS[lower] || '';
+    let morph = '';
+    for (const ds of datasets) {
+        const w = ds.words.find(w => w.word.toLowerCase() === lower);
+        if (w) { morph = w.morphological || ''; break; }
+    }
+    if (!morph) for (const item of storageData) {
+        if (item.word.toLowerCase() === lower) { morph = item.morphological || ''; break; }
+    }
+    if (!morph) for (const [, item] of grid.entries()) {
+        if (item.word.toLowerCase() === lower) { morph = item.morphological || ''; break; }
+    }
+    return { word: raw, pos, morphological: morph };
+}
+
 function l3vAddWord() {
     const input = document.getElementById('l3v-input');
     const raw = input.value.trim();
     if (!raw) return;
-    const wordMap = buildWordPosMap();
-    const pos = wordMap.get(raw.toLowerCase()) || '';
-    const morph = (() => {
-        for (const ds of datasets) {
-            const w = ds.words.find(w => w.word.toLowerCase() === raw.toLowerCase());
-            if (w) return w.morphological || '';
-        }
-        for (const item of storageData) {
-            if (item.word.toLowerCase() === raw.toLowerCase()) return item.morphological || '';
-        }
-        for (const [, item] of grid.entries()) {
-            if (item.word.toLowerCase() === raw.toLowerCase()) return item.morphological || '';
-        }
-        return '';
-    })();
-    l3vTokens.push({ word: raw, pos, morphological: morph });
+    l3vTokens.push(getWordMeta(raw));
     input.value = '';
     renderL3VSentence();
     updateL3VWalsHints();
@@ -448,6 +444,16 @@ function l3vRemoveWord(idx) {
     l3vTokens.splice(idx, 1);
     renderL3VSentence();
     updateL3VWalsHints();
+}
+
+let l3vHintsCollapsed = false;
+
+function toggleL3VHints() {
+    l3vHintsCollapsed = !l3vHintsCollapsed;
+    const hints = document.getElementById('l3v-wals-hints');
+    const btn = document.getElementById('l3v-hints-toggle-btn');
+    if (hints) hints.classList.toggle('collapsed', l3vHintsCollapsed);
+    if (btn) btn.textContent = l3vHintsCollapsed ? '▶ WALS 規則提示' : '▼ WALS 規則提示';
 }
 
 function renderL3VSentence() {
@@ -535,32 +541,285 @@ function submitL3V() {
             startAutoAdvance('l3v-countdown');
         }
     }
-    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+    updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
 }
 
 document.addEventListener('keydown', e => {
-    if (document.getElementById('action-l3v').style.display !== 'none' && e.key === 'Enter') {
+    if (e.key !== 'Enter') return;
+    if (document.getElementById('action-l3v').style.display !== 'none') {
         l3vAddWord();
+    } else if (document.getElementById('action-l4').style.display !== 'none') {
+        l4vAddWord();
+    } else if (document.getElementById('action-l5').style.display !== 'none') {
+        l5vAddWord();
     }
 });
 
-// L4: 文法應用 (stub)
+// === L4: 限制造句 (REDESIGN-4) ===
+let l4vTokens = [];
+
+function calcL4Required() {
+    const unlocked = rulesA1.filter(r => isRuleUnlocked(r.id));
+    return Math.max(1, Math.ceil(unlocked.length / 2));
+}
+
 registerQuestionModule(4, {
     activate(wordData) {
         showAudioButtons(false, false);
+        document.getElementById('p-word').style.visibility = 'visible';
         document.getElementById('action-l4').style.display = 'flex';
         document.getElementById('next-word-btn').style.display = 'none';
-        document.getElementById('grammar-input').value = '';
-        document.getElementById('grammar-feedback').textContent = '';
-        document.getElementById('grammar-feedback').className = '';
+        document.getElementById('l4-feedback').textContent = '';
+        document.getElementById('l4-feedback').className = '';
+        document.getElementById('l4-actions').style.display = 'flex';
+        document.getElementById('l4-countdown').style.display = 'none';
+        document.getElementById('l4-input').value = '';
+        l4vTokens = [];
+        document.getElementById('l4-req-count').textContent = calcL4Required();
         updateProgressDots('l4-dots', wordData.successes || 0);
+        renderL4VSentence();
+        updateL4VWalsHints();
         speakText(wordData.word);
     },
     deactivate() {
+        cancelAutoAdvance('l4-countdown');
         document.getElementById('action-l4').style.display = 'none';
     }
 });
 
-function submitGrammar() {
-    skipWord();
+function l4vAddWord() {
+    const input = document.getElementById('l4-input');
+    const raw = input.value.trim();
+    if (!raw) return;
+    l4vTokens.push(getWordMeta(raw));
+    input.value = '';
+    renderL4VSentence();
+    updateL4VWalsHints();
+    input.focus();
+}
+
+function l4vRemoveWord(idx) {
+    l4vTokens.splice(idx, 1);
+    renderL4VSentence();
+    updateL4VWalsHints();
+}
+
+function renderL4VSentence() {
+    const area = document.getElementById('l4-sentence');
+    if (!area) return;
+    if (!l4vTokens.length) {
+        area.innerHTML = '<span style="color:#c7c7cc; font-size:14px;">點擊「加入」放入單字...</span>';
+        return;
+    }
+    area.innerHTML = '';
+    l4vTokens.forEach((t, i) => {
+        const chip = document.createElement('span');
+        chip.className = 'l3v-word-chip';
+        chip.textContent = t.word + ' ×';
+        chip.style.backgroundColor = t.pos ? getPosColor(t.pos) : '#e5e5ea';
+        chip.onclick = () => l4vRemoveWord(i);
+        area.appendChild(chip);
+    });
+}
+
+function updateL4VWalsHints() {
+    const container = document.getElementById('l4v-wals-hints');
+    if (!container) return;
+    const unlocked = rulesA1.filter(r => isRuleUnlocked(r.id));
+    if (!unlocked.length) {
+        container.innerHTML = '<span style="color:#c7c7cc; font-size:13px;">解鎖 WALS 規則後才能進行此題型。</span>';
+        return;
+    }
+    const req = calcL4Required();
+    const rows = unlocked.map(rule => {
+        const ok = l4vTokens.length > 0 && checkWalsRule(rule.id, l4vTokens);
+        return `<div class="l3v-hint-item ${ok ? 'l3v-hint-satisfied' : 'l3v-hint-unsatisfied'}">${ok ? '✓' : '○'} WALS ${rule.id} ${rule.name}</div>`;
+    }).join('');
+    container.innerHTML = rows + `<div style="font-size:12px; color:var(--text-secondary); margin-top:4px; text-align:center;">需滿足 ${req} 條規則才過關</div>`;
+}
+
+function submitL4V() {
+    if (!l4vTokens.length) {
+        const fb = document.getElementById('l4-feedback');
+        fb.textContent = '請先加入單字';
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    const targetLower = currentWordData.word.toLowerCase();
+    if (!l4vTokens.some(t => t.word.toLowerCase() === targetLower)) {
+        const fb = document.getElementById('l4-feedback');
+        fb.textContent = `句子必須包含目標單字：${currentWordData.word}`;
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    if (l4vTokens.length < 2) {
+        const fb = document.getElementById('l4-feedback');
+        fb.textContent = '請至少加入 2 個單字';
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    const unlockedIds = rulesA1.filter(r => isRuleUnlocked(r.id)).map(r => r.id);
+    const satisfiedIds = unlockedIds.filter(id => checkWalsRule(id, l4vTokens));
+    const satisfiedCount = satisfiedIds.length;
+    const required = calcL4Required();
+    const fb = document.getElementById('l4-feedback');
+    if (satisfiedCount >= required) {
+        currentWordData.attempts++;
+        currentWordData.successes++;
+        updateProgressDots('l4-dots', currentWordData.successes);
+        satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
+        const bonus = satisfiedCount * 3;
+        fb.textContent = `滿足 ${satisfiedCount}/${unlockedIds.length} 條規則 +${bonus}`;
+        fb.className = 'feedback-correct';
+        updateTokens(bonus);
+        updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
+        document.getElementById('l4-actions').style.display = 'none';
+        startAutoAdvance('l4-countdown');
+    } else {
+        fb.textContent = `僅滿足 ${satisfiedCount}/${required} 條規則，繼續加入符合規則的單字`;
+        fb.className = 'feedback-wrong';
+    }
+}
+
+// === L5: 情境造句 (REDESIGN-5) ===
+let l5vTokens = [];
+
+function calcContextBonus(contextSentence, userTokens) {
+    const contextWords = (contextSentence || '').split(/\s+/).filter(t => t);
+    const userWords = new Set(userTokens.map(t => t.word.toLowerCase()));
+    let bonus = 0;
+    contextWords.forEach(t => {
+        const lower = t.toLowerCase().replace(/[^a-z]/g, '');
+        if (lower && !COMMON_WORD_POS[lower] && userWords.has(lower)) bonus++;
+    });
+    return Math.min(bonus, 3);
+}
+
+registerQuestionModule(5, {
+    activate(wordData) {
+        showAudioButtons(false, false);
+        document.getElementById('p-word').style.visibility = 'visible';
+        document.getElementById('p-sentence-row').style.display = 'none';
+        document.getElementById('action-l5').style.display = 'flex';
+        document.getElementById('next-word-btn').style.display = 'none';
+        document.getElementById('l5-feedback').textContent = '';
+        document.getElementById('l5-feedback').className = '';
+        document.getElementById('l5-actions').style.display = 'flex';
+        document.getElementById('l5-countdown').style.display = 'none';
+        document.getElementById('l5-input').value = '';
+        l5vTokens = [];
+        document.getElementById('l5-context').textContent = wordData.sentence || '';
+        updateProgressDots('l5-dots', wordData.successes || 0);
+        renderL5VSentence();
+        updateL5VWalsHints();
+        speakText(wordData.word);
+    },
+    deactivate() {
+        cancelAutoAdvance('l5-countdown');
+        document.getElementById('p-sentence-row').style.display = '';
+        document.getElementById('action-l5').style.display = 'none';
+    }
+});
+
+function l5vAddWord() {
+    const input = document.getElementById('l5-input');
+    const raw = input.value.trim();
+    if (!raw) return;
+    l5vTokens.push(getWordMeta(raw));
+    input.value = '';
+    renderL5VSentence();
+    updateL5VWalsHints();
+    input.focus();
+}
+
+function l5vRemoveWord(idx) {
+    l5vTokens.splice(idx, 1);
+    renderL5VSentence();
+    updateL5VWalsHints();
+}
+
+function renderL5VSentence() {
+    const area = document.getElementById('l5-sentence');
+    if (!area) return;
+    if (!l5vTokens.length) {
+        area.innerHTML = '<span style="color:#c7c7cc; font-size:14px;">點擊「加入」放入單字...</span>';
+        return;
+    }
+    area.innerHTML = '';
+    l5vTokens.forEach((t, i) => {
+        const chip = document.createElement('span');
+        chip.className = 'l3v-word-chip';
+        chip.textContent = t.word + ' ×';
+        chip.style.backgroundColor = t.pos ? getPosColor(t.pos) : '#e5e5ea';
+        chip.onclick = () => l5vRemoveWord(i);
+        area.appendChild(chip);
+    });
+}
+
+function updateL5VWalsHints() {
+    const container = document.getElementById('l5v-wals-hints');
+    if (!container) return;
+    const unlocked = rulesA1.filter(r => isRuleUnlocked(r.id));
+    if (!unlocked.length) {
+        container.innerHTML = '<span style="color:#c7c7cc; font-size:13px;">解鎖 WALS 規則後，此處將顯示語法提示。</span>';
+        return;
+    }
+    container.innerHTML = unlocked.map(rule => {
+        const ok = l5vTokens.length > 0 && checkWalsRule(rule.id, l5vTokens);
+        return `<div class="l3v-hint-item ${ok ? 'l3v-hint-satisfied' : 'l3v-hint-unsatisfied'}">${ok ? '✓' : '○'} WALS ${rule.id} ${rule.name}</div>`;
+    }).join('');
+}
+
+function submitL5V() {
+    if (!l5vTokens.length) {
+        const fb = document.getElementById('l5-feedback');
+        fb.textContent = '請先加入單字';
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    const targetLower = currentWordData.word.toLowerCase();
+    if (!l5vTokens.some(t => t.word.toLowerCase() === targetLower)) {
+        const fb = document.getElementById('l5-feedback');
+        fb.textContent = `句子必須包含目標單字：${currentWordData.word}`;
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    if (l5vTokens.length < 2) {
+        const fb = document.getElementById('l5-feedback');
+        fb.textContent = '請至少加入 2 個單字';
+        fb.className = 'feedback-wrong';
+        return;
+    }
+    currentWordData.attempts++;
+    const fb = document.getElementById('l5-feedback');
+    const unlockedIds = rulesA1.filter(r => isRuleUnlocked(r.id)).map(r => r.id);
+    const satisfiedIds = unlockedIds.filter(id => checkWalsRule(id, l5vTokens));
+    const satisfiedCount = satisfiedIds.length;
+    const contextBonus = calcContextBonus(currentWordData.sentence || '', l5vTokens);
+    if (satisfiedCount > 0 || unlockedIds.length === 0) {
+        currentWordData.successes++;
+        updateProgressDots('l5-dots', currentWordData.successes);
+        satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
+        const walsBonusTokens = satisfiedCount * 2;
+        const totalBonus = walsBonusTokens + contextBonus;
+        let msg = '';
+        if (satisfiedCount >= 3) msg = `完整句型 +${satisfiedCount * 2}`;
+        else if (satisfiedCount === 2) msg = '語法組合 +4';
+        else if (satisfiedCount === 1) msg = '基礎句型 +2';
+        else msg = '良好！';
+        if (contextBonus > 0) msg += ` 情境加成 +${contextBonus}`;
+        fb.textContent = msg;
+        fb.className = 'feedback-correct';
+        if (totalBonus > 0) updateTokens(totalBonus);
+        document.getElementById('l5-actions').style.display = 'none';
+        startAutoAdvance('l5-countdown');
+    } else {
+        fb.textContent = '試試看加入更多符合已解鎖規則的單字';
+        fb.className = 'feedback-wrong';
+        if (currentWordData.attempts >= 5) {
+            document.getElementById('l5-actions').style.display = 'none';
+            startAutoAdvance('l5-countdown');
+        }
+    }
+    updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
 }

@@ -170,7 +170,7 @@ function renderPracticeWord() {
     currentWordData = practiceQueue[currentPracticeIndex];
 
     document.getElementById('practice-word-card').style.backgroundColor = getPosColor(currentWordData.pos);
-    document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+    updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
     document.getElementById('p-word').textContent = currentWordData.word;
     document.getElementById('p-phonetic').textContent = currentWordData.phonetic;
     document.getElementById('p-pos').textContent = currentWordData.pos || 'N/A';
@@ -233,7 +233,7 @@ function l1aSelectChip(btn, selected) {
         fb.className = 'feedback-correct';
         currentWordData.successes++;
         updateProgressDots('l1a-dots', currentWordData.successes);
-        document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+        updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
         document.getElementById('l1a-blank-sentence').textContent = currentWordData.sentence || '';
         speakText(currentWordData.sentence);
         setTimeout(() => {
@@ -305,7 +305,7 @@ function l1aSpeakToggleMic() {
                 document.getElementById('l1a-speak-result-actions').style.display = 'flex';
             }
         }
-        document.getElementById('practice-progress').textContent = `目標進度: ${currentWordData.successes}/3 | 剩餘機會: ${5 - currentWordData.attempts}`;
+        updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
     };
     l1aSpeakRecognition.onerror = () => {
         const fb = document.getElementById('l1a-speak-feedback');
@@ -345,6 +345,19 @@ function cancelAutoAdvance(countdownId) {
     if (!countdownId) return;
     const countdown = document.getElementById(countdownId);
     if (countdown) countdown.style.display = 'none';
+}
+
+function updatePracticeProgress(successes, attempts) {
+    const el = document.getElementById('practice-progress');
+    if (!el) return;
+    let html = '';
+    for (let i = 0; i < 3; i++)
+        html += `<span class="pp-dot${i < successes ? ' filled' : ''}"></span>`;
+    html += '<span class="pp-sep">·</span>';
+    const remaining = Math.max(0, 5 - attempts);
+    for (let i = 0; i < 5; i++)
+        html += `<span class="pp-heart${i < remaining ? ' filled' : ''}">♥</span>`;
+    el.innerHTML = html;
 }
 
 function updateProgressDots(containerId, successes) {
