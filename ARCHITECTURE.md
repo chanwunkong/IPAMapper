@@ -20,7 +20,7 @@
 | `js/grammar.js` | WALS 規則定義（`rulesA1`）、`checkWalsRule()`、解鎖邏輯、規則清單渲染、詳情 modal |
 | `js/practice.js` | 練習 session 主控：SRS 抽題邏輯、TTS `speakText()`、麥克風辨識（L1-S）、升降級、`endPractice()` |
 | `js/dispatcher.js` | 題型派發器：`registerQuestionModule(level, module)`、`dispatchQuestion(wordData)`（含音訊禁用過濾） |
-| `js/questions/q-stub.js` | 題型模組實作：L2-V（詞塊重組）、L2-A（填空）、L3-V（POS 造句）、L4 stub |
+| `js/questions/q-stub.js` | 題型模組實作（現行）：L2-V（詞塊重組）、L2-A（填空，待廢止）、L3-V（詞塊造句 + WALS 計分，基準軸）、L4 stub（待替換為限制造句） |
 | `js/sentence-renderer.js` | 例句動態渲染：比對 `buildWordPosMap()`，為例句中已知單字套用 POS 背景色 |
 | `js/passage.js` | 文章輸入引擎：`parsePassage()` 斷詞、`classifyPassageWords()` 比對已知詞、`addPassageWordToMap()` 加入詞庫、朗讀模式（逐句 TTS + 陌生詞高亮 + 每 3 句插入生字統整） |
 | `js/ui.js` | 通用 UI 工具：`showToast()`、modal 開關、打卡日曆 |
@@ -56,7 +56,7 @@ index.html (DOM 載入順序)
 ```
 1. 應用啟動
    firebase.js (Auth 狀態) → storage.js (loadSaveData)
-   → state.js 填入：storageData / grid / unlockedRules / voiceSettings / tokens
+   → state.js 填入：storageData / grid / unlockedRules / ruleHitCounts / voiceSettings / tokens / passageText
 
 2. 地圖互動
    canvas.js (點擊判斷)
@@ -97,7 +97,7 @@ index.html (DOM 載入順序)
 |------|---------|---------|
 | L1-V（閃卡自評） | 被動認知，無助詞形記憶 | — |
 | L1-A（聽音多選） | 功能折入 L1 詞塊填空的音訊維度 | REDESIGN-1 |
-| L2-A（手寫填空） | 手寫 OCR 準確率低；功能折入 L2 聽後重組 | REDESIGN-3 |
+| L2-A（手寫填空） | 設計重對齊：手寫辨識為輔助輸入，核心機制（單字填空）不符統一造句軸；功能折入 L2 聽後重組 | REDESIGN-3 |
 
 ---
 
@@ -112,5 +112,7 @@ index.html (DOM 載入順序)
 | `grid` | 地圖擺放狀態（key = `q,r`） |
 | `checkInHistory` | 打卡日期陣列 |
 | `unlockedRules` | 已解鎖 WALS 規則 ID 陣列 |
+| `ruleHitCounts` | 各規則在練習中被滿足的累計次數（`{ [ruleId]: number }`） |
 | `voiceSettings` | `{ voiceURI, lang }` |
+| `passageText` | 使用者存入的文章全文（朗讀支線用） |
 | `datasets` | 題庫清單（含 usedIndices） |
