@@ -264,16 +264,18 @@ body, html {
 
 .mic-skip-group { display: flex; align-items: center; gap: 20px; }
 
-#mic-btn, #l1a-mic-btn {
+#mic-btn, #l1a-mic-btn, #l1s-mic-btn, #l2s-mic-btn, #l1a-submit-btn {
     background-color: var(--accent-color); color: white; border: none; border-radius: 50%;
-    width: 70px; height: 70px; font-size: 16px; font-weight: bold;
+    width: 70px; height: 70px; font-size: 15px; font-weight: bold;
     box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s;
 }
 
-#mic-btn.listening, #l1a-mic-btn.listening {
+#mic-btn.listening, #l1a-mic-btn.listening, #l1s-mic-btn.listening, #l2s-mic-btn.listening {
     background-color: #ff3b30; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
     animation: pulse 1.5s infinite;
 }
+
+#l1a-submit-btn:disabled { background-color: #c7c7cc; box-shadow: none; cursor: not-allowed; }
 
 .l1a-blank-sentence {
     font-size: 17px; line-height: 1.7; text-align: center;
@@ -446,6 +448,7 @@ body, html {
 .l1a-option-btn:active { transform: scale(0.97); }
 .l1a-option-btn.correct { border-color: #34c759; background: #e6fff0; color: #1a8a32; }
 .l1a-option-btn.wrong { border-color: #ff3b30; background: #fff0ee; color: #cc2d24; }
+.l1a-option-btn.selected { border-color: var(--accent-color); background: #e8f0fe; color: var(--accent-color); }
 
 .l3v-sentence-area {
     display: flex; flex-wrap: wrap; gap: 6px; min-height: 48px;

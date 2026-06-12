@@ -358,6 +358,131 @@ registerQuestionModule(2, {
     }
 });
 
+// L2-S: 覆誦整句
+let l2sRecognition = null;
+let l2sListening = false;
+
+registerQuestionModule(2, {
+    requiresSpeaking: true,
+    activate(wordData) {
+        document.getElementById('p-sentence-row').style.display = 'none';
+        document.getElementById('p-etymology-row').style.display = 'none';
+        showAudioButtons(false, false);
+        document.getElementById('p-word').style.visibility = 'visible';
+        document.getElementById('action-l2s').style.display = 'flex';
+        document.getElementById('next-word-btn').style.display = 'none';
+        document.getElementById('l2s-countdown').style.display = 'none';
+        document.getElementById('l2s-feedback').textContent = '請點擊麥克風發音';
+        document.getElementById('l2s-feedback').className = '';
+        document.getElementById('l2s-result-actions').style.display = 'none';
+        document.getElementById('l2s-sentence').textContent = wordData.sentence || '';
+        updateProgressDots('l2s-dots', wordData.successes || 0);
+        speakText(wordData.sentence);
+    },
+    deactivate() {
+        cancelAutoAdvance('l2s-countdown');
+        if (l2sRecognition) { try { l2sRecognition.abort(); } catch(e) {} l2sRecognition = null; }
+        l2sListening = false;
+        const micBtn = document.getElementById('l2s-mic-btn');
+        if (micBtn) micBtn.classList.remove('listening');
+        document.getElementById('p-sentence-row').style.display = '';
+        document.getElementById('p-etymology-row').style.display = '';
+        document.getElementById('action-l2s').style.display = 'none';
+    }
+});
+
+function l2sToggleMic() {
+    if (l2sListening) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return alert('抱歉，您的瀏覽器不支援語音辨識功能。');
+    l2sRecognition = new SR();
+    l2sRecognition.lang = 'en-US';
+    l2sRecognition.interimResults = false;
+    l2sRecognition.onstart = () => {
+        l2sListening = true;
+        document.getElementById('l2s-mic-btn').classList.add('listening');
+        document.getElementById('l2s-feedback').textContent = '聆聽中...';
+        document.getElementById('l2s-feedback').className = '';
+    };
+    l2sRecognition.onresult = (event) => {
+        currentWordData.attempts++;
+        const transcript = event.results[0][0].transcript;
+        const spoken = transcript.toLowerCase().replace(/[^\w\s]/g, '');
+        const target = currentWordData.word.toLowerCase().replace(/[^\w]/g, '');
+        const fb = document.getElementById('l2s-feedback');
+        if (spoken.includes(target)) {
+            currentWordData.successes++;
+            updateProgressDots('l2s-dots', currentWordData.successes);
+            fb.textContent = `正確！辨識到：${transcript}`;
+            fb.className = 'feedback-correct';
+            document.getElementById('l2s-result-actions').style.display = 'none';
+            startAutoAdvance('l2s-countdown');
+        } else {
+            fb.textContent = `辨識到：${transcript}`;
+            fb.className = 'feedback-wrong';
+            if (currentWordData.attempts >= 5) {
+                startAutoAdvance('l2s-countdown');
+            } else {
+                document.getElementById('l2s-result-actions').style.display = 'flex';
+            }
+        }
+        updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
+    };
+    l2sRecognition.onerror = () => {
+        document.getElementById('l2s-feedback').textContent = '未接收到語音，請重試';
+        document.getElementById('l2s-feedback').className = 'feedback-wrong';
+    };
+    l2sRecognition.onend = () => {
+        l2sListening = false;
+        document.getElementById('l2s-mic-btn').classList.remove('listening');
+    };
+    l2sRecognition.start();
+}
+
+function l2sRetry() {
+    document.getElementById('l2s-result-actions').style.display = 'none';
+    document.getElementById('l2s-feedback').textContent = '請點擊麥克風發音';
+    document.getElementById('l2s-feedback').className = '';
+    l2sToggleMic();
+}
+
+// L3-A: 聽寫填空（補模組註冊）
+registerQuestionModule(3, {
+    activate(wordData) {
+        document.getElementById('p-sentence-row').style.display = 'none';
+        document.getElementById('p-etymology-row').style.display = 'none';
+        showAudioButtons(false, false);
+        document.getElementById('p-word').style.visibility = 'hidden';
+        document.getElementById('action-l3').style.display = 'flex';
+        document.getElementById('next-word-btn').style.display = 'none';
+        document.getElementById('l3-feedback').textContent = '';
+        document.getElementById('l3-feedback').className = '';
+        document.getElementById('l3-actions').style.display = 'flex';
+        document.getElementById('l3-countdown').style.display = 'none';
+        document.getElementById('l3-input').value = '';
+        updateProgressDots('l3-dots', wordData.successes || 0);
+        const sentence = wordData.sentence || '';
+        const escaped = wordData.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const gapHtml = escapeHtml(sentence).replace(
+            new RegExp(`(?<![\\w])${escaped}(?![\\w])`, 'gi'),
+            '<span class="l3-blank">___</span>'
+        );
+        document.getElementById('l3-gap-sentence').innerHTML = gapHtml || escapeHtml(sentence);
+        initL3Canvas();
+        resizeL3Canvas();
+        l3Strokes = [];
+        redrawL3Canvas();
+        speakText(sentence);
+    },
+    deactivate() {
+        cancelAutoAdvance('l3-countdown');
+        document.getElementById('p-word').style.visibility = 'visible';
+        document.getElementById('p-sentence-row').style.display = '';
+        document.getElementById('p-etymology-row').style.display = '';
+        document.getElementById('action-l3').style.display = 'none';
+    }
+});
+
 function submitL3() {
     const input = document.getElementById('l3-input');
     const typed = input.value.trim().toLowerCase().replace(/[^\w]/g, '');
@@ -662,16 +787,17 @@ function submitL4V() {
     const satisfiedIds = unlockedIds.filter(id => checkWalsRule(id, l4vTokens));
     const satisfiedCount = satisfiedIds.length;
     const required = calcL4Required();
+    const noRules = unlockedIds.length === 0;
     const fb = document.getElementById('l4-feedback');
-    if (satisfiedCount >= required) {
+    if (satisfiedCount >= required || noRules) {
         currentWordData.attempts++;
         currentWordData.successes++;
         updateProgressDots('l4-dots', currentWordData.successes);
         satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
-        const bonus = satisfiedCount * 3;
-        fb.textContent = `滿足 ${satisfiedCount}/${unlockedIds.length} 條規則 +${bonus}`;
+        const bonus = noRules ? 0 : satisfiedCount * 3;
+        fb.textContent = noRules ? '良好！（尚未解鎖規則）' : `滿足 ${satisfiedCount}/${unlockedIds.length} 條規則 +${bonus}`;
         fb.className = 'feedback-correct';
-        updateTokens(bonus);
+        if (bonus > 0) updateTokens(bonus);
         updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
         document.getElementById('l4-actions').style.display = 'none';
         startAutoAdvance('l4-countdown');

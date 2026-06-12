@@ -21,18 +21,45 @@
 
 > L3-V（詞塊自由造句 + WALS 計分）是所有題型的基準軸。上位下位關卡均為其延伸變化，透過「自由度」與「WALS 約束強度」兩個維度控制難易度。
 
-| Level | 題型名 | 機制 | 自由度 | WALS 介入 | 音訊維度 |
-|-------|--------|------|--------|-----------|----------|
-| L1 | 詞塊填空 | 例句挖空，詞塊池 4 選 1 | 極低 | 無 | TTS 播放例句；SpeechRecognition 覆誦 |
-| L2 | 詞塊重組 | 打亂例句，還原語序 | 低 | 提示（不計分） | TTS 播放原句後依記憶重組 |
-| L3 | 詞塊造句 | 自由組句，目標詞必現 | 高 | 計分 | TTS 播放目標詞 |
-| L4 | 限制造句 | 自由組句，滿足 N 條規則才過關 | 高 | 強制門檻 | TTS 播放目標詞 |
-| L5 | 情境造句 | 語境提示句，組句回應 | 最高 | 計分 + 情境加成 | TTS + SpeechRecognition |
+| Level | 題型 ID | 題型名 | 機制 | 自由度 | WALS 介入 | 裝置需求 |
+|-------|---------|--------|------|--------|-----------|----------|
+| L1 | **L1-A** | 詞塊填空 | TTS 自動播例句，單字隱藏；詞塊池 4 選 1（字母變換干擾詞）；選後送出確認；選錯立即失敗 | 極低 | 無 | 喇叭 |
+| L1 | **L1-S** | 唸出單字 | TTS 播放單字，學習者跟讀；SpeechRecognition 比對目標詞 | 極低 | 無 | 喇叭 + 麥克風 |
+| L2 | **L2-V** | 詞塊重組 | 打亂例句詞塊，點選還原語序 | 低 | 提示（不計分） | 無 |
+| L2 | **L2-A** | 聽後重組 | TTS 播打亂前例句，依記憶從詞塊池重組 | 低 | 提示（不計分） | 喇叭 |
+| L2 | **L2-S** | 覆誦整句 | TTS 播例句，學習者跟讀整句；SpeechRecognition 比對目標詞 | 低 | 無 | 喇叭 + 麥克風 |
+| L3 | **L3-A** | 聽寫填空 | 例句遮蓋目標詞，手寫/鍵盤輸入拼寫 | 低 | 無 | 無 |
+| L3 | **L3-V** | 詞塊造句 | 自由組句，目標詞必現，WALS 計分（+2/+4/+6）| 高 | 計分 | 無 |
+| L4 | **L4** | 限制造句 | 自由組句，必須滿足 ≥ ceil(解鎖數/2) 條規則才過關；不達標不扣次數 | 高 | 強制門檻 | 無 |
+| L5 | **L5** | 情境造句 | 顯示語境提示句，組句回應；WALS 計分 + 情境詞加成（最高 +3） | 最高 | 計分 + 情境加成 | 無 |
 
 ---
 
 ## 當前任務 (Current Focus)
 
+### 路線 H：題型模組重建 + 跨題型 UX 一致性
+
+> 掃描結論：L1 合體模組需拆分、L3-A 從未接入 dispatcher、L2-S 尚未實作、各題型 TTS 不一致、L4 無規則死鎖、dev modal 過時。
+
+**目標模組清單（dispatcher 最終狀態）**
+- Level 1：L1-A（requiresListening）、L1-S（requiresSpeaking）
+- Level 2：L2-V、L2-A（requiresListening）、L2-S（requiresSpeaking）
+- Level 3：L3-A、L3-V
+- Level 4：L4
+- Level 5：L5
+
+**實作子項目**
+
+- [x] (2026-06-12) [H1] `practice.js` + `index.html` + `style.css` — L1-A 重構為獨立模組（`requiresListening: true`）：移除合體兩段式；干擾詞改純字母變換；圓形送出鈕；選錯立即失敗
+- [x] (2026-06-12) [H2] `practice.js` + `index.html` — L1-S 新增獨立模組（`requiresSpeaking: true`）：TTS 播單字；SpeechRecognition 比對目標詞
+- [x] (2026-06-12) [H3] `q-stub.js` + `index.html` — L2-S 新增模組（`requiresSpeaking: true`）：TTS 播例句；SpeechRecognition 比對目標詞
+- [x] (2026-06-12) [H4] `q-stub.js` — L3-A 補模組註冊，接入 dispatcher
+- [x] (2026-06-12) [H5] `index.html` — L3-V / L5 補「聽單字」TTS 按鈕
+- [x] (2026-06-12) [H6] `q-stub.js` — L4 無規則備援：`unlockedIds.length === 0` 時直接過關
+- [x] (2026-06-12) [H7] `index.html` — dev modal 全面更新：9 個題型按正確索引排列
+- [ ] [H8] `index.html` — bug 修正：`cancelAutoAdvance()` 缺少 `'l1a-countdown'` 參數
+
+---
 
 ### 文章引擎待解問題 (TEXT-6)
 
