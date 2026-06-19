@@ -108,7 +108,8 @@ function importGameData(data) {
     checkInHistory = data.checkInHistory || [];
     unlockedRules = data.unlockedRules || [];
     ruleHitCounts = data.ruleHitCounts || {};
-    voiceSettings = data.voiceSettings || { voiceURI: '', lang: 'en-US' };
+    voiceSettings = data.voiceSettings || { voiceURI: '', lang: 'en-US', langCode: 'en' };
+    if (!voiceSettings.langCode) voiceSettings.langCode = 'en';
     passageText = data.passageText || '';
     const ta = document.getElementById('passage-input');
     if (ta) ta.value = passageText;

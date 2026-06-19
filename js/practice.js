@@ -1,5 +1,6 @@
 let practiceQueue = [];
 let currentPracticeIndex = 0;
+let activeRuleIds = [];
 let isSlowSpeed = false;
 let recognition = null;
 let isListening = false;
@@ -142,9 +143,58 @@ document.getElementById('play-btn').addEventListener('click', () => {
     practiceSpeakingDisabled = false;
     document.getElementById('listening-disabled-notice').style.display = 'none';
     document.getElementById('speaking-disabled-notice').style.display = 'none';
+
+    if (unlockedRules.length >= 2) {
+        showSkillDraft();
+    } else {
+        activeRuleIds = [...unlockedRules];
+        document.getElementById('practice-modal').classList.add('active');
+        renderPracticeWord();
+    }
+});
+
+function showSkillDraft() {
+    const pool = [...unlockedRules];
+    // Shuffle and pick 3 candidates (or fewer if not enough)
+    for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    const candidates = pool.slice(0, Math.min(3, pool.length));
+    const container = document.getElementById('skill-draft-options');
+    container.innerHTML = '';
+    candidates.forEach(id => {
+        const rule = rulesA1.find(r => r.id === id);
+        if (!rule) return;
+        const btn = document.createElement('button');
+        btn.className = 'skill-draft-btn';
+        btn.dataset.ruleId = id;
+        btn.textContent = `WALS ${id}  ${rule.name}`;
+        btn.onclick = () => toggleSkillDraftBtn(btn);
+        container.appendChild(btn);
+    });
+    document.getElementById('skill-draft-confirm').disabled = true;
+    document.getElementById('skill-draft-modal').style.display = 'flex';
+}
+
+function toggleSkillDraftBtn(btn) {
+    const selected = document.querySelectorAll('#skill-draft-options .skill-draft-btn.selected');
+    if (btn.classList.contains('selected')) {
+        btn.classList.remove('selected');
+    } else if (selected.length < 2) {
+        btn.classList.add('selected');
+    }
+    const count = document.querySelectorAll('#skill-draft-options .skill-draft-btn.selected').length;
+    document.getElementById('skill-draft-confirm').disabled = count < 1;
+}
+
+function confirmSkillDraft() {
+    activeRuleIds = [...document.querySelectorAll('#skill-draft-options .skill-draft-btn.selected')]
+        .map(btn => Number(btn.dataset.ruleId));
+    document.getElementById('skill-draft-modal').style.display = 'none';
     document.getElementById('practice-modal').classList.add('active');
     renderPracticeWord();
-});
+}
 
 function resetWordCardFields() {
     document.getElementById('p-word').style.visibility = 'visible';

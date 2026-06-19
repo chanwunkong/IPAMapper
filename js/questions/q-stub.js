@@ -733,23 +733,22 @@ function submitL3V() {
     const fb = document.getElementById('l3v-feedback');
     const unlockedIds = rulesA1.filter(r => isRuleUnlocked(r.id)).map(r => r.id);
     const satisfiedIds = unlockedIds.filter(id => checkWalsRule(id, l3vTokens));
-    const satisfiedCount = satisfiedIds.length;
-    if (satisfiedCount > 0 || unlockedIds.length === 0) {
+    if (satisfiedIds.length > 0 || unlockedIds.length === 0) {
         currentWordData.successes++;
         updateProgressDots('l3v-dots', currentWordData.successes);
-        satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
-        if (satisfiedCount >= 3) {
-            const bonus = satisfiedCount * 2;
-            fb.textContent = `完整句型 +${bonus}`;
-            updateTokens(bonus);
-        } else if (satisfiedCount === 2) {
-            fb.textContent = `語法組合 +4`;
-            updateTokens(4);
-        } else if (satisfiedCount === 1) {
-            fb.textContent = `基礎句型 +2`;
-            updateTokens(2);
+        let score = 0;
+        satisfiedIds.forEach(id => {
+            score += (activeRuleIds && activeRuleIds.includes(id)) ? 2 : 1;
+            ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1;
+        });
+        const combo = getComboBonus(satisfiedIds);
+        score += combo;
+        if (score > 0) {
+            const comboLabel = combo > 0 ? ` (含組合加成 +${combo})` : '';
+            fb.textContent = `語法得分 +${score}${comboLabel}`;
+            updateTokens(score);
         } else {
-            fb.textContent = `良好！`;
+            fb.textContent = '良好！';
         }
         fb.className = 'feedback-correct';
         document.getElementById('l3v-actions').style.display = 'none';
@@ -906,24 +905,30 @@ function submitL4V() {
     }
     const unlockedIds = rulesA1.filter(r => isRuleUnlocked(r.id)).map(r => r.id);
     const satisfiedIds = unlockedIds.filter(id => checkWalsRule(id, l4vTokens));
-    const satisfiedCount = satisfiedIds.length;
-    const required = calcL4Required();
     const noRules = unlockedIds.length === 0;
+    const hasActiveRule = satisfiedIds.some(id => activeRuleIds && activeRuleIds.includes(id));
     const fb = document.getElementById('l4-feedback');
-    if (satisfiedCount >= required || noRules) {
+    if (hasActiveRule || noRules) {
         currentWordData.attempts++;
         currentWordData.successes++;
         updateProgressDots('l4-dots', currentWordData.successes);
-        satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
-        const bonus = noRules ? 0 : satisfiedCount * 3;
-        fb.textContent = noRules ? '良好！（尚未解鎖規則）' : `滿足 ${satisfiedCount}/${unlockedIds.length} 條規則 +${bonus}`;
+        let score = 0;
+        satisfiedIds.forEach(id => {
+            score += (activeRuleIds && activeRuleIds.includes(id)) ? 2 : 1;
+            ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1;
+        });
+        const combo = getComboBonus(satisfiedIds);
+        score += combo;
+        const comboLabel = combo > 0 ? ` (含組合加成 +${combo})` : '';
+        fb.textContent = noRules ? '良好！（尚未解鎖規則）' : `語法得分 +${score}${comboLabel}`;
         fb.className = 'feedback-correct';
-        if (bonus > 0) updateTokens(bonus);
+        if (score > 0) updateTokens(score);
         updatePracticeProgress(currentWordData.successes, currentWordData.attempts);
         document.getElementById('l4-actions').style.display = 'none';
         startAutoAdvance('l4-countdown');
     } else {
-        fb.textContent = `僅滿足 ${satisfiedCount}/${required} 條規則，繼續加入符合規則的單字`;
+        const activeNames = (activeRuleIds || []).map(id => { const r = rulesA1.find(x => x.id === id); return r ? r.name : id; }).join('、');
+        fb.textContent = activeNames ? `需滿足主動規則：${activeNames}` : '需滿足至少一條已解鎖規則';
         fb.className = 'feedback-wrong';
     }
 }
@@ -1066,23 +1071,24 @@ function submitL5V() {
     const fb = document.getElementById('l5-feedback');
     const unlockedIds = rulesA1.filter(r => isRuleUnlocked(r.id)).map(r => r.id);
     const satisfiedIds = unlockedIds.filter(id => checkWalsRule(id, l5vTokens));
-    const satisfiedCount = satisfiedIds.length;
     const contextBonus = calcContextBonus(currentWordData.sentence || '', l5vTokens);
-    if (satisfiedCount > 0 || unlockedIds.length === 0) {
+    if (satisfiedIds.length > 0 || unlockedIds.length === 0) {
         currentWordData.successes++;
         updateProgressDots('l5-dots', currentWordData.successes);
-        satisfiedIds.forEach(id => { ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1; });
-        const walsBonusTokens = satisfiedCount * 2;
-        const totalBonus = walsBonusTokens + contextBonus;
-        let msg = '';
-        if (satisfiedCount >= 3) msg = `完整句型 +${satisfiedCount * 2}`;
-        else if (satisfiedCount === 2) msg = '語法組合 +4';
-        else if (satisfiedCount === 1) msg = '基礎句型 +2';
-        else msg = '良好！';
+        let score = 0;
+        satisfiedIds.forEach(id => {
+            score += (activeRuleIds && activeRuleIds.includes(id)) ? 2 : 1;
+            ruleHitCounts[id] = (ruleHitCounts[id] || 0) + 1;
+        });
+        const combo = getComboBonus(satisfiedIds);
+        score += combo;
+        const total = score + contextBonus;
+        let msg = score > 0 ? `語法得分 +${score}` : '良好！';
+        if (combo > 0) msg += ` (組合 +${combo})`;
         if (contextBonus > 0) msg += ` 情境加成 +${contextBonus}`;
         fb.textContent = msg;
         fb.className = 'feedback-correct';
-        if (totalBonus > 0) updateTokens(totalBonus);
+        if (total > 0) updateTokens(total);
         document.getElementById('l5-actions').style.display = 'none';
         startAutoAdvance('l5-countdown');
     } else {

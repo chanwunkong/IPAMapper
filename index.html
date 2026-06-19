@@ -342,6 +342,17 @@
                 </div>
             </div>
 
+            <div id="skill-draft-modal" class="rule-detail-overlay" style="display:none;">
+                <div class="rule-detail-card" style="gap:12px;">
+                    <div class="rule-detail-header">
+                        <span class="rule-detail-name">本場技能抽選</span>
+                        <span class="rule-detail-desc" style="font-size:13px;">選 1–2 條作為主動規則（命中倍率 ×2），其餘已解鎖規則維持 ×1</span>
+                    </div>
+                    <div id="skill-draft-options" style="display:flex; flex-direction:column; gap:10px;"></div>
+                    <button id="skill-draft-confirm" class="action-btn btn-unlock" style="width:100%;" onclick="confirmSkillDraft()" disabled>確認並開始</button>
+                </div>
+            </div>
+
             <div id="rule-detail-modal" class="rule-detail-overlay" style="display:none;" onclick="closeRuleDetail()">
                 <div class="rule-detail-card" onclick="event.stopPropagation()">
                     <div class="rule-detail-header">
@@ -391,10 +402,17 @@
                     </div>
 
                     <div class="settings-card">
-                        <div class="settings-title">語音設定 (Voice)</div>
+                        <div class="settings-title">學習語言 (Language)</div>
                         <div class="settings-row">
-                            <div style="font-size:14px; color:var(--text-secondary); line-height:1.4;">選擇朗讀單字時使用的語音引擎，設定會隨存檔儲存。</div>
-                            <select id="voice-select" style="padding: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; width: 100%; margin-top: 8px;"></select>
+                            <div id="lang-toggle" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                                <button class="lang-btn" data-lang="en" onclick="setLang('en')">英</button>
+                                <button class="lang-btn" data-lang="it" onclick="setLang('it')">義</button>
+                                <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">俄</button>
+                                <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">中</button>
+                                <button class="lang-btn" data-lang="ja" onclick="setLang('ja')">日</button>
+                            </div>
+                            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:4px;">語音引擎</div>
+                            <select id="voice-select" style="padding: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; width: 100%;"></select>
                         </div>
                     </div>
 
@@ -446,6 +464,8 @@
     <script src="js/state.js"></script>
     <script src="js/canvas.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/wals-rules.js"></script>
+    <script src="js/wals-combo.js"></script>
     <script src="js/grammar.js"></script>
     <script src="js/datasets.js"></script>
     <script src="js/voice.js"></script>
