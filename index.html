@@ -126,6 +126,7 @@
                         <div id="l1s-dots" class="progress-dots"></div>
                         <div id="l1s-result-actions" style="display:none; align-items:center; gap:15px;">
                             <button class="btn-retry" onclick="l1sRetry()">再試</button>
+                            <button id="l1s-replay-btn" class="btn-retry" onclick="l1sPlayReplay()" style="display:none;">回播</button>
                             <button class="btn-continue" onclick="cancelAutoAdvance('l1s-countdown'); moveToNextWord()">下一題</button>
                         </div>
                         <div id="l1s-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
@@ -140,7 +141,7 @@
                         <div class="tts-group">
                             <button class="tts-btn" onclick="speakSequence([currentWordData.word, currentWordData.sentence])">再聽一次</button>
                         </div>
-                        <div style="font-size:12px; color:var(--text-secondary);">點選單字依序填入 / 點選已排入的單字取回</div>
+                        <div style="font-size:12px; color:var(--text-secondary);">點選填入 / 拖拉調整順序 / 點選已排入的單字取回</div>
                         <div id="l2-word-pool" class="l2-token-area"></div>
                         <div id="l2-answer-area" class="l2-token-area l2-answer"></div>
                         <div id="l2-dots" class="progress-dots"></div>
@@ -171,6 +172,7 @@
                         <div id="l2s-dots" class="progress-dots"></div>
                         <div id="l2s-result-actions" style="display:none; align-items:center; gap:15px;">
                             <button class="btn-retry" onclick="l2sRetry()">再試</button>
+                            <button id="l2s-replay-btn" class="btn-retry" onclick="l2sPlayReplay()" style="display:none;">回播</button>
                             <button class="btn-continue" onclick="cancelAutoAdvance('l2s-countdown'); moveToNextWord()">下一題</button>
                         </div>
                         <div id="l2s-countdown" style="display:none; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:280px;">
@@ -440,6 +442,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="js/state.js"></script>
     <script src="js/canvas.js"></script>
     <script src="js/ui.js"></script>

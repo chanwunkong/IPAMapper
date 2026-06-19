@@ -30,10 +30,25 @@ const COMMON_WORD_POS = {
     one:'CD', two:'CD', three:'CD', first:'JJ', second:'JJ',
 };
 
+function levenshtein(a, b) {
+    const m = Array.from({ length: b.length + 1 }, (_, i) => i);
+    for (let j = 1; j <= a.length; j++) {
+        let prev = j;
+        for (let i = 1; i <= b.length; i++) {
+            const val = a[j - 1] === b[i - 1] ? m[i - 1] : Math.min(m[i - 1], m[i], prev) + 1;
+            m[i - 1] = prev;
+            prev = val;
+        }
+        m[b.length] = prev;
+    }
+    return m[b.length];
+}
+
 // L2-V: 句型重組 — 點選詞塊依序還原例句
 let l2OriginalTokens = [];
 let l2AnswerTokens = [];
 let l2PoolTokens = [];
+let l2Sortable = null;
 
 registerQuestionModule(2, {
     activate(wordData) {
@@ -85,6 +100,7 @@ function renderL2Pool() {
 
 function renderL2Answer() {
     const area = document.getElementById('l2-answer-area');
+    if (l2Sortable) { l2Sortable.destroy(); l2Sortable = null; }
     area.innerHTML = '';
     area.style.borderStyle = l2AnswerTokens.length > 0 ? 'solid' : 'dashed';
     const wordMap = buildWordPosMap();
@@ -92,11 +108,33 @@ function renderL2Answer() {
         const btn = document.createElement('button');
         btn.className = 'l2-word-chip placed';
         btn.textContent = token;
+        btn.dataset.idx = i;
         const clean = token.toLowerCase().replace(/[^a-z]/g, '');
         const pos = wordMap.get(clean) || COMMON_WORD_POS[clean] || '';
         if (pos) btn.style.backgroundColor = getPosColor(pos);
         btn.onclick = () => l2AnswerToPool(i);
         area.appendChild(btn);
+    });
+    initL2Sortable();
+}
+
+function initL2Sortable() {
+    const area = document.getElementById('l2-answer-area');
+    if (!area || typeof Sortable === 'undefined') return;
+    l2Sortable = Sortable.create(area, {
+        animation: 150,
+        onEnd: () => {
+            const newTokens = [];
+            Array.from(area.children).forEach((chip, i) => {
+                const oldIdx = parseInt(chip.dataset.idx);
+                if (!isNaN(oldIdx) && l2AnswerTokens[oldIdx] !== undefined) {
+                    newTokens.push(l2AnswerTokens[oldIdx]);
+                }
+                chip.dataset.idx = i;
+                chip.onclick = () => l2AnswerToPool(i);
+            });
+            if (newTokens.length === l2AnswerTokens.length) l2AnswerTokens = newTokens;
+        }
     });
 }
 
@@ -361,6 +399,9 @@ registerQuestionModule(2, {
 // L2-S: 覆誦整句
 let l2sRecognition = null;
 let l2sListening = false;
+let l2sMediaRecorder = null;
+let l2sAudioChunks = [];
+let l2sLastAudioUrl = null;
 
 registerQuestionModule(2, {
     requiresSpeaking: true,
@@ -375,6 +416,8 @@ registerQuestionModule(2, {
         document.getElementById('l2s-feedback').textContent = '請點擊麥克風發音';
         document.getElementById('l2s-feedback').className = '';
         document.getElementById('l2s-result-actions').style.display = 'none';
+        document.getElementById('l2s-replay-btn').style.display = 'none';
+        l2sLastAudioUrl = null;
         document.getElementById('l2s-sentence').textContent = wordData.sentence || '';
         updateProgressDots('l2s-dots', wordData.successes || 0);
         speakText(wordData.sentence);
@@ -383,6 +426,7 @@ registerQuestionModule(2, {
         cancelAutoAdvance('l2s-countdown');
         if (l2sRecognition) { try { l2sRecognition.abort(); } catch(e) {} l2sRecognition = null; }
         l2sListening = false;
+        if (l2sMediaRecorder && l2sMediaRecorder.state === 'recording') { try { l2sMediaRecorder.stop(); } catch(e) {} }
         const micBtn = document.getElementById('l2s-mic-btn');
         if (micBtn) micBtn.classList.remove('listening');
         document.getElementById('p-sentence-row').style.display = '';
@@ -395,6 +439,18 @@ function l2sToggleMic() {
     if (l2sListening) return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return alert('抱歉，您的瀏覽器不支援語音辨識功能。');
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        l2sAudioChunks = [];
+        l2sMediaRecorder = new MediaRecorder(stream);
+        l2sMediaRecorder.ondataavailable = e => { if (e.data.size > 0) l2sAudioChunks.push(e.data); };
+        l2sMediaRecorder.onstop = () => {
+            const blob = new Blob(l2sAudioChunks, { type: 'audio/webm' });
+            l2sLastAudioUrl = URL.createObjectURL(blob);
+            document.getElementById('l2s-replay-btn').style.display = '';
+            stream.getTracks().forEach(t => t.stop());
+        };
+        l2sMediaRecorder.start();
+    }).catch(() => {});
     l2sRecognition = new SR();
     l2sRecognition.lang = 'en-US';
     l2sRecognition.interimResults = false;
@@ -435,8 +491,13 @@ function l2sToggleMic() {
     l2sRecognition.onend = () => {
         l2sListening = false;
         document.getElementById('l2s-mic-btn').classList.remove('listening');
+        if (l2sMediaRecorder && l2sMediaRecorder.state === 'recording') { try { l2sMediaRecorder.stop(); } catch(e) {} }
     };
     l2sRecognition.start();
+}
+
+function l2sPlayReplay() {
+    if (l2sLastAudioUrl) new Audio(l2sLastAudioUrl).play();
 }
 
 function l2sRetry() {
@@ -490,10 +551,20 @@ function submitL3() {
     if (!typed) return;
     currentWordData.attempts++;
     const fb = document.getElementById('l3-feedback');
-    if (typed === target) {
+    const dist = levenshtein(typed, target);
+    const isClose = dist === 1 && target.length > 3;
+    if (dist === 0) {
         currentWordData.successes++;
         updateProgressDots('l3-dots', currentWordData.successes);
         fb.textContent = '正確！';
+        fb.className = 'feedback-correct';
+        document.getElementById('l3-actions').style.display = 'none';
+        startAutoAdvance('l3-countdown');
+    } else if (isClose) {
+        currentWordData.successes++;
+        updateProgressDots('l3-dots', currentWordData.successes);
+        const sim = Math.round(((target.length - dist) / target.length) * 100);
+        fb.textContent = `接近正確（辨識：${typed}，相似度 ${sim}%）`;
         fb.className = 'feedback-correct';
         document.getElementById('l3-actions').style.display = 'none';
         startAutoAdvance('l3-countdown');
@@ -511,6 +582,7 @@ function submitL3() {
 
 // === L3-V: POS 造句 ===
 let l3vTokens = [];
+let l3vSortable = null;
 
 registerQuestionModule(3, {
     activate(wordData) {
@@ -584,6 +656,7 @@ function toggleL3VHints() {
 function renderL3VSentence() {
     const area = document.getElementById('l3v-sentence');
     if (!area) return;
+    if (l3vSortable) { l3vSortable.destroy(); l3vSortable = null; }
     if (!l3vTokens.length) {
         area.innerHTML = '<span style="color:#c7c7cc; font-size:14px;">點擊「加入」放入單字...</span>';
         return;
@@ -593,9 +666,32 @@ function renderL3VSentence() {
         const chip = document.createElement('span');
         chip.className = 'l3v-word-chip';
         chip.textContent = t.word + ' ×';
+        chip.dataset.idx = i;
         chip.style.backgroundColor = t.pos ? getPosColor(t.pos) : '#e5e5ea';
         chip.onclick = () => l3vRemoveWord(i);
         area.appendChild(chip);
+    });
+    initL3VSortable();
+}
+
+function initL3VSortable() {
+    const area = document.getElementById('l3v-sentence');
+    if (!area || typeof Sortable === 'undefined' || !l3vTokens.length) return;
+    l3vSortable = Sortable.create(area, {
+        animation: 150,
+        onEnd: () => {
+            const newTokens = [];
+            Array.from(area.children).forEach((chip, i) => {
+                const oldIdx = parseInt(chip.dataset.idx);
+                if (!isNaN(oldIdx) && l3vTokens[oldIdx]) {
+                    newTokens.push(l3vTokens[oldIdx]);
+                }
+                chip.dataset.idx = i;
+                chip.onclick = () => l3vRemoveWord(i);
+            });
+            if (newTokens.length === l3vTokens.length) l3vTokens = newTokens;
+            updateL3VWalsHints();
+        }
     });
 }
 
@@ -682,6 +778,7 @@ document.addEventListener('keydown', e => {
 
 // === L4: 限制造句 (REDESIGN-4) ===
 let l4vTokens = [];
+let l4vSortable = null;
 
 function calcL4Required() {
     const unlocked = rulesA1.filter(r => isRuleUnlocked(r.id));
@@ -732,6 +829,7 @@ function l4vRemoveWord(idx) {
 function renderL4VSentence() {
     const area = document.getElementById('l4-sentence');
     if (!area) return;
+    if (l4vSortable) { l4vSortable.destroy(); l4vSortable = null; }
     if (!l4vTokens.length) {
         area.innerHTML = '<span style="color:#c7c7cc; font-size:14px;">點擊「加入」放入單字...</span>';
         return;
@@ -741,9 +839,32 @@ function renderL4VSentence() {
         const chip = document.createElement('span');
         chip.className = 'l3v-word-chip';
         chip.textContent = t.word + ' ×';
+        chip.dataset.idx = i;
         chip.style.backgroundColor = t.pos ? getPosColor(t.pos) : '#e5e5ea';
         chip.onclick = () => l4vRemoveWord(i);
         area.appendChild(chip);
+    });
+    initL4VSortable();
+}
+
+function initL4VSortable() {
+    const area = document.getElementById('l4-sentence');
+    if (!area || typeof Sortable === 'undefined' || !l4vTokens.length) return;
+    l4vSortable = Sortable.create(area, {
+        animation: 150,
+        onEnd: () => {
+            const newTokens = [];
+            Array.from(area.children).forEach((chip, i) => {
+                const oldIdx = parseInt(chip.dataset.idx);
+                if (!isNaN(oldIdx) && l4vTokens[oldIdx]) {
+                    newTokens.push(l4vTokens[oldIdx]);
+                }
+                chip.dataset.idx = i;
+                chip.onclick = () => l4vRemoveWord(i);
+            });
+            if (newTokens.length === l4vTokens.length) l4vTokens = newTokens;
+            updateL4VWalsHints();
+        }
     });
 }
 
@@ -809,6 +930,7 @@ function submitL4V() {
 
 // === L5: 情境造句 (REDESIGN-5) ===
 let l5vTokens = [];
+let l5vSortable = null;
 
 function calcContextBonus(contextSentence, userTokens) {
     const contextWords = (contextSentence || '').split(/\s+/).filter(t => t);
@@ -867,6 +989,7 @@ function l5vRemoveWord(idx) {
 function renderL5VSentence() {
     const area = document.getElementById('l5-sentence');
     if (!area) return;
+    if (l5vSortable) { l5vSortable.destroy(); l5vSortable = null; }
     if (!l5vTokens.length) {
         area.innerHTML = '<span style="color:#c7c7cc; font-size:14px;">點擊「加入」放入單字...</span>';
         return;
@@ -876,9 +999,32 @@ function renderL5VSentence() {
         const chip = document.createElement('span');
         chip.className = 'l3v-word-chip';
         chip.textContent = t.word + ' ×';
+        chip.dataset.idx = i;
         chip.style.backgroundColor = t.pos ? getPosColor(t.pos) : '#e5e5ea';
         chip.onclick = () => l5vRemoveWord(i);
         area.appendChild(chip);
+    });
+    initL5VSortable();
+}
+
+function initL5VSortable() {
+    const area = document.getElementById('l5-sentence');
+    if (!area || typeof Sortable === 'undefined' || !l5vTokens.length) return;
+    l5vSortable = Sortable.create(area, {
+        animation: 150,
+        onEnd: () => {
+            const newTokens = [];
+            Array.from(area.children).forEach((chip, i) => {
+                const oldIdx = parseInt(chip.dataset.idx);
+                if (!isNaN(oldIdx) && l5vTokens[oldIdx]) {
+                    newTokens.push(l5vTokens[oldIdx]);
+                }
+                chip.dataset.idx = i;
+                chip.onclick = () => l5vRemoveWord(i);
+            });
+            if (newTokens.length === l5vTokens.length) l5vTokens = newTokens;
+            updateL5VWalsHints();
+        }
     });
 }
 

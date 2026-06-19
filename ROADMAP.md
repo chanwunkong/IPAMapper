@@ -38,6 +38,31 @@
 ## 當前任務 (Current Focus)
 
 
+### 路線 I：test 場技術移植
+
+**[I1] Levenshtein 容錯 — L3-A** (`js/questions/q-stub.js`)
+- 新增純函式 `levenshtein(a, b)` (8 行)
+- 修改 `submitL3()`：原本 `typed === target` 純等值判斷，改為相似度 ≥ 85% 即通過；反饋顯示辨識結果與相似度（例：「接近正確（辨識：helo，相似度 89%）」）；完全相符仍顯示「正確！」
+
+**[I2] SortableJS 拖拉排序 — L2/L3-V/L4/L5 workspace** (`index.html` + `js/questions/q-stub.js`)
+- `index.html`：加入 SortableJS CDN（`cdn.jsdelivr.net/npm/sortablejs@1.15.0`）
+- L2-V / L2-A `activate()` 末段對 `#l2-answer-area` 呼叫 `new Sortable()`，`onEnd` callback 從 DOM `children` 的 `dataset.token` 同步回 `l2AnswerTokens[]`
+- L3-V / L4 / L5 的 `activate()` 末段同理：`#l3v-sentence`→`l3vTokens[]`、`#l4-sentence`→`l4Tokens[]`、`#l5-sentence`→`l5Tokens[]`，各自 `onEnd` 同步（chip 渲染時存 `dataset.idx`）
+
+**[I3] 錄音回播 — L1-S / L2-S** (`index.html` + `js/practice.js` + `js/questions/q-stub.js`)
+- `index.html`：`#l1s-result-actions` 與 `#l2s-result-actions` 各加「回播錄音」按鈕（初始 `display:none`）
+- `practice.js`（L1-S）：`l1sToggleMic()` 開始收音時同步啟動 `MediaRecorder`，結果出來後以 `URL.createObjectURL(blob)` 存入 `l1sLastAudioUrl`，顯示回播按鈕
+- `q-stub.js`（L2-S）：同上邏輯，存入 `l2sLastAudioUrl`，顯示回播按鈕
+- 回播按鈕 `onclick` 建立 `new Audio(url).play()`；新題開始時清除舊 URL
+
+**實作子項目**
+
+- [x] (2026-06-12) [I1] `q-stub.js` — L3-A Levenshtein 容錯（≥ 85% 視為通過，顯示相似度提示）
+- [x] (2026-06-12) [I2] `index.html` + `q-stub.js` — SortableJS 拖拉排序接入 L2-V/L2-A/L3-V/L4/L5 workspace
+- [x] (2026-06-12) [I3] `index.html` + `practice.js` + `q-stub.js` — MediaRecorder 錄音回播加入 L1-S / L2-S
+
+---
+
 ### 文章引擎待解問題 (TEXT-6)
 
 - [ ] [TEXT-6-1] 詞形變化比對：文章中的 "running" 無法比對詞庫的 "run"，需定義是否要做詞根還原（stemming），或改以使用者手動確認

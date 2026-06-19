@@ -228,11 +228,33 @@ function l1aSubmit() {
 // ===== L1-S 唸出單字 =====
 let l1sRecognition = null;
 let l1sListening = false;
+let l1sMediaRecorder = null;
+let l1sAudioChunks = [];
+let l1sLastAudioUrl = null;
 
 function l1sToggleMic() {
     if (l1sListening) return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return alert('抱歉，您的瀏覽器不支援語音辨識功能。');
+
+    // 啟動 MediaRecorder 同步錄製（靜默失敗不影響主流程）
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            l1sAudioChunks = [];
+            l1sMediaRecorder = new MediaRecorder(stream);
+            l1sMediaRecorder.ondataavailable = e => { if (e.data.size > 0) l1sAudioChunks.push(e.data); };
+            l1sMediaRecorder.onstop = () => {
+                stream.getTracks().forEach(t => t.stop());
+                const blob = new Blob(l1sAudioChunks, { type: 'audio/webm' });
+                if (l1sLastAudioUrl) URL.revokeObjectURL(l1sLastAudioUrl);
+                l1sLastAudioUrl = URL.createObjectURL(blob);
+                const btn = document.getElementById('l1s-replay-btn');
+                if (btn) btn.style.display = '';
+            };
+            l1sMediaRecorder.start();
+        }).catch(() => {});
+    }
+
     l1sRecognition = new SR();
     l1sRecognition.lang = 'en-US';
     l1sRecognition.interimResults = false;
@@ -273,8 +295,13 @@ function l1sToggleMic() {
     l1sRecognition.onend = () => {
         l1sListening = false;
         document.getElementById('l1s-mic-btn').classList.remove('listening');
+        if (l1sMediaRecorder && l1sMediaRecorder.state === 'recording') l1sMediaRecorder.stop();
     };
     l1sRecognition.start();
+}
+
+function l1sPlayReplay() {
+    if (l1sLastAudioUrl) new Audio(l1sLastAudioUrl).play();
 }
 
 function l1sRetry() {
@@ -495,13 +522,18 @@ registerQuestionModule(1, {
         document.getElementById('l1s-feedback').textContent = '請點擊麥克風發音';
         document.getElementById('l1s-feedback').className = '';
         document.getElementById('l1s-result-actions').style.display = 'none';
+        document.getElementById('l1s-replay-btn').style.display = 'none';
         document.getElementById('l1s-phonetic').textContent = wordData.phonetic || '';
+        l1sLastAudioUrl = null;
         updateProgressDots('l1s-dots', wordData.successes || 0);
         speakText(wordData.word);
     },
     deactivate() {
         cancelAutoAdvance('l1s-countdown');
         if (l1sRecognition) { try { l1sRecognition.abort(); } catch(e) {} l1sRecognition = null; }
+        if (l1sMediaRecorder && l1sMediaRecorder.state === 'recording') {
+            try { l1sMediaRecorder.stop(); } catch(e) {}
+        }
         l1sListening = false;
         const micBtn = document.getElementById('l1s-mic-btn');
         if (micBtn) micBtn.classList.remove('listening');
